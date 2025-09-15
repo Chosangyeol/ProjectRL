@@ -6,6 +6,8 @@ namespace Player
 {
 	public class PlayerModel : MonoBehaviour
 	{
+		private SPlayerStat _playerState;
+
 		
 	}
 }

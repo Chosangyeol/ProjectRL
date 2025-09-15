@@ -1,4 +1,4 @@
-﻿namespace Console
+namespace Console
 {
 	public interface IConsoleCommand
 	{

@@ -9,7 +9,10 @@ namespace Config.UserInput
 {
 	public class UserInputConfig : NonMonoSingleton<UserInputConfig>
 	{
-		public KeyCode jump;
-		public bool isAxisYFlipped = false;
+		// ===== KeyCode Mapping =====
+		public KeyCode	keyJump;
+
+		// ===== User Setting =====
+		public bool		isAxisYFlipped = false;
 	}
 }

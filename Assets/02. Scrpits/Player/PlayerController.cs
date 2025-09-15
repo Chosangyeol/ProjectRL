@@ -44,7 +44,7 @@ namespace Player
 			if (!isAlive || !isMoveable)
 				return ;
 			Move();
-			if (Input.GetKeyDown(UserInputConfig.Instance.jump))
+			if (Input.GetKeyDown(UserInputConfig.Instance.keyJump))
 				Jump();
 			if (isFixedCursor)
 				Turn();
