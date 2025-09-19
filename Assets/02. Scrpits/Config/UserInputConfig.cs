@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
+using UnitySubCore.Singleton;
 
 namespace Config.UserInput
 {
-	public class UserInputConfig : NonMonoSingleton<UserInputConfig>
+	public class UserInputConfig : ASingleton<UserInputConfig>
 	{
 		// ===== KeyCode Mapping =====
 		public KeyCode	keyJump;
