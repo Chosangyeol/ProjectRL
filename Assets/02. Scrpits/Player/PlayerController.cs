@@ -1,22 +1,17 @@
 using Config.UserInput;
+using System;
 using UnityEngine;
+using UnitySubCore.Resolve;
 
 namespace Player
 {
-	[RequireComponent(typeof(Rigidbody))]
 	public class PlayerController : MonoBehaviour
 	{
 		[Header("Player Object")]
 		[SerializeField]
-		private PlayerModel _playerModelParent;
+		private PlayerModel _playerModel;
 		[SerializeField]
-		private GameObject _playerCameraParent;
-
-		[Header("Movement")]
-		[SerializeField]
-		private float _moveSpeed;
-		[SerializeField]
-		private float _jumpForce;
+		private PlayerCamera _playerCamera;
 
 		[Header("Input Mouse")]
 		[SerializeField]
@@ -24,34 +19,27 @@ namespace Player
 		[SerializeField]
 		private float _mouseRY;
 
-		private Rigidbody _rigid;
-
-		private bool isGrounded = true;
 		private bool isFixedCursor = true;
-		private bool isAlive = true;
-		private bool isMoveable = true;
-		
-		void Awake()
+
+		public PlayerModel Player { get => _playerModel; }
+		public PlayerCamera Camera { get => _playerCamera; }
+
+		public event Action ActionCallbackMove;
+		public event Action ActionCallbackJump;
+		public event Action ActionCallbackTurn;
+
+		private void Awake()
 		{
-			_rigid = GetComponent<Rigidbody>();
 			return ;
 		}
 
 		void Update()
 		{
-			if (!isAlive || !isMoveable)
-				return ;
 			Move();
 			if (Input.GetKeyDown(UserInputConfig.Instance.keyJump))
 				Jump();
 			if (isFixedCursor)
 				Turn();
-			return ;
-		}
-
-		public void SetMoveable(bool active)
-		{
-			isMoveable = active;
 			return ;
 		}
 
@@ -73,32 +61,19 @@ namespace Player
 		{
 			float moveHorizontal = Input.GetAxis("Horizontal");
 			float moveVertical = Input.GetAxis("Vertical");
-			Vector3 moveCamF = Vector3.Scale(_playerCameraParent.transform.forward, new Vector3(1, 0, 1));
-			Vector3 moveCamR = Vector3.Scale(_playerCameraParent.transform.right, new Vector3(1, 0, 1));
-			Vector3 movement = moveCamF * moveVertical + moveCamR * moveHorizontal;
+			Vector3 moveCamF = Vector3.Scale(Camera.transform.forward, new Vector3(1, 0, 1));
+			Vector3 moveCamR = Vector3.Scale(Camera.transform.right, new Vector3(1, 0, 1));
+			Vector3 movement = moveCamF.normalized * moveVertical + moveCamR.normalized * moveHorizontal;
 
 			if (movement.sqrMagnitude > 1)
 				movement.Normalize();
-			transform.position += _moveSpeed * Time.deltaTime * movement;
-			return ;
-		}
-
-		private void OnCollisionEnter(Collision collision)
-		{
-			if (collision.gameObject.CompareTag("Ground"))
-			{
-				isGrounded = true;
-			}
+			Player.Move(Time.deltaTime * movement, ActionCallbackMove);
 			return ;
 		}
 
 		private void Jump()
 		{
-			if (isGrounded)
-			{
-				_rigid.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-				isGrounded = false;
-			}
+			Player.Jump(ActionCallbackJump);
 			return ;
 		}
 
@@ -107,11 +82,7 @@ namespace Player
 			float mouseX = Input.GetAxis("Mouse X") * _mouseRX * Time.deltaTime;
 			float mouseY = Input.GetAxis("Mouse Y") * _mouseRY * Time.deltaTime;
 
-			if (UserInputConfig.Instance.isAxisYFlipped)
-				_playerCameraParent.transform.Rotate(Vector3.right, mouseY);
-			else
-				_playerCameraParent.transform.Rotate(Vector3.left, mouseY);
-			transform.Rotate(Vector3.up, mouseX);
+			Camera.Turn(mouseX, mouseY, ActionCallbackTurn);
 			return ;
 		}
 	}
