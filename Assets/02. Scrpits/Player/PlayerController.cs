@@ -36,7 +36,7 @@ namespace Player
 		void Update()
 		{
 			Move();
-			if (Input.GetKeyDown(UserInputConfig.Instance.keyJump))
+			if (Input.GetKeyDown(ConfigUserInput.Instance.keyJump))
 				Jump();
 			if (isFixedCursor)
 				Turn();

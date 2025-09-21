@@ -3,7 +3,7 @@ using UnitySubCore.Singleton;
 
 namespace Config.UserInput
 {
-	public class UserInputConfig : ASingleton<UserInputConfig>
+	public class ConfigUserInput : ASingleton<ConfigUserInput>
 	{
 		// ===== KeyCode Mapping =====
 		public KeyCode	keyJump;

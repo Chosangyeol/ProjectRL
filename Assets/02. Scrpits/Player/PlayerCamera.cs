@@ -19,7 +19,7 @@ namespace Player
 
 		public void Turn(float x, float y, Action callback = null)
 		{
-			if (UserInputConfig.Instance.isAxisYFlipped)
+			if (ConfigUserInput.Instance.isAxisYFlipped)
 				transform.Rotate(Vector3.right, y, Space.Self);
 			else
 				transform.Rotate(Vector3.left, y, Space.Self);
