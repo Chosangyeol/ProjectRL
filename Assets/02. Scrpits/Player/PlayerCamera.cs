@@ -1,4 +1,4 @@
-using Config.UserInput;
+using Config;
 using System;
 using UnityEngine;
 

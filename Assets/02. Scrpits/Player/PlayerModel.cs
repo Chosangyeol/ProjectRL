@@ -8,43 +8,45 @@ namespace Player
 	[RequireComponent(typeof(Rigidbody))]
 	public class PlayerModel : MonoBehaviour
 	{
-		[Header("Movement")]
+		[Header("Components")]
+		private PlayerComponentSkill cpnSkill;
 		[SerializeField]
-		private float _moveSpeed = 7.0f;
+		private PlayerComponentBuff cpnBuff;
 		[SerializeField]
-		private float _jumpForce = 5.0f;
+		private PlayerComponentStat cpnStat;
 
 		private Rigidbody rigid;
 		private bool isGrounded = true;
 
-		public SPlayerStat PlayerState { get; private set; }
 		public bool IsAlive { get; private set; }
 		public bool IsMoveable { get; private set; }
 
-		public event Action ActionCallbackValueChanged;
+		public event Action ActionCallbackSkillChanged;
+		public event Action ActionCallbackBuffChanged;
+		public event Action ActionCallbackStatChanged;
 		public event Action ActionCallbackLanding;
 
 		void Awake()
 		{
 			rigid = GetComponent<Rigidbody>();
+			cpnSkill = new PlayerComponentSkill(this);
+			cpnBuff = new PlayerComponentBuff(this);
+			cpnStat = new PlayerComponentStat();
 			return;
 		}
 
 		public float Move(Vector3 movement, Action callback = null)
 		{
-			Vector3 result;
-
 			if (!IsMoveable)
 				return (0);
-			result = _moveSpeed * movement;
-			transform.position += result;
+			transform.position += movement;
 			callback?.Invoke();
-			return (result.sqrMagnitude);
+			return (movement.sqrMagnitude);
 		}
 
 		public bool Jump(Action callback = null)
 		{
-			return (Jump(_jumpForce, callback));
+			return (Jump(cpnStat.jumpPower, callback));
 		}
 
 		public bool Jump(float jumpForce, Action callback = null)
@@ -53,6 +55,14 @@ namespace Player
 			{
 				rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 				isGrounded = false;
+				cpnStat.CountJump();
+				callback?.Invoke();
+				return (true);
+			}
+			else if (cpnStat.CanJump())
+			{
+				rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+				cpnStat.CountJump();
 				callback?.Invoke();
 				return (true);
 			}
@@ -63,9 +73,10 @@ namespace Player
 		{
 			if (collision.gameObject.CompareTag("Ground"))
 			{
+				cpnStat.ResetJumpCount();
 				isGrounded = true;
+				ActionCallbackLanding?.Invoke();
 			}
-			ActionCallbackLanding?.Invoke();
 			return;
 		}
 	}

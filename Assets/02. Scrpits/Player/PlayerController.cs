@@ -1,4 +1,4 @@
-using Config.UserInput;
+using Config;
 using System;
 using UnityEngine;
 
@@ -11,6 +11,10 @@ namespace Player
 		private PlayerModel _playerModel;
 		[SerializeField]
 		private PlayerCamera _playerCamera;
+
+		[Header("Game Charactor Prefabs")]
+		[SerializeField]
+		private GameObject[] _charactorPrefabs;
 
 		[Header("Input Mouse")]
 		[SerializeField]
@@ -39,6 +43,18 @@ namespace Player
 				Jump();
 			if (isFixedCursor)
 				Turn();
+			return ;
+		}
+
+		public void SetCharactor(int index)
+		{
+			if (index >= _charactorPrefabs.Length)
+				throw (new ArgumentOutOfRangeException());
+			if (_playerModel != null)
+				Destroy(_playerModel.gameObject);
+			GameObject obj = Instantiate(_charactorPrefabs[index], transform);
+
+			_playerModel = obj.GetComponent<PlayerModel>();
 			return ;
 		}
 
