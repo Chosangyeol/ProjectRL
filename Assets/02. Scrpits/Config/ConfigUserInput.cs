@@ -6,7 +6,7 @@ namespace Config.UserInput
 	public class ConfigUserInput : ASingleton<ConfigUserInput>
 	{
 		// ===== KeyCode Mapping =====
-		public KeyCode	keyJump;
+		public KeyCode	keyJump = KeyCode.Space;
 
 		// ===== User Setting =====
 		public bool		isAxisYFlipped = false;

@@ -44,8 +44,7 @@ namespace Player
 
 		public bool Jump(Action callback = null)
 		{
-			Jump(_jumpForce, callback);
-			return (false);
+			return (Jump(_jumpForce, callback));
 		}
 
 		public bool Jump(float jumpForce, Action callback = null)
@@ -54,9 +53,9 @@ namespace Player
 			{
 				rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 				isGrounded = false;
+				callback?.Invoke();
 				return (true);
 			}
-			callback?.Invoke();
 			return (false);
 		}
 
