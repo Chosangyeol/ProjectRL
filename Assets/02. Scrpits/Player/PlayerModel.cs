@@ -17,6 +17,7 @@ namespace Player
 
 		private Rigidbody rigid;
 		private bool isGrounded = true;
+		private float angleY;
 
 		public bool IsAlive { get; private set; }
 		public bool IsMoveable { get; private set; }
@@ -67,6 +68,12 @@ namespace Player
 				return (true);
 			}
 			return (false);
+		}
+
+		public void SetAngleY(float angle)
+		{
+			angleY = angle;
+			return ;
 		}
 
 		private void OnCollisionEnter(Collision collision)

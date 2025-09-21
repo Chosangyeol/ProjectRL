@@ -97,7 +97,7 @@ namespace Player
 			float mouseX = Input.GetAxis("Mouse X") * _mouseRX * Time.deltaTime;
 			float mouseY = Input.GetAxis("Mouse Y") * _mouseRY * Time.deltaTime;
 
-			Camera.Turn(mouseX, mouseY, ActionCallbackTurn);
+			Player.SetAngleY(Camera.Turn(mouseX, mouseY, ActionCallbackTurn));
 			return ;
 		}
 	}
