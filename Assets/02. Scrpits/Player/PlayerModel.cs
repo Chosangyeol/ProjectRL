@@ -1,3 +1,4 @@
+using Player.Item;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,15 +11,25 @@ namespace Player
 	public class PlayerModel : MonoBehaviour
 	{
 		[Header("Components")]
+		[SerializeField]
 		private PlayerComponentSkill cpnSkill;
 		[SerializeField]
 		private PlayerComponentBuff cpnBuff;
 		[SerializeField]
 		private PlayerComponentStat cpnStat;
 
+		[Header("Inventory")]
+		[SerializeField]
+		private Inventory inventory;
+
 		private Rigidbody rigid;
 		private bool isGrounded = true;
 		private Vector3 angleCamera;
+
+		public PlayerComponentSkill Skill { get => cpnSkill; }
+		public PlayerComponentBuff Buff { get => cpnBuff; }
+		public PlayerComponentStat Stat { get => cpnStat; }
+		public Inventory Inventory { get => inventory; }
 
 		public bool IsAlive { get; private set; }
 		public bool IsMoveable { get; private set; }
@@ -34,6 +45,7 @@ namespace Player
 			cpnSkill = new PlayerComponentSkill(this);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat();
+			inventory = new Inventory();
 			cpnStat.speedMove = 3f;
 			cpnStat.speedSprint = 7f;
 			IsMoveable = true;
