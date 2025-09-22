@@ -1,19 +1,25 @@
+using JetBrains.Annotations;
 using System;
 
 namespace Player
 {
-	[Serializable]
 	public class PlayerComponentStat
 	{
-		public int hpCurrent;
 		public int hpMax;
+		public int hpCurrent;
+		public int hpRegenPerSecond;
 		public int shield;
+
+		public int spMax;
+		public int spCurrent;
+		public int spRegenPerSecond;
 
 		public int levelCurrent;
 		public int levelMax;
 		public int expCurrent;
 		public int expMax;
-		
+		public int expExtendWhenLevelUp;
+
 		public float speedMove;
 		public float speedSprint;
 		public float powerDash;
@@ -22,28 +28,59 @@ namespace Player
 		public int jumpCountMax;
 		public float jumpPower;
 
+		public float attackDamage;
 		public float critPercent;
 		public float critDamagePercent;
 
-		public PlayerComponentStat()
+		public PlayerComponentStat(PlayerComponentStatSO so)
 		{
-
+			Equalize(so);
 			return ;
 		}
 
-		// TODO!
-		public bool Healed(int heal)
+		public int AddShield(int add)
 		{
-			if (heal < 0)
-				return (false);
-			hpCurrent = Math.Min(hpCurrent + heal, hpMax);
-			return (true);
+			if (add < 0)
+				return (0);
+			shield += add;
+			if (shield > Int32.MaxValue)
+			{
+				add = shield - Int32.MaxValue;
+				shield = Int32.MaxValue;
+			}
+			return (add);
 		}
 
-		public bool Damaged(int damage)
+		public int RemoveShield(int remove)
 		{
-			if (damage < 0)
-				return (false);
+			if (shield <= 0 || remove <= 0)
+				return (remove);
+			shield -= remove;
+			if (shield < 0)
+			{
+				remove += shield;
+				shield = 0;
+			}
+			return (remove);
+		}
+
+		public int Healed(int heal)
+		{
+			if (heal < 0)
+				return (0);
+			hpCurrent += heal;
+			if (hpCurrent > hpMax)
+			{
+				heal = hpCurrent - hpMax;
+				hpCurrent = hpMax;
+			}
+			return (heal);
+		}
+
+		public int Damaged(int damage)
+		{
+			if (damage <= 0)
+				return (0);
 			if (shield <= damage)
 			{
 				damage -= shield;
@@ -54,13 +91,39 @@ namespace Player
 				shield -= damage;
 				damage = 0;
 			}
-			hpCurrent -= damage;
-			return (true);
+			hpCurrent = Math.Max(hpCurrent - damage, 0);
+			return (damage);
 		}
 
 		public bool IsAlive()
 		{
 			return (hpCurrent > 0);
+		}
+
+		public int AddExp(int exp)
+		{
+			int result = 0;
+
+			if (levelCurrent >= levelMax)
+				return (result);
+			result = LevelUp();
+			return (result);
+		}
+
+		private int LevelUp()
+		{
+			int result = 0;
+
+			while (expCurrent >= expMax)
+			{
+				if (levelCurrent >= levelMax)
+					break ;
+				levelCurrent++;
+				expCurrent -= expMax;
+				expMax += expExtendWhenLevelUp;
+				result++;
+			}
+			return (result);
 		}
 
 		public void CountJump()
@@ -78,6 +141,30 @@ namespace Player
 		public bool CanJump()
 		{
 			return (jumpCountCurrent < jumpCountMax);
+		}
+
+		private void Equalize(PlayerComponentStatSO so)
+		{
+			hpCurrent = hpMax = so.hpMax;
+			hpRegenPerSecond = so.hpRegenPerSecond;
+			shield = 0;
+			spCurrent = spMax = so.spMax;
+			spRegenPerSecond = so.spRegenPerSecond;
+			levelCurrent = 1;
+			levelMax = so.levelMax;
+			expCurrent = 0;
+			expMax = so.expMax;
+			expExtendWhenLevelUp = so.expExtendWhenLevelUp;
+			speedMove = so.speedMove;
+			speedSprint = so.speedSprint;
+			powerDash = so.powerDash;
+			jumpCountCurrent = 0;
+			jumpCountMax = so.jumpCountMax;
+			jumpPower = so.jumpPower;
+			attackDamage = so.attackDamage;
+			critPercent = so.critPercent;
+			critDamagePercent = so.critDamagePercent;
+			return ;
 		}
 	}
 }

@@ -2,7 +2,6 @@ using Player.Item;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Player
@@ -12,16 +11,15 @@ namespace Player
 	{
 		[Header("Components")]
 		[SerializeField]
-		private PlayerComponentSkill cpnSkill;
-		[SerializeField]
-		private PlayerComponentBuff cpnBuff;
-		[SerializeField]
-		private PlayerComponentStat cpnStat;
+		private PlayerComponentStatSO _cpnStatSO;
 
 		[Header("Inventory")]
 		[SerializeField]
 		private Inventory inventory;
 
+		private PlayerComponentSkill cpnSkill;
+		private PlayerComponentBuff cpnBuff;
+		private PlayerComponentStat cpnStat;
 		private Rigidbody rigid;
 		private bool isGrounded = true;
 		private Vector3 angleCamera;
@@ -39,18 +37,22 @@ namespace Player
 		public event Action ActionCallbackStatChanged;
 		public event Action ActionCallbackLanding;
 
+		#region Init
+
 		void Awake()
 		{
 			rigid = GetComponent<Rigidbody>();
 			cpnSkill = new PlayerComponentSkill(this);
 			cpnBuff = new PlayerComponentBuff(this);
-			cpnStat = new PlayerComponentStat();
+			cpnStat = new PlayerComponentStat(_cpnStatSO);
 			inventory = new Inventory();
-			cpnStat.speedMove = 3f;
-			cpnStat.speedSprint = 7f;
 			IsMoveable = true;
 			return;
 		}
+
+		#endregion
+
+		#region Move & Jump &Turn
 
 		public float Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
 		{
@@ -60,11 +62,11 @@ namespace Player
 				return (0);
 			if (isSprint)
 			{
-				speed = cpnStat.speedSprint;
+				speed = _cpnStatSO.speedSprint;
 			}
 			else
 			{
-				speed = cpnStat.speedMove;
+				speed = _cpnStatSO.speedMove;
 			}
 				parent.position += movement * speed;
 			callback?.Invoke();
@@ -73,7 +75,7 @@ namespace Player
 
 		public bool Jump(Action callback = null)
 		{
-			return (Jump(cpnStat.jumpPower, callback));
+			return (Jump(_cpnStatSO.jumpPower, callback));
 		}
 
 		public bool Jump(float jumpForce, Action callback = null)
@@ -82,14 +84,14 @@ namespace Player
 			{
 				rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 				isGrounded = false;
-				cpnStat.CountJump();
+				Stat.CountJump();
 				callback?.Invoke();
 				return (true);
 			}
-			else if (cpnStat.CanJump())
+			else if (Stat.CanJump())
 			{
 				rigid.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-				cpnStat.CountJump();
+				Stat.CountJump();
 				callback?.Invoke();
 				return (true);
 			}
@@ -112,11 +114,56 @@ namespace Player
 		{
 			if (collision.gameObject.CompareTag("Ground"))
 			{
-				cpnStat.ResetJumpCount();
+				Stat.ResetJumpCount();
 				isGrounded = true;
 				ActionCallbackLanding?.Invoke();
 			}
 			return;
 		}
+
+		#endregion
+
+		#region Stat
+
+		public int AddShield(int add)
+		{
+			int result = Stat.AddShield(add);
+
+			ActionCallbackStatChanged?.Invoke();
+			return (result);
+		}
+
+		public int RemoveShield(int remove)
+		{
+			int result = Stat.RemoveShield(remove);
+
+			ActionCallbackStatChanged?.Invoke();
+			return (result);
+		}
+
+		public int Healed(int heal)
+		{
+			int result = Stat.Healed(heal);
+
+			ActionCallbackStatChanged?.Invoke();
+			return (result);
+		}
+
+		// TODO!
+		public int Damaged(AttackInfo info)
+		{
+			throw (new NotImplementedException());
+		}
+
+		public int Damaged(int damage)
+		{
+			int result = Stat.Damaged(damage);
+
+			IsAlive = Stat.IsAlive();
+			ActionCallbackStatChanged?.Invoke();
+			return (result);
+		}
+
+		#endregion
 	}
 }

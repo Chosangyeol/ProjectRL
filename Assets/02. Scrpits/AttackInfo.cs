@@ -14,5 +14,4 @@ public class AttackInfo
 	public GameObject target;
 	public int damage;
 	public ElementType type;
-	public List<BuffInfo> buffs;
 }

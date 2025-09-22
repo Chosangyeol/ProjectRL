@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// TODO!
 public class BuffInfo
 {
 	public GameObject attacker;

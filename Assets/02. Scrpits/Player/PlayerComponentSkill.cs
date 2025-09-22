@@ -2,6 +2,7 @@ using System;
 
 namespace Player
 {
+	// TODO!
 	[Serializable]
 	public class PlayerComponentSkill
 	{
