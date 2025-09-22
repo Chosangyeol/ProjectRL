@@ -14,9 +14,9 @@ namespace Player
 		public int expCurrent;
 		public int expMax;
 		
-		public float speedWalk;
-		public float speedRush;
-		public float speedDash;
+		public float speedMove;
+		public float speedSprint;
+		public float powerDash;
 
 		public int jumpCountCurrent;
 		public int jumpCountMax;

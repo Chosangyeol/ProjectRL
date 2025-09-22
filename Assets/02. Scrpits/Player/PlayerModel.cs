@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Player
@@ -17,7 +18,7 @@ namespace Player
 
 		private Rigidbody rigid;
 		private bool isGrounded = true;
-		private float angleY;
+		private Vector3 angleCamera;
 
 		public bool IsAlive { get; private set; }
 		public bool IsMoveable { get; private set; }
@@ -33,14 +34,27 @@ namespace Player
 			cpnSkill = new PlayerComponentSkill(this);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat();
+			cpnStat.speedMove = 3f;
+			cpnStat.speedSprint = 7f;
+			IsMoveable = true;
 			return;
 		}
 
-		public float Move(Vector3 movement, Action callback = null)
+		public float Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
 		{
+			float speed;
+
 			if (!IsMoveable)
 				return (0);
-			transform.position += movement;
+			if (isSprint)
+			{
+				speed = cpnStat.speedSprint;
+			}
+			else
+			{
+				speed = cpnStat.speedMove;
+			}
+				parent.position += movement * speed;
 			callback?.Invoke();
 			return (movement.sqrMagnitude);
 		}
@@ -70,9 +84,15 @@ namespace Player
 			return (false);
 		}
 
-		public void SetAngleY(float angle)
+		public Quaternion Rotate(Transform parent, float x)
 		{
-			angleY = angle;
+			parent.Rotate(Vector3.up, x, Space.World);
+			return (transform.rotation);
+		}
+
+		public void SetAngle(Vector3 angle)
+		{
+			angleCamera = angle;
 			return ;
 		}
 
