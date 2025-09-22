@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Player
 {
+	[CreateAssetMenu(fileName = "New Player Stat", menuName = "SO/Player Stat")]
 	public class PlayerComponentStatSO : ScriptableObject
 	{
 		[Header("Health Point")]

@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce6bdc403c567ac44bc7de0577f13d18, type: 3}
-  m_Name: Buff
+  m_Script: {fileID: 11500000, guid: a9937f8f4d5ba1e438346c7baa3b9393, type: 3}
+  m_Name: ElementType
   m_EditorClassIdentifier: 
-  all: []
+  all:
+  - {fileID: 11400000, guid: 9961aec50a15f4246ba4bc812999ac07, type: 2}

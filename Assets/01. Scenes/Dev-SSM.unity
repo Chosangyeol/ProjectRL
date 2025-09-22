@@ -343,7 +343,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerCamera: {fileID: 1188151686}
   _cameraTarget: {fileID: 1564277857}
-  _speed: 1
 --- !u!1 &1041881512
 GameObject:
   m_ObjectHideFlags: 0
@@ -942,22 +941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f1a8553303fe6e4d8fe71ba530b23d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cpnStat:
-    hpCurrent: 0
-    hpMax: 0
-    shield: 0
-    levelCurrent: 0
-    levelMax: 0
-    expCurrent: 0
-    expMax: 0
-    speedMove: 0
-    speedSprint: 0
-    powerDash: 0
-    jumpCountCurrent: 0
-    jumpCountMax: 0
-    jumpPower: 0
-    critPercent: 0
-    critDamagePercent: 0
+  _cpnStatSO: {fileID: 11400000, guid: cebee7838d2c7224ca321271738263c7, type: 2}
 --- !u!54 &1956132086
 Rigidbody:
   m_ObjectHideFlags: 0
