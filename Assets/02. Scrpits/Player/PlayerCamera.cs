@@ -1,4 +1,4 @@
-using Config.UserInput;
+using Config;
 using System;
 using UnityEngine;
 
@@ -11,21 +11,24 @@ namespace Player
 		[SerializeField]
 		private Transform _cameraTarget;
 
+		private float nowX = 0f;
+		private float minX = -80f;
+		private float maxX = 70f;
+
 		void Update()
 		{
 			SetCamPos();
 			return ;
 		}
 
-		public void Turn(float x, float y, Action callback = null)
+		public Vector3 Turn(Transform parent, float y)
 		{
-			if (ConfigUserInput.Instance.isAxisYFlipped)
-				transform.Rotate(Vector3.right, y, Space.Self);
-			else
-				transform.Rotate(Vector3.left, y, Space.Self);
-			transform.Rotate(Vector3.up, x, Space.World);
-			callback?.Invoke();
-			return;
+			Vector3 rot = parent.rotation.eulerAngles;
+
+			nowX += y;
+			nowX = Mathf.Clamp(nowX, minX, maxX);
+			transform.rotation = Quaternion.Euler(nowX, rot.y, 0f);
+			return (transform.rotation.eulerAngles);
 		}
 
 		private void SetCamPos()

@@ -57,6 +57,7 @@ namespace UnitySubCore.Singleton
 		private void OnApplicationQuit()
 		{
 			_isDestroyed = true;
+			return ;
 		}
 	}
 }
