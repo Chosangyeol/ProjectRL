@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 
 namespace Player.Component
 {
@@ -7,12 +8,18 @@ namespace Player.Component
 		public PlayerModel playerModel;
 
 		private SPlayerStat origin;
-		public SPlayerStat stat; // TODO!
+		public SPlayerStat stat;
 
 		public PlayerComponentStat(PlayerModel model, PlayerComponentStatSO so)
 		{
 			playerModel = model;
 			Equalize(so);
+			return ;
+		}
+
+		public void AddStat(SPlayerStat add)
+		{
+			origin += add;
 			return ;
 		}
 
@@ -31,7 +38,7 @@ namespace Player.Component
 
 		public int RemoveShield(int remove)
 		{
-			if (stat.shield <= 0 || remove <= 0)
+			if (origin.shield <= 0 || remove <= 0)
 				return (remove);
 			origin.shield -= remove;
 			if (origin.shield < 0)
@@ -125,60 +132,6 @@ namespace Player.Component
 		{
 			origin.Equalize(so);
 
-			return ;
-		}
-	}
-
-	public struct SPlayerStat
-	{
-		public int hpMax;
-		public int hpCurrent;
-		public int hpRegenPerSecond;
-		public int shield;
-
-		public int spMax;
-		public int spCurrent;
-		public int spRegenPerSecond;
-
-		public int levelCurrent;
-		public int levelMax;
-		public int expCurrent;
-		public int expMax;
-		public int expExtendWhenLevelUp;
-
-		public float speedMove;
-		public float speedSprint;
-		public float powerDash;
-
-		public int jumpCountCurrent;
-		public int jumpCountMax;
-		public float jumpPower;
-
-		public float attackDamage;
-		public float critPercent;
-		public float critDamagePercent;
-
-		public void Equalize(PlayerComponentStatSO so)
-		{
-			hpCurrent = hpMax = so.hpMax;
-			hpRegenPerSecond = so.hpRegenPerSecond;
-			shield = 0;
-			spCurrent = spMax = so.spMax;
-			spRegenPerSecond = so.spRegenPerSecond;
-			levelCurrent = 1;
-			levelMax = so.levelMax;
-			expCurrent = 0;
-			expMax = so.expMax;
-			expExtendWhenLevelUp = so.expExtendWhenLevelUp;
-			speedMove = so.speedMove;
-			speedSprint = so.speedSprint;
-			powerDash = so.powerDash;
-			jumpCountCurrent = 0;
-			jumpCountMax = so.jumpCountMax;
-			jumpPower = so.jumpPower;
-			attackDamage = so.attackDamage;
-			critPercent = so.critPercent;
-			critDamagePercent = so.critDamagePercent;
 			return ;
 		}
 	}
