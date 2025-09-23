@@ -1,8 +1,6 @@
-using JetBrains.Annotations;
-using System;
 using UnityEngine;
 
-namespace Player
+namespace Player.Component
 {
 	[CreateAssetMenu(fileName = "New Player Stat", menuName = "SO/Player Stat")]
 	public class PlayerComponentStatSO : ScriptableObject

@@ -1,14 +1,15 @@
+using Info;
 using System;
 using System.Collections.Generic;
 
-namespace Player
+namespace Player.Component
 {
 	// TODO!
 	[Serializable]
 	public class PlayerComponentBuff
 	{
 		private PlayerModel playerModel;
-		private List<BuffInfo> ListBuff;
+		private List<SInfoBuff> ListBuff;
 
 		public PlayerComponentBuff(PlayerModel model)
 		{

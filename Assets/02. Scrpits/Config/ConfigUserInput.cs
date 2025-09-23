@@ -9,24 +9,21 @@ namespace Config
 		public event Action ActionCallbackConfigChanged;
 
 		// ===== KeyCode Mapping =====
-		public KeyCode	keyMoveFront = KeyCode.W;
-		public KeyCode	keyMoveBack = KeyCode.S;
-		public KeyCode	keyMoveLeft = KeyCode.A;
-		public KeyCode	keyMoveRight = KeyCode.D;
+		public KeyCode		keyMoveFront = KeyCode.W;
+		public KeyCode		keyMoveBack = KeyCode.S;
+		public KeyCode		keyMoveLeft = KeyCode.A;
+		public KeyCode		keyMoveRight = KeyCode.D;
 
-		public KeyCode	keySprint = KeyCode.LeftShift;
-		public KeyCode	keyDash = KeyCode.LeftControl;
-		public KeyCode	keyJump = KeyCode.Space;
+		public KeyCode		keySprint = KeyCode.LeftShift;
+		public KeyCode		keyDash = KeyCode.LeftControl;
+		public KeyCode		keyJump = KeyCode.Space;
 
-		public KeyCode	keySkill1 = KeyCode.Q;
-		public KeyCode	keySkill2 = KeyCode.E;
-		public KeyCode	keySkill3 = KeyCode.R;
-		public KeyCode	keySkill4 = KeyCode.G;
+		public KeyCode[]	keySkill = new KeyCode[4] { KeyCode.Q, KeyCode.E, KeyCode.R, KeyCode.G };
 
-		public KeyCode	keyPause = KeyCode.Escape;
+		public KeyCode		keyPause = KeyCode.Escape;
 
 		// ===== User Setting =====
-		public bool		isAxisYFlipped = false;
+		public bool			isAxisYFlipped = false;
 
 		public void OnChangeConfig()
 		{

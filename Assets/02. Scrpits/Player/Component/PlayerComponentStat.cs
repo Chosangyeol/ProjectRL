@@ -1,10 +1,11 @@
-using JetBrains.Annotations;
 using System;
 
-namespace Player
+namespace Player.Component
 {
 	public class PlayerComponentStat
 	{
+		public PlayerModel playerModel;
+
 		public int hpMax;
 		public int hpCurrent;
 		public int hpRegenPerSecond;
@@ -32,8 +33,9 @@ namespace Player
 		public float critPercent;
 		public float critDamagePercent;
 
-		public PlayerComponentStat(PlayerComponentStatSO so)
+		public PlayerComponentStat(PlayerModel model, PlayerComponentStatSO so)
 		{
+			playerModel = model;
 			Equalize(so);
 			return ;
 		}
