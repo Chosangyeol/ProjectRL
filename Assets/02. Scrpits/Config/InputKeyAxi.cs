@@ -1,18 +1,26 @@
-using JetBrains.Annotations;
 using System;
 using UnityEngine;
 
-namespace Player
+namespace Config
 {
 	[Serializable]
-	public struct SInputKeyAxe
+	public class InputKeyAxe
 	{
+		public KeyCode positive;
+		public KeyCode negative;
 		public float axis;
 		public float deadZone;
 		public float sensitivity;
 		public float gravity;
+		
+		public void InitKeyCode(KeyCode positive, KeyCode negative)
+		{
+			this.positive = positive;
+			this.negative = negative;
+			return ;
+		}
 
-		public void Init(float deadZone, float sensitivity, float gravity)
+		public void InitField(float deadZone, float sensitivity, float gravity)
 		{
 			this.deadZone = deadZone;
 			this.sensitivity = sensitivity;
@@ -20,7 +28,7 @@ namespace Player
 			return ;
 		}
 
-		public float GetAxis(KeyCode positive, KeyCode negative, float deltaTime)
+		public float GetAxis(float deltaTime)
 		{
 			float value = 0f;
 
@@ -35,7 +43,6 @@ namespace Player
 				axis = Mathf.MoveTowards(axis, value, sensitivity * deltaTime);
 			else
 				axis = Mathf.MoveTowards(axis, 0, gravity * deltaTime);
-
 			return (axis);
 		}
 	}

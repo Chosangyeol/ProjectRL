@@ -14,31 +14,31 @@ namespace Player
 	{
 		[Header("Components")]
 		[SerializeField]
-		private PlayerComponentStatSO	_cpnStatSO;
+		private PlayerComponentStatSO		_cpnStatSO;
 
 		[Header("Inventory")]
 		[SerializeField]
-		private Inventory				inventory;
+		private Inventory					inventory;
 
-		private PlayerComponentSkill	cpnSkill;
-		private PlayerComponentBuff		cpnBuff;
-		private PlayerComponentStat		cpnStat;
-		private Rigidbody				rigid;
-		private bool					isGrounded = true;
-		private Vector3					angleCamera;
+		private PlayerComponentSkill		cpnSkill;
+		private PlayerComponentBuff			cpnBuff;
+		private PlayerComponentStat			cpnStat;
+		private Rigidbody					rigid;
+		private bool						isGrounded = true;
+		private Vector3						angleCamera;
 
-		public PlayerComponentSkill		Skill { get => cpnSkill; }
-		public PlayerComponentBuff		Buff { get => cpnBuff; }
-		public PlayerComponentStat		Stat { get => cpnStat; }
-		public Inventory				Inventory { get => inventory; }
+		public PlayerComponentSkill			Skill { get => cpnSkill; }
+		public PlayerComponentBuff			Buff { get => cpnBuff; }
+		public PlayerComponentStat			Stat { get => cpnStat; }
+		public Inventory					Inventory { get => inventory; }
 
-		public bool						IsAlive { get; private set; }
-		public bool						IsMoveable { get; private set; }
+		public bool							IsAlive { get; private set; }
+		public bool							IsMoveable { get; private set; }
 
-		public event Action				ActionCallbackSkillChanged;
-		public event Action				ActionCallbackBuffChanged;
-		public event Action				ActionCallbackStatChanged;
-		public event Action				ActionCallbackLanded;
+		public event Action					ActionCallbackSkillChanged;
+		public event Action					ActionCallbackBuffChanged;
+		public event Action					ActionCallbackStatChanged;
+		public event Action					ActionCallbackLanded;
 
 		public delegate void InfoIntHandler(ref SInfoInt info);
 		public delegate void InfoAttackHandler(ref SInfoAttack info);

@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
+using UnitySubCore.Json;
 using UnitySubCore.Singleton;
 
 namespace Config
@@ -8,27 +11,104 @@ namespace Config
 	{
 		public event Action ActionCallbackConfigChanged;
 
-		// ===== KeyCode Mapping =====
-		public KeyCode		keyMoveFront = KeyCode.W;
-		public KeyCode		keyMoveBack = KeyCode.S;
-		public KeyCode		keyMoveLeft = KeyCode.A;
-		public KeyCode		keyMoveRight = KeyCode.D;
+		private readonly string path = "Config/InputSetting";
+		
+		public SInputSetting input;
 
-		public KeyCode		keySprint = KeyCode.LeftShift;
-		public KeyCode		keyDash = KeyCode.LeftControl;
-		public KeyCode		keyJump = KeyCode.Space;
+		private Dictionary<string, KeyCode> dict;
+		private Dictionary<string, InputKeyAxe> axis;
 
-		public KeyCode[]	keySkill = new KeyCode[4] { KeyCode.Q, KeyCode.E, KeyCode.R, KeyCode.G };
+		public ConfigUserInput()
+		{
+			LoadData();
+			SaveData();
+			return;
+		}
 
-		public KeyCode		keyPause = KeyCode.Escape;
+		public bool GetKey(string key)
+		{
+			KeyCode code = GetKeyCode(key);
 
-		// ===== User Setting =====
-		public bool			isAxisYFlipped = false;
+			return (Input.GetKey(code));
+		}
+
+		public bool GetKeyDown(string key)
+		{
+			KeyCode code = GetKeyCode(key);
+
+			return (Input.GetKeyDown(code));
+		}
+
+		public bool GetKeyUp(string key)
+		{
+			KeyCode code = GetKeyCode(key);
+
+			return (Input.GetKeyUp(code));
+		}
+
+		public float GetAxis(string key, float deltaTime)
+		{
+			if (axis.TryGetValue(key, out InputKeyAxe axe))
+				return (axe.GetAxis(deltaTime));
+			throw (new ArgumentException($"{key} is not correct key"));
+		}
+
+		public KeyCode GetKeyCode(string key)
+		{
+			if (dict.TryGetValue(key, out KeyCode result))
+				return (result);
+			throw (new ArgumentException($"{key} is not correct key"));
+		}
+
+		private void SetDict()
+		{
+			FieldInfo[] array = typeof(SInputSetting).GetFields();
+
+			dict = new Dictionary<string, KeyCode>();
+			for (int i = 0; i < array.Length; i++)
+			{
+				FieldInfo field = array[i];
+
+				if (field.FieldType != typeof(KeyCode))
+					continue ;
+				dict[field.Name] = (KeyCode)(field.GetValue(input));
+			}
+			// ==========
+			axis = new Dictionary<string, InputKeyAxe>();
+			
+			axis["Horizontal"] = new InputKeyAxe();
+			axis["Horizontal"].InitKeyCode(input.keyMoveRight, input.keyMoveLeft);
+			axis["Horizontal"].InitField(0.001f, 3f, 3f);
+			axis["Vertical"] = new InputKeyAxe();
+			axis["Vertical"].InitKeyCode(input.keyMoveFront, input.keyMoveBack);
+			axis["Vertical"].InitField(0.001f, 3f, 3f);
+			return ;
+		}
+
+		public void LoadData()
+		{
+			input = SCJson.LoadFromJson<SInputSetting>(path, true);
+			
+			if (input.Equals(default(SInputSetting)))
+			{
+				input.Init();
+			}
+			SetDict();
+			return ;
+		}
+
+		public void SaveData()
+		{
+			SCJson.SaveToJson(input, path, true);
+			return;
+		}
 
 		public void OnChangeConfig()
 		{
+			SetDict();
+			SaveData();
 			ActionCallbackConfigChanged?.Invoke();
-			return ;
+			return;
 		}
 	}
 }
