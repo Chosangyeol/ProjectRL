@@ -22,9 +22,6 @@ namespace Player
 		[SerializeField]
 		private float _mouseRY;
 
-		[Header("Input Key Axis")]
-		[SerializeField]
-		private SInputKeyAxe[] _inputKeyAxis;
 		private bool isFixedCursor = true;
 
 		public PlayerModel Player { get => _playerModel; }
@@ -36,19 +33,13 @@ namespace Player
 
 		private void Awake()
 		{
-			if (_inputKeyAxis.Length < 2)
-			{
-				_inputKeyAxis = new SInputKeyAxe[2];
-				_inputKeyAxis[0].Init(0.001f, 3f, 3f);
-				_inputKeyAxis[1].Init(0.001f, 3f, 3f);
-			}
 			return ;
 		}
 
 		void Update()
 		{
 			Move(Time.deltaTime);
-			if (Input.GetKeyDown(ConfigUserInput.Instance.keyJump))
+			if (ConfigUserInput.Instance.GetKeyDown("keyJump"))
 				Jump();
 			if (isFixedCursor)
 				Turn(Time.deltaTime);
@@ -83,15 +74,15 @@ namespace Player
 
 		private void Move(float timeSecond)
 		{
-			float moveHorizontal = _inputKeyAxis[0].GetAxis(ConfigUserInput.Instance.keyMoveRight, ConfigUserInput.Instance.keyMoveLeft, timeSecond);
-			float moveVertical = _inputKeyAxis[1].GetAxis(ConfigUserInput.Instance.keyMoveFront, ConfigUserInput.Instance.keyMoveBack, timeSecond);
+			float moveHorizontal = ConfigUserInput.Instance.GetAxis("Horizontal", timeSecond);
+			float moveVertical = ConfigUserInput.Instance.GetAxis("Vertical", timeSecond);
 			Vector3 moveCamR = Vector3.Scale(Camera.transform.right, new Vector3(1, 0, 1));
 			Vector3 moveCamF = Vector3.Scale(Camera.transform.forward, new Vector3(1, 0, 1));
 			Vector3 movement = moveCamF.normalized * moveVertical + moveCamR.normalized * moveHorizontal;
 
 			if (movement.sqrMagnitude > 1)
 				movement.Normalize();
-			Player.Move(transform, Time.deltaTime * movement, Input.GetKey(ConfigUserInput.Instance.keySprint), ActionCallbackMove);
+			Player.Move(transform, Time.deltaTime * movement, ConfigUserInput.Instance.GetKey("keySprint"), ActionCallbackMove);
 			return ;
 		}
 

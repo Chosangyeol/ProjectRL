@@ -25,7 +25,9 @@ namespace Player
 		{
 			Vector3 rot = parent.rotation.eulerAngles;
 
-			nowX += y;
+			if (ConfigUserInput.Instance.input.isAxisYFlipped)
+				y = - y;
+			nowX -= y;
 			nowX = Mathf.Clamp(nowX, minX, maxX);
 			transform.rotation = Quaternion.Euler(nowX, rot.y, 0f);
 			return (transform.rotation.eulerAngles);
