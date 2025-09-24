@@ -65,7 +65,7 @@ namespace Player
 			cpnSkill = new PlayerComponentSkill(this);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
-			inventory = new Inventory();
+			inventory = new Inventory(this);
 			IsMoveable = true;
 			return ;
 		}

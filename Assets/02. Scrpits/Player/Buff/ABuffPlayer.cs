@@ -4,20 +4,18 @@ namespace Player.Buff
 {
 	public abstract class ABuffPlayer : IBuffAct
 	{
-		private PlayerModel target;
-		private float remainSecond;
+		protected PlayerModel target;
+		protected float remainSecond;
 		public bool canDiscount;
-
-		public GameObject Target { get; private set; }
-		public BuffType Type { get; private set; }
+		
+		public BuffType Type { get; protected set; }
 		public string Desc { get; protected set; }
 
 		public ABuffPlayer(PlayerModel target, float remainSecond, string desc)
 		{
-			Target = target.gameObject;
+			this.target = target;
 			this.remainSecond = remainSecond;
 			canDiscount = true;
-			this.target = target;
 			Desc = desc;
 			return ;
 		}

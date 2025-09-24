@@ -53,7 +53,7 @@ namespace Player.Component
 			return (result);
 		}
 
-		public void RemoveBuff(ref SInfoBuff buff)
+		public void UnactiveBuff(ref SInfoBuff buff)
 		{
 			buff.act.SetUnactive();
 			return ;

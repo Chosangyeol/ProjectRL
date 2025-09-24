@@ -17,7 +17,5 @@ namespace Player.Item
 			Instantiate(item.itemPrefab, transform);
 			return ;
 		}
-
-
 	}
 }

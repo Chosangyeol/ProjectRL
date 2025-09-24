@@ -2,7 +2,6 @@ using UnityEngine;
 
 public interface IBuffAct
 {
-	public GameObject Target { get; }
 	public BuffType Type { get; }
 
 	public string Desc { get; }
