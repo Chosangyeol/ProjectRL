@@ -6,6 +6,7 @@ namespace Player.Item
 
 		public AItem(ItemDataSO itemData)
 		{
+			this.itemData = itemData;
 			return ;
 		}
 
@@ -14,6 +15,5 @@ namespace Player.Item
 		public abstract bool OnUpdateInventory();
 
 		public abstract void OnRemoveInventory();
-
 	}
 }

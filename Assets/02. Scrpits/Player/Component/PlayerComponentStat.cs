@@ -16,8 +16,8 @@ namespace Player.Component
 		public PlayerComponentStat(PlayerModel model, PlayerComponentStatSO so)
 		{
 			playerModel = model;
-			playerModel.ActionCallbackSkillChanged += () => RecalculateStat();
 			playerModel.ActionCallbackBuffChanged += () => RecalculateStat();
+			playerModel.ActionCallbackItemChanged += () => RecalculateStat();
 			Equalize(so);
 			return ;
 		}

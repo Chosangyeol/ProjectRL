@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Player.Skill;
 
 namespace Player
 {
@@ -14,17 +15,20 @@ namespace Player
 		[Header("Components")]
 		[SerializeField]
 		private PlayerComponentStatSO		_cpnStatSO;
+		[SerializeField]
+		private PlayerSkillDataSO[]			_skillDataSO;
 
 		[Header("Inventory")]
 		[SerializeField]
 		private Inventory					inventory;
+
+		public Vector3						angleCamera;
 
 		private PlayerComponentSkill		cpnSkill;
 		private PlayerComponentBuff			cpnBuff;
 		private PlayerComponentStat			cpnStat;
 		private Rigidbody					rigid;
 		private bool						isGrounded = true;
-		private Vector3						angleCamera;
 
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
@@ -34,9 +38,9 @@ namespace Player
 		public bool							IsAlive { get; private set; }
 		public bool							IsMoveable { get; private set; }
 
-		public event Action					ActionCallbackSkillChanged;
 		public event Action					ActionCallbackBuffChanged;
 		public event Action					ActionCallbackStatChanged;
+		public event Action					ActionCallbackItemChanged;
 		public event Action					ActionCallbackLanded;
 
 		public delegate void InfoIntHandler(ref SInfoInt info);
@@ -48,14 +52,12 @@ namespace Player
 		public event InfoIntHandler			ActionOnBeforeHeal;
 		public event InfoAttackHandler		ActionOnBeforeDamage;
 		public event InfoAttackHandler		ActionOnBeforeDeal;
-		public event InfoBuffHandler		ActionOnBeforeBuff;
 
 		public event Action<SInfoInt>		ActionOnAfterAddShield;
 		public event Action<SInfoInt>		ActionOnAfterRemoveShield;
 		public event Action<SInfoInt>		ActionOnAfterHeal;
 		public event Action<SInfoAttack>	ActionOnAfterDamage;
 		public event Action<SInfoAttack>	ActionOnAfterDeal;
-		public event Action<SInfoBuff>		ActionOnAfterBuff;
 
 		#region UnityEvent
 
@@ -72,7 +74,11 @@ namespace Player
 
 		protected virtual void Update()
 		{
-			cpnBuff.UpdateBuff(Time.deltaTime);
+			if (cpnBuff.UpdateBuff(Time.deltaTime))
+			{
+				ActionCallbackBuffChanged?.Invoke();
+			}
+			cpnSkill.UpdateSkill(Time.deltaTime);
 			return ;
 		}
 
@@ -232,10 +238,21 @@ namespace Player
 
 		#region Buff
 
+		// TODO!
 		public void AddBuff(SInfoBuff info)
 		{
 			cpnBuff.AddBuff(info);
+			ActionCallbackBuffChanged?.Invoke();
 			return ;
+		}
+
+		#endregion
+
+		#region Skill
+
+		public bool UseSkill(short index)
+		{
+			return (cpnSkill.UseSkill(index));
 		}
 
 		#endregion
