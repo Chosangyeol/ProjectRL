@@ -2,8 +2,7 @@ namespace Player.Item
 {
 	public abstract class AItem
 	{
-		protected ItemDataSO itemData;
-		protected string desc;
+		public ItemDataSO itemData;
 
 		public AItem(ItemDataSO itemData)
 		{
@@ -16,9 +15,5 @@ namespace Player.Item
 
 		public abstract void OnRemoveInventory();
 
-		public string GetDesc()
-		{
-			return (desc);
-		}
 	}
 }
