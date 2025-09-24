@@ -9,6 +9,7 @@ namespace Player.Buff
 		public bool canDiscount;
 
 		public GameObject Target { get; private set; }
+		public BuffType Type { get; private set; }
 		public string Desc { get; protected set; }
 
 		public ABuffPlayer(PlayerModel target, float remainSecond, string desc)
@@ -32,7 +33,7 @@ namespace Player.Buff
 
 		public abstract void OnDisable();
 
-		public void SetDisable()
+		public void SetUnactive()
 		{
 			remainSecond = 0f;
 			return ;

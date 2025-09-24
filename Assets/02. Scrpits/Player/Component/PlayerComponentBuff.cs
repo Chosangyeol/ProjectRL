@@ -55,7 +55,7 @@ namespace Player.Component
 
 		public void RemoveBuff(ref SInfoBuff buff)
 		{
-			buff.act.SetDisable();
+			buff.act.SetUnactive();
 			return ;
 		}
 	}
