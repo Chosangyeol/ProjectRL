@@ -1,4 +1,6 @@
+using Player.Skill;
 using System;
+using System.Collections.Generic;
 
 namespace Player.Component
 {
@@ -8,10 +10,33 @@ namespace Player.Component
 	{
 		private PlayerModel playerModel;
 
+		private APlayerSkill[] skills;
+
 		public PlayerComponentSkill(PlayerModel model)
 		{
 			playerModel = model;
+			skills = new APlayerSkill[4];
 			return ;
+		}
+
+		public bool UpdateSkill(float delta)
+		{
+			bool result = false;
+
+			for (int i = 0; i < skills.Length; i++)
+			{
+				skills[i]?.UpdateSkill(delta);
+			}
+			return (result);
+		}
+
+		public bool UseSkill(short index)
+		{
+			if (index > skills.Length || index < 0)
+				return (false);
+			if (skills[index] == null)
+				throw new Exception($"unknown skill {index}");
+			return (skills[index].UseSkill(playerModel));
 		}
 	}
 }

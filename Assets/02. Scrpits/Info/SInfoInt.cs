@@ -2,7 +2,7 @@ using Info;
 using UnityEngine;
 
 // TODO!
-public struct SInfoInt : IInfo<GameObject, GameObject>
+public struct SInfoInt : IInfo
 {
 	public GameObject Source { get; private set; }
 	public GameObject Target { get; private set; }

@@ -62,7 +62,7 @@ namespace Config
 
 		private void SetDict()
 		{
-			FieldInfo[] array = typeof(SInputSetting).GetFields();
+			FieldInfo[] array = typeof(SInputSetting).GetFields(BindingFlags.Public | BindingFlags.Instance);
 
 			dict = new Dictionary<string, KeyCode>();
 			for (int i = 0; i < array.Length; i++)

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Player
 {
+	[RequireComponent(typeof(Rigidbody))]
 	public class PlayerController : MonoBehaviour
 	{
 		[Header("Player Object")]
@@ -30,15 +31,27 @@ namespace Player
 		public event Action ActionCallbackMove;
 		public event Action ActionCallbackJump;
 		public event Action ActionCallbackTurn;
+		public event Action<Index, bool> ActionCallbackTrySkill;
 
 		private void Awake()
 		{
+			SetCharactor(0);
 			return ;
+		}
+
+		protected virtual void OnCollisionEnter(Collision collision)
+		{
+			if (collision.gameObject.CompareTag("Ground"))
+			{
+				Player.OnGround();
+			}
+			return;
 		}
 
 		void Update()
 		{
 			Move(Time.deltaTime);
+			UseSkill();
 			if (ConfigUserInput.Instance.GetKeyDown("keyJump"))
 				Jump();
 			if (isFixedCursor)
@@ -83,6 +96,25 @@ namespace Player
 			if (movement.sqrMagnitude > 1)
 				movement.Normalize();
 			Player.Move(transform, Time.deltaTime * movement, ConfigUserInput.Instance.GetKey("keySprint"), ActionCallbackMove);
+			return ;
+		}
+
+		private void UseSkill()
+		{
+			short index = -1;
+			bool trySkill;
+
+			if (ConfigUserInput.Instance.GetKeyDown("keySkill1"))
+				index = 0;
+			if (ConfigUserInput.Instance.GetKeyDown("keySkill2"))
+				index = 1;
+			if (ConfigUserInput.Instance.GetKeyDown("keySkill3"))
+				index = 2;
+			if (ConfigUserInput.Instance.GetKeyDown("keySkill4"))
+				index = 3;
+			trySkill = Player.UseSkill(index);
+			if (index != -1)
+				ActionCallbackTrySkill?.Invoke(index, trySkill);
 			return ;
 		}
 

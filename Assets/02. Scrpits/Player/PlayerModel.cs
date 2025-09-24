@@ -5,27 +5,30 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Android;
+using Player.Skill;
+using System.Security.Cryptography;
 
 namespace Player
 {
-	[RequireComponent(typeof(Rigidbody))]
 	public class PlayerModel : MonoBehaviour
 	{
 		[Header("Components")]
 		[SerializeField]
 		private PlayerComponentStatSO		_cpnStatSO;
+		[SerializeField]
+		private PlayerSkillDataSO[]			_skillDataSO;
 
 		[Header("Inventory")]
 		[SerializeField]
 		private Inventory					inventory;
+
+		public Vector3						angleCamera;
 
 		private PlayerComponentSkill		cpnSkill;
 		private PlayerComponentBuff			cpnBuff;
 		private PlayerComponentStat			cpnStat;
 		private Rigidbody					rigid;
 		private bool						isGrounded = true;
-		private Vector3						angleCamera;
 
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
@@ -35,9 +38,9 @@ namespace Player
 		public bool							IsAlive { get; private set; }
 		public bool							IsMoveable { get; private set; }
 
-		public event Action					ActionCallbackSkillChanged;
 		public event Action					ActionCallbackBuffChanged;
 		public event Action					ActionCallbackStatChanged;
+		public event Action					ActionCallbackItemChanged;
 		public event Action					ActionCallbackLanded;
 
 		public delegate void InfoIntHandler(ref SInfoInt info);
@@ -49,31 +52,48 @@ namespace Player
 		public event InfoIntHandler			ActionOnBeforeHeal;
 		public event InfoAttackHandler		ActionOnBeforeDamage;
 		public event InfoAttackHandler		ActionOnBeforeDeal;
-		public event InfoBuffHandler		ActionOnBeforeBuff;
 
 		public event Action<SInfoInt>		ActionOnAfterAddShield;
 		public event Action<SInfoInt>		ActionOnAfterRemoveShield;
 		public event Action<SInfoInt>		ActionOnAfterHeal;
 		public event Action<SInfoAttack>	ActionOnAfterDamage;
 		public event Action<SInfoAttack>	ActionOnAfterDeal;
-		public event Action<SInfoBuff>		ActionOnAfterBuff;
 
-		#region Init
+		#region UnityEvent
 
-		void Awake()
+		protected virtual void Awake()
 		{
-			rigid = GetComponent<Rigidbody>();
+			rigid = GetComponentInParent<Rigidbody>();
 			cpnSkill = new PlayerComponentSkill(this);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
-			inventory = new Inventory();
+			inventory = new Inventory(this);
 			IsMoveable = true;
+			return ;
+		}
+
+		protected virtual void Update()
+		{
+			if (cpnBuff.UpdateBuff(Time.deltaTime))
+			{
+				ActionCallbackBuffChanged?.Invoke();
+			}
+			cpnSkill.UpdateSkill(Time.deltaTime);
+			inventory.UpdateItem(Time.deltaTime);
+			return ;
+		}
+
+		public void OnGround()
+		{
+			Stat.ResetJumpCount();
+			isGrounded = true;
+			ActionCallbackLanded?.Invoke();
 			return;
 		}
 
 		#endregion
 
-		#region Move & Jump &Turn
+		#region Move & Jump & Turn
 
 		public float Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
 		{
@@ -81,22 +101,15 @@ namespace Player
 
 			if (!IsMoveable)
 				return (0);
-			if (isSprint)
-			{
-				speed = _cpnStatSO.speedSprint;
-			}
-			else
-			{
-				speed = _cpnStatSO.speedMove;
-			}
-				parent.position += movement * speed;
+			speed = Stat.GetSpeed(isSprint);
+			parent.position += movement * speed;
 			callback?.Invoke();
-			return (movement.sqrMagnitude);
+			return (movement.sqrMagnitude * speed);
 		}
 
 		public bool Jump(Action callback = null)
 		{
-			return (Jump(_cpnStatSO.jumpPower, callback));
+			return (Jump(Stat.GetJumpPower(), callback));
 		}
 
 		public bool Jump(float jumpForce, Action callback = null)
@@ -118,7 +131,7 @@ namespace Player
 			}
 			return (false);
 		}
-
+		
 		public Quaternion Rotate(Transform parent, float x)
 		{
 			parent.Rotate(Vector3.up, x, Space.World);
@@ -131,20 +144,10 @@ namespace Player
 			return ;
 		}
 
-		private void OnCollisionEnter(Collision collision)
-		{
-			if (collision.gameObject.CompareTag("Ground"))
-			{
-				Stat.ResetJumpCount();
-				isGrounded = true;
-				ActionCallbackLanded?.Invoke();
-			}
-			return;
-		}
-
 		#endregion
 
 		#region Stat
+
 		public int AddShield(SInfoInt info)
 		{
 			int result;
@@ -228,6 +231,46 @@ namespace Player
 			ActionOnAfterDeal(info);
 			return (info.damage);
 		}
+
+		#endregion
+
+		#region Buff
+
+		// TODO!
+		public void AddBuff(SInfoBuff info)
+		{
+			cpnBuff.AddBuff(info);
+			ActionCallbackBuffChanged?.Invoke();
+			return ;
+		}
+
+		#endregion
+
+		#region Skill
+
+		public bool UseSkill(short index)
+		{
+			return (cpnSkill.UseSkill(index));
+		}
+
+		#endregion
+
+		#region Item
+
+		public void AddItem(AItem item)
+		{
+			inventory.AddItem(item);
+			ActionCallbackItemChanged?.Invoke();
+			return ;
+		}
+
+		public void RemovevItem(AItem item)
+		{
+			if (inventory.RemoveItem(item))
+				ActionCallbackItemChanged?.Invoke();
+			return ;
+		}
+
 		#endregion
 	}
 }

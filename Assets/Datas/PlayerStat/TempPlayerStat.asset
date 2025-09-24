@@ -23,7 +23,7 @@ MonoBehaviour:
   speedSprint: 7
   powerDash: 0
   jumpCountMax: 0
-  jumpPower: 0
+  jumpPower: 7
   attackDamage: 0
   critPercent: 0
   critDamagePercent: 0
