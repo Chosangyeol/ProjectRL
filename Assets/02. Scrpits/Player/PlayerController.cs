@@ -33,6 +33,7 @@ namespace Player
 
 		private void Awake()
 		{
+			SetCharactor(0);
 			return ;
 		}
 

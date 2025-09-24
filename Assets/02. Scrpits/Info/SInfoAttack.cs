@@ -10,7 +10,7 @@ using UnityEngine;
  */
 namespace Info
 {
-	public struct SInfoAttack : IInfo<GameObject, GameObject>
+	public struct SInfoAttack : IInfo
 	{
 		public GameObject Source { get; private set; }
 		public GameObject Target { get; private set; }

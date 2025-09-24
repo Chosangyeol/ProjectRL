@@ -34,7 +34,7 @@ namespace Player.Component
 		public float critPercent;
 		public float critDamagePercent;
 
-		#region Reflection
+		//#region Reflection
 
 		//private delegate void SetHandler<GType01>(ref SPlayerStat stat, GType01 v);
 		//private static readonly Dictionary<string, Func<SPlayerStat, object>> getters;
@@ -89,7 +89,7 @@ namespace Player.Component
 		//	throw new ArgumentException($"{name} is not a valid field");
 		//}
 
-		#endregion
+		//#endregion
 
 		public void Equalize(PlayerComponentStatSO so)
 		{

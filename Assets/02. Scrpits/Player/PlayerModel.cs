@@ -57,9 +57,9 @@ namespace Player
 		public event Action<SInfoAttack>	ActionOnAfterDeal;
 		public event Action<SInfoBuff>		ActionOnAfterBuff;
 
-		#region Init
+		#region UnityEvent
 
-		void Awake()
+		protected virtual void Awake()
 		{
 			rigid = GetComponent<Rigidbody>();
 			cpnSkill = new PlayerComponentSkill(this);
@@ -67,12 +67,29 @@ namespace Player
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
 			inventory = new Inventory();
 			IsMoveable = true;
+			return ;
+		}
+
+		protected virtual void Update()
+		{
+			cpnBuff.UpdateBuff(Time.deltaTime);
+			return ;
+		}
+
+		protected virtual void OnCollisionEnter(Collision collision)
+		{
+			if (collision.gameObject.CompareTag("Ground"))
+			{
+				Stat.ResetJumpCount();
+				isGrounded = true;
+				ActionCallbackLanded?.Invoke();
+			}
 			return;
 		}
 
 		#endregion
 
-		#region Move & Jump &Turn
+		#region Move & Jump & Turn
 
 		public float Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
 		{
@@ -80,22 +97,15 @@ namespace Player
 
 			if (!IsMoveable)
 				return (0);
-			if (isSprint)
-			{
-				speed = _cpnStatSO.speedSprint;
-			}
-			else
-			{
-				speed = _cpnStatSO.speedMove;
-			}
-				parent.position += movement * speed;
+			speed = Stat.GetSpeed(isSprint);
+			parent.position += movement * speed;
 			callback?.Invoke();
-			return (movement.sqrMagnitude);
+			return (movement.sqrMagnitude * speed);
 		}
 
 		public bool Jump(Action callback = null)
 		{
-			return (Jump(_cpnStatSO.jumpPower, callback));
+			return (Jump(Stat.GetJumpPower(), callback));
 		}
 
 		public bool Jump(float jumpForce, Action callback = null)
@@ -130,20 +140,10 @@ namespace Player
 			return ;
 		}
 
-		private void OnCollisionEnter(Collision collision)
-		{
-			if (collision.gameObject.CompareTag("Ground"))
-			{
-				Stat.ResetJumpCount();
-				isGrounded = true;
-				ActionCallbackLanded?.Invoke();
-			}
-			return;
-		}
-
 		#endregion
 
 		#region Stat
+
 		public int AddShield(SInfoInt info)
 		{
 			int result;
@@ -227,6 +227,17 @@ namespace Player
 			ActionOnAfterDeal(info);
 			return (info.damage);
 		}
+
+		#endregion
+
+		#region Buff
+
+		public void AddBuff(SInfoBuff info)
+		{
+			cpnBuff.AddBuff(info);
+			return ;
+		}
+
 		#endregion
 	}
 }
