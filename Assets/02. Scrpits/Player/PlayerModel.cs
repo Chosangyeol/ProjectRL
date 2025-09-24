@@ -6,10 +6,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
+using System.Security.Cryptography;
 
 namespace Player
 {
-	[RequireComponent(typeof(Rigidbody))]
 	public class PlayerModel : MonoBehaviour
 	{
 		[Header("Components")]
@@ -63,7 +63,7 @@ namespace Player
 
 		protected virtual void Awake()
 		{
-			rigid = GetComponent<Rigidbody>();
+			rigid = GetComponentInParent<Rigidbody>();
 			cpnSkill = new PlayerComponentSkill(this);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
@@ -79,17 +79,15 @@ namespace Player
 				ActionCallbackBuffChanged?.Invoke();
 			}
 			cpnSkill.UpdateSkill(Time.deltaTime);
+			inventory.UpdateItem(Time.deltaTime);
 			return ;
 		}
 
-		protected virtual void OnCollisionEnter(Collision collision)
+		public void OnGround()
 		{
-			if (collision.gameObject.CompareTag("Ground"))
-			{
-				Stat.ResetJumpCount();
-				isGrounded = true;
-				ActionCallbackLanded?.Invoke();
-			}
+			Stat.ResetJumpCount();
+			isGrounded = true;
+			ActionCallbackLanded?.Invoke();
 			return;
 		}
 
@@ -133,7 +131,7 @@ namespace Player
 			}
 			return (false);
 		}
-
+		
 		public Quaternion Rotate(Transform parent, float x)
 		{
 			parent.Rotate(Vector3.up, x, Space.World);
@@ -253,6 +251,24 @@ namespace Player
 		public bool UseSkill(short index)
 		{
 			return (cpnSkill.UseSkill(index));
+		}
+
+		#endregion
+
+		#region Item
+
+		public void AddItem(AItem item)
+		{
+			inventory.AddItem(item);
+			ActionCallbackItemChanged?.Invoke();
+			return ;
+		}
+
+		public void RemovevItem(AItem item)
+		{
+			if (inventory.RemoveItem(item))
+				ActionCallbackItemChanged?.Invoke();
+			return ;
 		}
 
 		#endregion

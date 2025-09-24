@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Player
 {
+	[RequireComponent(typeof(Rigidbody))]
 	public class PlayerController : MonoBehaviour
 	{
 		[Header("Player Object")]
@@ -36,6 +37,15 @@ namespace Player
 		{
 			SetCharactor(0);
 			return ;
+		}
+
+		protected virtual void OnCollisionEnter(Collision collision)
+		{
+			if (collision.gameObject.CompareTag("Ground"))
+			{
+				Player.OnGround();
+			}
+			return;
 		}
 
 		void Update()
@@ -96,11 +106,11 @@ namespace Player
 
 			if (ConfigUserInput.Instance.GetKeyDown("keySkill1"))
 				index = 0;
-			if (ConfigUserInput.Instance.GetKeyDown("keySkill1"))
+			if (ConfigUserInput.Instance.GetKeyDown("keySkill2"))
 				index = 1;
-			if (ConfigUserInput.Instance.GetKeyDown("keySkill1"))
+			if (ConfigUserInput.Instance.GetKeyDown("keySkill3"))
 				index = 2;
-			if (ConfigUserInput.Instance.GetKeyDown("keySkill1"))
+			if (ConfigUserInput.Instance.GetKeyDown("keySkill4"))
 				index = 3;
 			trySkill = Player.UseSkill(index);
 			if (index != -1)

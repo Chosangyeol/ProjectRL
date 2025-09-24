@@ -22,6 +22,7 @@ namespace Player.Component
 		public PlayerComponentBuff(PlayerModel model)
 		{
 			playerModel = model;
+			ListBuff = new List<SInfoBuff>();
 			return ;
 		}
 
@@ -31,6 +32,7 @@ namespace Player.Component
 			info.act.OnEnable();
 			ListBuff.Add(info);
 			ActionAfterAddBuff?.Invoke(info);
+			return ;
 		}
 
 		public bool UpdateBuff(float delta)

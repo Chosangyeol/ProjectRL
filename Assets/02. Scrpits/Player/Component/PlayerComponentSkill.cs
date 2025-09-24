@@ -1,7 +1,6 @@
 using Player.Skill;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace Player.Component
 {
@@ -26,7 +25,7 @@ namespace Player.Component
 
 			for (int i = 0; i < skills.Length; i++)
 			{
-				skills[i].UpdateSkill(delta);
+				skills[i]?.UpdateSkill(delta);
 			}
 			return (result);
 		}
@@ -35,6 +34,8 @@ namespace Player.Component
 		{
 			if (index > skills.Length || index < 0)
 				return (false);
+			if (skills[index] == null)
+				throw new Exception($"unknown skill {index}");
 			return (skills[index].UseSkill(playerModel));
 		}
 	}

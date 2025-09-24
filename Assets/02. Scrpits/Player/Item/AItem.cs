@@ -10,10 +10,10 @@ namespace Player.Item
 			return ;
 		}
 
-		public abstract void OnAddInventory();
+		public abstract void OnAddInventory(PlayerModel model);
 
-		public abstract bool OnUpdateInventory();
+		public abstract bool OnUpdateInventory(PlayerModel model, float delta);
 
-		public abstract void OnRemoveInventory();
+		public abstract void OnRemoveInventory(PlayerModel model);
 	}
 }
