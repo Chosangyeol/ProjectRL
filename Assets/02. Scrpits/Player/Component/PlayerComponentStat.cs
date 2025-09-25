@@ -8,7 +8,9 @@ namespace Player.Component
 		public PlayerModel playerModel;
 
 		private SPlayerStat origin;
-		public SPlayerStat stat;
+		private SPlayerStat stat;
+
+		public SPlayerStat Stat { get => stat; }
 
 		public delegate void StatCalculator(ref SPlayerStat stat);
 		public event StatCalculator ActionCalculateStat;
@@ -22,10 +24,17 @@ namespace Player.Component
 			return ;
 		}
 
-		public void RecalculateStat()
+		private void RecalculateStat()
 		{
 			stat = origin;
 			ActionCalculateStat?.Invoke(ref stat);
+			return ;
+		}
+
+		public void EditOriginStat(StatCalculator calculator)
+		{
+			calculator(ref origin);
+			RecalculateStat();
 			return ;
 		}
 

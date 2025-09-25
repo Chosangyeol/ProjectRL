@@ -4,9 +4,9 @@ namespace Player.Item
 {
 	public class DropItemModel : MonoBehaviour
 	{
-		private ItemDataSO _itemDataSO;
+		private AItemDataSO _itemDataSO;
 
-		public void Init(ItemDataSO item)
+		public void Init(AItemDataSO item)
 		{
 			if (item == null)
 			{

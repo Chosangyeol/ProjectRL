@@ -4,15 +4,15 @@ namespace Player.Skill
 {
 	public abstract class APlayerSkill
 	{
-		public PlayerSkillDataSO dataSO;
+		public APlayerSkillDataSO dataSO;
 		private float coolTime;
 		private float nowTime;
 		private bool canUse;
 
-		public APlayerSkill(PlayerSkillDataSO dataSO, float coolTime)
+		public APlayerSkill(APlayerSkillDataSO dataSO)
 		{
 			this.dataSO = dataSO;
-			this.coolTime = coolTime;
+			this.coolTime = dataSO.coolTime;
 			nowTime = 0f;
 			canUse = true;
 			return ;

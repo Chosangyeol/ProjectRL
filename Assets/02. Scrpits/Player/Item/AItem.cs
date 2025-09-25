@@ -2,9 +2,9 @@ namespace Player.Item
 {
 	public abstract class AItem
 	{
-		public ItemDataSO itemData;
+		public AItemDataSO itemData;
 
-		public AItem(ItemDataSO itemData)
+		public AItem(AItemDataSO itemData)
 		{
 			this.itemData = itemData;
 			return ;

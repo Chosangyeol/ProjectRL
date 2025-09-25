@@ -14,21 +14,21 @@ namespace Player
 	{
 		[Header("Components")]
 		[SerializeField]
-		private PlayerComponentStatSO		_cpnStatSO;
+		protected PlayerComponentStatSO		_cpnStatSO;
 		[SerializeField]
-		private PlayerSkillDataSO[]			_skillDataSO;
+		protected APlayerSkillDataSO[]		_skillDataSO;
 
 		[Header("Inventory")]
 		[SerializeField]
-		private Inventory					inventory;
+		protected Inventory					inventory;
 
 		public Vector3						angleCamera;
 
-		private PlayerComponentSkill		cpnSkill;
-		private PlayerComponentBuff			cpnBuff;
-		private PlayerComponentStat			cpnStat;
-		private Rigidbody					rigid;
-		private bool						isGrounded = true;
+		protected PlayerComponentSkill		cpnSkill;
+		protected PlayerComponentBuff		cpnBuff;
+		protected PlayerComponentStat		cpnStat;
+		protected Rigidbody					rigid;
+		protected bool						isGrounded = true;
 
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
