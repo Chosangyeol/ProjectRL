@@ -89,10 +89,8 @@ namespace Config
 		{
 			input = SCJson.LoadFromJson<SInputSetting>(path, true);
 			
-			if (input.Equals(default(SInputSetting)))
-			{
-				input.Init();
-			}
+
+			input.Init();
 			SetDict();
 			return ;
 		}
