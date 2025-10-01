@@ -18,7 +18,9 @@ namespace Player
 		[SerializeField]
 		protected APlayerSkillDataSO[]		_skillDataSO;
 
-		[Header("Inventory")]
+		[Header("Prefabs")]
+		protected GameObject				_bulletPrefab;
+
 		[SerializeField]
 		protected Inventory					inventory;
 
@@ -64,7 +66,7 @@ namespace Player
 		protected virtual void Awake()
 		{
 			rigid = GetComponentInParent<Rigidbody>();
-			cpnSkill = new PlayerComponentSkill(this);
+			cpnSkill = new PlayerComponentSkill(this, _skillDataSO);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
 			inventory = new Inventory(this);

@@ -41,4 +41,13 @@ namespace Player.Skill
 			return ;
 		}
 	}
+
+	// !TODO
+	//public class PlayerSkill : APlayerSkill
+	//{
+	//	public PlayerSkill(APlayerSkillDataSO dataSO) : base(dataSO)
+	//	{
+	//		return ;
+	//	}
+	//}
 }

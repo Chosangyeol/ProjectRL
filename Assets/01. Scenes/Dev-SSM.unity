@@ -714,6 +714,7 @@ MonoBehaviour:
   _playerCamera: {fileID: 786418686}
   _charactorPrefabs:
   - {fileID: 1097957100818599232, guid: 6b38557f116bd0043bdd152effcd40e9, type: 3}
+  - {fileID: 1097957100818599232, guid: c4f950c8df6b30741b75c89ca5eed349, type: 3}
   _mouseRX: 60
   _mouseRY: 60
 --- !u!54 &1899142733
