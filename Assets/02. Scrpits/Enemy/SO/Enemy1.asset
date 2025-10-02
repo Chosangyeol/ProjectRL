@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 696a2295808824341b044cf6cc0cb2c5, type: 3}
-  m_Name: Test2
+  m_Name: Enemy1
   m_EditorClassIdentifier: 
-  enemyName: 
-  cost: 0
-  weight: 0
-  spawnCount: 0
-  baseHp: 0
-  baseDamage: 0
-  moveSpeed: 0
-  attackSpeed: 0
+  enemyName: Enemy1
+  cost: 20
+  weight: 2
+  spawnCount: 3
+  baseHp: 100
+  baseDamage: 100
+  moveSpeed: 1
+  attackSpeed: 1

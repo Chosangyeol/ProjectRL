@@ -9,7 +9,7 @@ public class EnemySO : ScriptableObject
 
     [Header("스폰 세팅")]
     public int cost;
-    public int weight;
+    public int weight = 1;
     public int spawnCount;
 
     [Header("몬스터 스텟 세팅 (성장)")]

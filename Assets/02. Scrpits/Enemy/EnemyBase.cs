@@ -7,7 +7,6 @@ public class EnemyBase : PoolableMono
     public EnemySO enemySO;
     private EnemyStat Stat;
     
-
     [HideInInspector]
     public Rigidbody rb;
     [HideInInspector]
@@ -23,13 +22,13 @@ public class EnemyBase : PoolableMono
 
     private void OnEnable()
     {
-        
+
     }
     #endregion
 
     public override void Reset()
     {
-        Stat.EnemyReset(enemySO);
+        Stat = new EnemyStat(enemySO);
     }
 
     public void TakeDamage(float amount)
