@@ -36,7 +36,7 @@ public class EnemyBase : PoolableMono
 
     private void Start()
     {
-        //Invoke(fsm.ChangeState())
+
     }
 
     private void Update()
@@ -49,9 +49,9 @@ public class EnemyBase : PoolableMono
         fsm.FixedTick();
     }
 
-    private void OnEnable()
+    public virtual void OnEnable()
     {
-        
+        fsm.ChangeState(new State_Patrol(this, fsm));
     }
     #endregion
 
@@ -60,10 +60,16 @@ public class EnemyBase : PoolableMono
         Stat = new EnemyStat(enemySO);
     }
 
+    public EnemyStat GetStat()
+    {
+        return Stat;
+    }
+
     public void StartAttack()
     {
         if (Time.time - lastAttackTime >= Stat.attackSpeed)
         {
+            
             attackBehavior.ExecuteAttack(this);
             lastAttackTime = Time.time;
         }

@@ -14,20 +14,21 @@ public class State_Patrol : IState
 
     public void OnEnter()
     {
-        enemy.anim.SetBool("isPatrol", true);
-
+        enemy.anim.SetBool("isMoving", true);
+        SetRandomDestination();
     }
 
     public void Tick()
     {
         if (!enemy.agent.hasPath || enemy.agent.remainingDistance < 0.5f)
-        { }
+            SetRandomDestination();
 
         float dist = Vector3.Distance(enemy.transform.position, enemy.player.position);
         if (dist <= enemy.enemySO.detectRange)
         {
             fsm.ChangeState(new State_Chase(enemy, fsm));
         }
+        Debug.Log("Patrol");
     }
 
     public void FixedTick() { }
@@ -36,7 +37,7 @@ public class State_Patrol : IState
 
     private void SetRandomDestination()
     {
-        Vector3 randomPos = Random.insideUnitSphere * enemy.enemySO.patrolRange;
+        Vector3 randomPos = Random.insideUnitSphere * 100f;
         randomPos += enemy.transform.position;
         NavMeshHit hit;
         NavMesh.SamplePosition(randomPos, out hit, enemy.enemySO.patrolRange, 1);

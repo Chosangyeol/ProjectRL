@@ -34,6 +34,7 @@ public class State_Chase : IState
         {
             enemy.agent.SetDestination(enemy.player.position);
         }
+        Debug.Log("Chase");
     }
 
     public void FixedTick() { }

@@ -18,8 +18,8 @@ MonoBehaviour:
   spawnCount: 2
   baseHp: 100
   baseDamage: 100
-  attackRange: 2
+  attackRange: 5
   patrolRange: 10
-  detectRange: 6
-  moveSpeed: 2
+  detectRange: 7
+  moveSpeed: 4
   attackSpeed: 1

@@ -7,6 +7,8 @@ public class EnemyDirector : MonoBehaviour
 {
     [SerializeField]
     private PoolingListSO EnemyList;
+    [SerializeField]
+    private PoolingListSO ProjectileList;
     public float spawnRadius = 15f;
     public float interval = 10f;
 
@@ -21,6 +23,10 @@ public class EnemyDirector : MonoBehaviour
     private void Awake()
     {
         CreateEnemyPool();
+        ProjectileList.PoolList.ForEach(p =>
+        {
+            PoolManager.Instance.CreatePool(p.Prefab, p.Count);
+        });
     }
     private void Start()
     {
@@ -87,6 +93,7 @@ public class EnemyDirector : MonoBehaviour
 
             EnemyBase enemy = PoolManager.Instance.Pop(enemyPrefab.gameObject.name) as EnemyBase;
             enemy.gameObject.transform.position = spanwPos;
+            enemy.agent.Warp(spanwPos);
         }
     }
     #endregion
