@@ -17,6 +17,9 @@ public class EnemySO : ScriptableObject
     public float baseDamage;
 
     [Header("몬스터 스텟 세팅 (고정)")]
+    public float attackRange;
+    public float patrolRange;
+    public float detectRange;
     public float moveSpeed;
     public float attackSpeed;
 
