@@ -91,7 +91,7 @@ namespace Player
 			pool = new PlayerPool(bulletParent);
 			inventory = new Inventory(this);
 			attackCooldown = new WaitForSeconds(_attackCooltime);
-			pool.CreatePool(_bulletPrefab, 5);
+			pool.CreatePool(_bulletPrefab, 40);
 			IsMoveable = true;
 			return ;
 		}
@@ -109,7 +109,8 @@ namespace Player
 
 		protected virtual void OnDestroy()
 		{
-			Destroy(bulletParent.gameObject);
+			if (bulletParent != null)
+				Destroy(bulletParent.gameObject);
 			return ;
 		}
 

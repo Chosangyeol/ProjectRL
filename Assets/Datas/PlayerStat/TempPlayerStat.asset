@@ -24,6 +24,6 @@ MonoBehaviour:
   powerDash: 5
   jumpCountMax: 1
   jumpPower: 7
-  attackDamage: 5
+  attackDamage: 10
   critPercent: 0.5
   critDamagePercent: 1.5
