@@ -31,7 +31,7 @@ public class Projectile : PoolableMono
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("ÇÃ·¹ÀÌ¾î ÀûÁß");
+            Debug.Log("í”Œë ˆì´ì–´ ì ì¤‘");
             PoolManager.Instance.Push(this);
         }
     }

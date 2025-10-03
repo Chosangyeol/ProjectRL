@@ -22,7 +22,7 @@ namespace Player.Component
 			activeSkill = new APlayerSkill[4];
 			for (int i = 0; i < skills.Length; i++)
 			{
-				skills[i] = skillDatas[i].CreateSkill();
+				skills[i] = skillDatas[i]?.CreateSkill();
 			}
 			return ;
 		}

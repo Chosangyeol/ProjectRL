@@ -7,6 +7,13 @@ namespace Player
 	[RequireComponent(typeof(Rigidbody))]
 	public class PlayerController : MonoBehaviour
 	{
+
+#if UNITY_EDITOR
+		[Header("For Unity Editor")]
+		[SerializeField]
+		private int _playerNum;
+#endif
+
 		[Header("Player Object")]
 		[SerializeField]
 		private PlayerModel _playerModel;
@@ -35,7 +42,22 @@ namespace Player
 
 		private void Awake()
 		{
-			SetCharactor(1);
+
+#if UNITY_EDITOR
+			try
+			{
+				SetCharactor(_playerNum);
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e);
+				SetCharactor(0);
+			}
+
+#else
+			SetCharactor(0);
+#endif
+
 			return ;
 		}
 
@@ -50,6 +72,7 @@ namespace Player
 
 		void Update()
 		{
+			Attack(Time.deltaTime);
 			Move(Time.deltaTime);
 			UseSkill();
 			if (ConfigUserInput.Instance.GetKeyDown("keyJump"))
@@ -81,6 +104,15 @@ namespace Player
 			else
 			{
 				Cursor.lockState = CursorLockMode.None;
+			}
+			return ;
+		}
+
+		private void Attack(float timeSecond)
+		{
+			if (Input.GetMouseButton(0))
+			{
+				Player.Attack();
 			}
 			return ;
 		}

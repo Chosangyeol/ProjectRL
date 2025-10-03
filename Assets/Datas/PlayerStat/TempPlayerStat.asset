@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b28d7bfa3c88846815bf460908de3b, type: 3}
   m_Name: TempPlayerStat
   m_EditorClassIdentifier: 
-  hpMax: 0
-  hpRegenPerSecond: 0
-  spMax: 0
-  spRegenPerSecond: 0
-  levelMax: 0
-  expMax: 0
-  expExtendWhenLevelUp: 0
+  hpMax: 100
+  hpRegenPerSecond: 1
+  spMax: 10
+  spRegenPerSecond: 2
+  levelMax: 100
+  expMax: 100
+  expExtendWhenLevelUp: 50
   speedMove: 3
   speedSprint: 7
-  powerDash: 0
-  jumpCountMax: 0
+  powerDash: 5
+  jumpCountMax: 1
   jumpPower: 7
-  attackDamage: 0
-  critPercent: 0
-  critDamagePercent: 0
+  attackDamage: 5
+  critPercent: 0.5
+  critDamagePercent: 1.5

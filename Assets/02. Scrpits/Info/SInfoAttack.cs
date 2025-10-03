@@ -25,5 +25,11 @@ namespace Info
 			this.type = type;
 			return ;
 		}
+
+		public void SetTarget(GameObject target)
+		{
+			Target = target;
+			return ;
+		}
 	}
 }

@@ -28,7 +28,7 @@ namespace Player.Component
 		public float jumpPower;
 
 		[Header("Attack")]
-		public float attackDamage;
+		public int attackDamage;
 		public float critPercent;
 		public float critDamagePercent;
 	}
