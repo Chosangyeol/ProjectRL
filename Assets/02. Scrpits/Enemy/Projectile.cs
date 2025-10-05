@@ -20,7 +20,6 @@ public class Projectile : PoolableMono
 
     private void Update()
     {
-        timer += Time.deltaTime;
         if (Time.time - timer >= destroyTime)
         {
             PoolManager.Instance.Push(this);
