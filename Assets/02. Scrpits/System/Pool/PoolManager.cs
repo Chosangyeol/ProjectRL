@@ -31,7 +31,7 @@ public class PoolManager : MonoBehaviour
         }
 
         PoolableMono item = _pools[prefabName].Pop();
-        Debug.Log(item.name + " ²¨³¿");
+        Debug.Log(item.name + " êº¼ëƒ„");
         item.Reset();
         return item;
     }

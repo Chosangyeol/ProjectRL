@@ -1,11 +1,35 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace Config
 {
 	[Serializable]
 	public struct SInputSetting
 	{
+		public Dictionary<string, KeyCode> GetDefaultKey()
+		{
+			return (new Dictionary<string, KeyCode>
+			{
+				{ "keyMoveFront", KeyCode.W },
+				{ "keyMoveBack",  KeyCode.S },
+				{ "keyMoveLeft",  KeyCode.A },
+				{ "keyMoveRight", KeyCode.D },
+
+				{ "keySprint", KeyCode.LeftShift },
+				{ "keyDash",   KeyCode.LeftControl },
+				{ "keyJump",   KeyCode.Space },
+
+				{ "keySkill1", KeyCode.Q },
+				{ "keySkill2", KeyCode.E },
+				{ "keySkill3", KeyCode.R },
+				{ "keySkill4", KeyCode.G },
+
+				{ "keyPause", KeyCode.Escape }
+			});
+		}
+
 		// ===== KeyCode Mapping =====
 		public KeyCode keyMoveFront;
 		public KeyCode keyMoveBack;
@@ -28,24 +52,14 @@ namespace Config
 
 		public void Init()
 		{
-			// ===== KeyCode Mapping =====
-			keyMoveFront = KeyCode.W;
-			keyMoveBack = KeyCode.S;
-			keyMoveLeft = KeyCode.A;
-			keyMoveRight = KeyCode.D;
-
-			keySprint = KeyCode.LeftShift;
-			keyDash = KeyCode.LeftControl;
-			keyJump = KeyCode.Space;
-
-			keySkill1 = KeyCode.Q;
-			keySkill2 = KeyCode.E;
-			keySkill3 = KeyCode.R;
-			keySkill4 = KeyCode.G;
-			keyPause = KeyCode.Escape;
-
-			// ===== User Setting =====
-			isAxisYFlipped = false;
+			foreach (var field in typeof(SInputSetting).GetFields())
+			{
+				if (field.FieldType == typeof(KeyCode) && (KeyCode)field.GetValue(this) == KeyCode.None)
+				{
+					field.SetValueDirect(__makeref(this), GetDefaultKey()[field.Name]);
+				}
+			}
+			return;
 		}
 	}
 }

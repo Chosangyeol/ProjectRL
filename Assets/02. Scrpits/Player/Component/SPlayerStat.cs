@@ -30,7 +30,7 @@ namespace Player.Component
 		public int jumpCountMax;
 		public float jumpPower;
 
-		public float attackDamage;
+		public int attackDamage;
 		public float critPercent;
 		public float critDamagePercent;
 

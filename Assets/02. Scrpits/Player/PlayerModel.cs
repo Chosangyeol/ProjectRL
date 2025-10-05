@@ -7,33 +7,51 @@ using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
 using System.Security.Cryptography;
+using System.Diagnostics.Tracing;
+using System.Xml.Serialization;
 
 namespace Player
 {
 	public class PlayerModel : MonoBehaviour
 	{
-		[Header("Components")]
-		[SerializeField]
-		private PlayerComponentStatSO		_cpnStatSO;
-		[SerializeField]
-		private PlayerSkillDataSO[]			_skillDataSO;
+		#region define
 
-		[Header("Inventory")]
+		[Header("Stat")]
 		[SerializeField]
-		private Inventory					inventory;
+		protected PlayerComponentStatSO		_cpnStatSO;
+
+		[Header("Attack")]
+		[SerializeField]
+		protected PoolableMono				_bulletPrefab;
+		[SerializeField]
+		protected Transform					_bulletSummonTr;
+		[SerializeField]
+		protected float						_attackCooltime = 0.2f;
+
+		[Header("Skill")]
+		[SerializeField]
+		protected APlayerSkillDataSO[]		_skillDataSO;
+
+		[SerializeField]
+		protected Inventory					inventory;
 
 		public Vector3						angleCamera;
 
-		private PlayerComponentSkill		cpnSkill;
-		private PlayerComponentBuff			cpnBuff;
-		private PlayerComponentStat			cpnStat;
-		private Rigidbody					rigid;
-		private bool						isGrounded = true;
+		protected Transform					bulletParent;
+		protected PlayerComponentSkill		cpnSkill;
+		protected PlayerComponentBuff		cpnBuff;
+		protected PlayerComponentStat		cpnStat;
+		protected Rigidbody					rigid;
+		protected PlayerPool				pool;
+		protected WaitForSeconds			attackCooldown;
+		protected bool						canAttack = true;
+		protected bool						isGrounded = true;
 
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
 		public PlayerComponentStat			Stat { get => cpnStat; }
 		public Inventory					Inventory { get => inventory; }
+		public PlayerPool					Pool { get => pool; }
 
 		public bool							IsAlive { get; private set; }
 		public bool							IsMoveable { get; private set; }
@@ -59,15 +77,21 @@ namespace Player
 		public event Action<SInfoAttack>	ActionOnAfterDamage;
 		public event Action<SInfoAttack>	ActionOnAfterDeal;
 
+		#endregion
+
 		#region UnityEvent
 
 		protected virtual void Awake()
 		{
 			rigid = GetComponentInParent<Rigidbody>();
-			cpnSkill = new PlayerComponentSkill(this);
+			bulletParent = new GameObject("PlayerBulletParent").transform;
+			cpnSkill = new PlayerComponentSkill(this, _skillDataSO);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
+			pool = new PlayerPool(bulletParent);
 			inventory = new Inventory(this);
+			attackCooldown = new WaitForSeconds(_attackCooltime);
+			pool.CreatePool(_bulletPrefab, 40);
 			IsMoveable = true;
 			return ;
 		}
@@ -83,19 +107,18 @@ namespace Player
 			return ;
 		}
 
-		public void OnGround()
+		protected virtual void OnDestroy()
 		{
-			Stat.ResetJumpCount();
-			isGrounded = true;
-			ActionCallbackLanded?.Invoke();
-			return;
+			if (bulletParent != null)
+				Destroy(bulletParent.gameObject);
+			return ;
 		}
 
 		#endregion
 
 		#region Move & Jump & Turn
 
-		public float Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
+		public virtual float Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
 		{
 			float speed;
 
@@ -112,7 +135,7 @@ namespace Player
 			return (Jump(Stat.GetJumpPower(), callback));
 		}
 
-		public bool Jump(float jumpForce, Action callback = null)
+		public virtual bool Jump(float jumpForce, Action callback = null)
 		{
 			if (isGrounded)
 			{
@@ -131,7 +154,15 @@ namespace Player
 			}
 			return (false);
 		}
-		
+
+		public void OnGround()
+		{
+			Stat.ResetJumpCount();
+			isGrounded = true;
+			ActionCallbackLanded?.Invoke();
+			return;
+		}
+
 		public Quaternion Rotate(Transform parent, float x)
 		{
 			parent.Rotate(Vector3.up, x, Space.World);
@@ -146,9 +177,42 @@ namespace Player
 
 		#endregion
 
+		#region Attack
+
+		public virtual void Attack()
+		{
+			if (canAttack)
+			{
+				canAttack = false;
+				Shoot();
+				StartCoroutine(WaitAttack());
+			}
+			return ;
+		}
+
+		public virtual void Shoot(float speed = 5f)
+		{
+			PlayerBullet bullet = pool.Pop(_bulletPrefab.gameObject.name).GetComponent<PlayerBullet>();
+
+			bullet.SetInfo(this);
+			bullet.transform.position = _bulletSummonTr.position;
+			bullet.transform.rotation = Quaternion.Euler(angleCamera);
+			bullet.SetSpeed(speed);
+			return ;
+		}
+
+		private IEnumerator WaitAttack()
+		{
+			yield return (attackCooldown);
+			canAttack = true;
+			yield break ;
+		}
+
+		#endregion
+
 		#region Stat
 
-		public int AddShield(SInfoInt info)
+		public virtual int AddShield(SInfoInt info)
 		{
 			int result;
 
@@ -166,7 +230,7 @@ namespace Player
 			return (result);
 		}
 
-		public int RemoveShield(SInfoInt info)
+		public virtual int RemoveShield(SInfoInt info)
 		{
 			int result;
 
@@ -184,7 +248,7 @@ namespace Player
 			return (result);
 		}
 
-		public int Healed(SInfoInt info)
+		public virtual int Healed(SInfoInt info)
 		{
 			int result;
 
@@ -202,7 +266,7 @@ namespace Player
 			return (result);
 		}
 
-		public int Damaged(SInfoAttack info)
+		public virtual int Damaged(SInfoAttack info)
 		{
 			int result;
 
@@ -221,8 +285,10 @@ namespace Player
 			return (result);
 		}
 	
+
+
 		// TODO!
-		public int Deal(GameObject target, int damage, ElementType type = null)
+		protected virtual int Deal(GameObject target, int damage, ElementType type = null)
 		{
 			SInfoAttack info = new(gameObject, target, damage, type);
 
@@ -237,7 +303,7 @@ namespace Player
 		#region Buff
 
 		// TODO!
-		public void AddBuff(SInfoBuff info)
+		public virtual void AddBuff(SInfoBuff info)
 		{
 			cpnBuff.AddBuff(info);
 			ActionCallbackBuffChanged?.Invoke();
@@ -248,7 +314,7 @@ namespace Player
 
 		#region Skill
 
-		public bool UseSkill(short index)
+		public virtual bool UseSkill(short index)
 		{
 			return (cpnSkill.UseSkill(index));
 		}
