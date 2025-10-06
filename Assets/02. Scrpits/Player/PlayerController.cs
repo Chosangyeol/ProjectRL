@@ -112,7 +112,7 @@ namespace Player
 		{
 			if (Input.GetMouseButton(0))
 			{
-				Player.Attack();
+				Player.Attack(Camera.RaycastByAngle());
 			}
 			return ;
 		}
