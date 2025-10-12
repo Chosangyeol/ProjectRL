@@ -31,7 +31,7 @@ namespace Player
 			nowX -= y;
 			nowX = Mathf.Clamp(nowX, minX, maxX);
 			transform.rotation = Quaternion.Euler(nowX, rot.y, 0f);
-			return (transform.rotation.eulerAngles);
+			return (_playerCamera.transform.forward);
 		}
 
 		public Vector3 RaycastByAngle(Transform origin, Vector3 direction = default, float distance = 50f)

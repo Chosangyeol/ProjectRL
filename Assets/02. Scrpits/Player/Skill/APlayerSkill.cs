@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine.Rendering;
 
 namespace Player.Skill
@@ -18,7 +20,7 @@ namespace Player.Skill
 			return ;
 		}
 
-		public bool UseSkill(PlayerModel model)
+		public virtual bool UseSkill(PlayerModel model)
 		{
 			if (canUse)
 			{
@@ -32,7 +34,7 @@ namespace Player.Skill
 
 		public abstract void Activate(PlayerModel model);
 
-		public void UpdateSkill(float delta)
+		public virtual void UpdateSkill(float delta)
 		{
 			if (canUse)
 				return ;
@@ -42,12 +44,21 @@ namespace Player.Skill
 		}
 	}
 
-	// !TODO
-	//public class PlayerSkill : APlayerSkill
-	//{
-	//	public PlayerSkill(APlayerSkillDataSO dataSO) : base(dataSO)
-	//	{
-	//		return ;
-	//	}
-	//}
+	public class PlayerSkill : APlayerSkill
+	{
+		public static readonly Dictionary<string, Type> skillTypes = new Dictionary<string, Type>()
+		{
+			{ "PlayerSkillDash", typeof(PlayerSkillDash)},
+		};
+
+		public PlayerSkill(PlayerSkillDataSO dataSO) : base(dataSO)
+		{
+			return ;
+		}
+
+		public override void Activate(PlayerModel model)
+		{
+			return ;
+		}
+	}
 }

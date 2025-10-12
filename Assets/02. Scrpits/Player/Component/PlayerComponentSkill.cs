@@ -23,6 +23,10 @@ namespace Player.Component
 			for (int i = 0; i < skills.Length; i++)
 			{
 				skills[i] = skillDatas[i]?.CreateSkill();
+				if (skills[i] != null)
+				{
+					activeSkill[i] = skills[i];
+				}
 			}
 			return ;
 		}

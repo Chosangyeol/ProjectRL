@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
+using JetBrains.Annotations;
 
 namespace Player
 {
@@ -150,6 +151,19 @@ namespace Player
 				return (true);
 			}
 			return (false);
+		}
+
+		public void Dash(Action callback = null)
+		{
+			Dash(Stat.Stat.powerDash);
+			return;
+		}
+
+		public virtual void Dash(float power, Action callback = null)
+		{
+			rigid.velocity = power * angleCamera.normalized;
+			callback?.Invoke();
+			return ;
 		}
 
 		public void OnGround()
@@ -320,6 +334,7 @@ namespace Player
 
 		public virtual bool UseSkill(short index)
 		{
+			Debug.Log($"PlayerModel : Skill {index} use input");
 			return (cpnSkill.UseSkill(index));
 		}
 

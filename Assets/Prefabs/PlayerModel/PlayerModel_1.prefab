@@ -62,7 +62,7 @@ MonoBehaviour:
   _bulletSummonTr: {fileID: 5484158569492881901}
   _attackCooltime: 0.2
   _skillDataSO:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: a5b9fb6aa1e171c43ae64170fbc1e75f, type: 2}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

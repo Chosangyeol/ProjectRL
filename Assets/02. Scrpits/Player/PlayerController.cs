@@ -144,9 +144,11 @@ namespace Player
 				index = 2;
 			if (ConfigUserInput.Instance.GetKeyDown("keySkill4"))
 				index = 3;
-			trySkill = Player.UseSkill(index);
 			if (index != -1)
+			{
+				trySkill = Player.UseSkill(index);
 				ActionCallbackTrySkill?.Invoke(index, trySkill);
+			}
 			return ;
 		}
 
