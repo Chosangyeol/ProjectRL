@@ -35,6 +35,9 @@ namespace Player
 		public PlayerModel Player { get => _playerModel; }
 		public PlayerCamera Camera { get => _playerCamera; }
 
+		public float interactRange;
+		public LayerMask interactLayer;
+
 		public event Action ActionCallbackMove;
 		public event Action ActionCallbackJump;
 		public event Action ActionCallbackTurn;
@@ -79,6 +82,7 @@ namespace Player
 				Jump();
 			if (isFixedCursor)
 				Turn(Time.deltaTime);
+			TryInteract();
 			return ;
 		}
 
@@ -165,6 +169,41 @@ namespace Player
 			Player.SetAngle(Camera.Turn(transform, mouseY));
 			ActionCallbackTurn?.Invoke();
 			return ;
+		}
+
+		private void TryInteract()
+		{
+			if (ConfigUserInput.Instance.GetKeyDown("keyInteract"))
+			{
+                Collider[] colliders = Physics.OverlapSphere(transform.position, interactRange, interactLayer);
+
+                IInteractable target = null;
+                float closestDist = float.MaxValue;
+
+                foreach (var col in colliders)
+                {
+                    if (col.TryGetComponent<IInteractable>(out var interactable))
+                    {
+                        float dist = Vector3.Distance(transform.position, col.transform.position);
+
+                        if (dist < closestDist)
+                        {
+                            closestDist = dist;
+                            target = interactable;
+                        }
+                    }
+                }
+
+                if (target != null)
+                {
+                    target.OnInteract();
+                    Debug.Log("상호작용 실행");
+                }
+                else
+                {
+                    Debug.Log("상호작용 실패");
+                }
+            }
 		}
 	}
 }

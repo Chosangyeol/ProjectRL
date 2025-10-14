@@ -20,6 +20,7 @@ namespace Config
 				{ "keySprint", KeyCode.LeftShift },
 				{ "keyDash",   KeyCode.LeftControl },
 				{ "keyJump",   KeyCode.Space },
+				{ "keyInteract", KeyCode.F },
 
 				{ "keySkill1", KeyCode.Q },
 				{ "keySkill2", KeyCode.E },
@@ -39,6 +40,7 @@ namespace Config
 		public KeyCode keySprint;
 		public KeyCode keyDash;
 		public KeyCode keyJump;
+		public KeyCode keyInteract;
 
 		public KeyCode keySkill1;
 		public KeyCode keySkill2;

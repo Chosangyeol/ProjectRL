@@ -9,12 +9,13 @@ namespace Player.Item
         private AItem _item;
         public string interactName { get; }
 
-        private bool isInRange = false;
-        private Transform player;
+        public bool isInRange = false;
+        public Transform player;
 
         private void OnEnable()
         {
             _item = _itemDataSO.CreateItem();
+            Debug.Log(_item.itemData.itemName);
         }
 
 
@@ -51,7 +52,8 @@ namespace Player.Item
 
         public void OnInteract()
         {
-            TryPickUp(player.GetComponent<PlayerModel>());
+            PlayerModel model = player.GetComponentInChildren<PlayerModel>();
+            TryPickUp(model);
         }
 
         private void TryPickUp(PlayerModel model)

@@ -16,4 +16,4 @@ MonoBehaviour:
   tooltip: "\uD14C\uC2A4\uD2B8\uC6A9 \uCE74\uB4DC \uC124\uBA85"
   itemSprite: {fileID: 0}
   itemPrefab: {fileID: 0}
-  increAmount: 0
+  increAmount: 1
