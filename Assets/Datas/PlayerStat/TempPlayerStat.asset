@@ -21,7 +21,7 @@ MonoBehaviour:
   expExtendWhenLevelUp: 50
   speedMove: 3
   speedSprint: 7
-  powerDash: 5
+  powerDash: 10
   jumpCountMax: 1
   jumpPower: 7
   attackDamage: 10

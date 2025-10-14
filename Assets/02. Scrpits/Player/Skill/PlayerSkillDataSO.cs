@@ -13,13 +13,17 @@ namespace Player.Skill
 		public abstract APlayerSkill CreateSkill();
 	}
 
-	// !TODO
 	[CreateAssetMenu(fileName = "New Player Skill Data", menuName = "SO/Player Skill Data")]
 	public class PlayerSkillDataSO : APlayerSkillDataSO
 	{
+		[SerializeField, SerializeReference]
+		private string skillClassName;
+
 		public override APlayerSkill CreateSkill()
 		{
-			throw (new NotImplementedException());
+			Type type = PlayerSkill.skillTypes[skillClassName];
+
+			return ((APlayerSkill)Activator.CreateInstance(type, this, 0));
 		}
 	}
 }

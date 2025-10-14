@@ -6,9 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
-using System.Security.Cryptography;
-using System.Diagnostics.Tracing;
-using System.Xml.Serialization;
+using JetBrains.Annotations;
 
 namespace Player
 {
@@ -155,6 +153,19 @@ namespace Player
 			return (false);
 		}
 
+		public void Dash(Action callback = null)
+		{
+			Dash(Stat.Stat.powerDash);
+			return;
+		}
+
+		public virtual void Dash(float power, Action callback = null)
+		{
+			rigid.velocity = power * angleCamera.normalized;
+			callback?.Invoke();
+			return ;
+		}
+
 		public void OnGround()
 		{
 			Stat.ResetJumpCount();
@@ -179,26 +190,35 @@ namespace Player
 
 		#region Attack
 
-		public virtual void Attack()
+		public virtual void Attack(Vector3 targetPos)
 		{
 			if (canAttack)
 			{
 				canAttack = false;
-				Shoot();
+				Shoot(targetPos);
 				StartCoroutine(WaitAttack());
 			}
 			return ;
 		}
 
-		public virtual void Shoot(float speed = 5f)
+		public virtual void Shoot(Vector3 targetPos, float speed = 5f, float spread = 0.04f)
 		{
 			PlayerBullet bullet = pool.Pop(_bulletPrefab.gameObject.name).GetComponent<PlayerBullet>();
+			Vector3 direction = GetSpreadDirection((targetPos - _bulletSummonTr.position).normalized, spread);
 
 			bullet.SetInfo(this);
 			bullet.transform.position = _bulletSummonTr.position;
-			bullet.transform.rotation = Quaternion.Euler(angleCamera);
+			bullet.transform.LookAt(_bulletSummonTr.position + direction);
 			bullet.SetSpeed(speed);
 			return ;
+		}
+
+		public Vector3 GetSpreadDirection(Vector3 forward, float spread = 0.04f)
+		{
+			Vector3 random = UnityEngine.Random.insideUnitSphere * spread;
+			Vector3 direction = (forward + random).normalized;
+
+			return (direction);
 		}
 
 		private IEnumerator WaitAttack()
@@ -284,8 +304,6 @@ namespace Player
 			ActionCallbackStatChanged?.Invoke();
 			return (result);
 		}
-	
-
 
 		// TODO!
 		protected virtual int Deal(GameObject target, int damage, ElementType type = null)
@@ -316,6 +334,7 @@ namespace Player
 
 		public virtual bool UseSkill(short index)
 		{
+			Debug.Log($"PlayerModel : Skill {index} use input");
 			return (cpnSkill.UseSkill(index));
 		}
 

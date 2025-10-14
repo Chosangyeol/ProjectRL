@@ -40,20 +40,28 @@ namespace Player
 		{
 			if (other.CompareTag("Enemy"))
 			{
-				EnemyBase enemy = other.GetComponent<EnemyBase>();
-				SPlayerStat stat = player.Stat.Stat;
-				SInfoAttack info;
-
-				if (enemy == null || !enemy.gameObject.activeInHierarchy)
-					return ;
-				if (Random.Range(0f, 1f) < stat.critPercent)
-					stat.attackDamage = (int)(stat.attackDamage * stat.critDamagePercent);
-				info = new SInfoAttack(player.gameObject, enemy.gameObject, stat.attackDamage);
-				enemy.TakeDamage(info.damage);
-				Debug.Log($"Player attack {enemy.gameObject.name}, Damage {info.damage}");
+				DealDamageToEnemy(other.GetComponent<EnemyBase>());
+			}
+			else if (other.CompareTag("Ground"))
+			{
 				player.Pool.Push(this);
 			}
 			return ;
+		}
+
+		public void DealDamageToEnemy(EnemyBase enemy)
+		{
+			SPlayerStat stat = player.Stat.Stat;
+			SInfoAttack info;
+
+			if (enemy == null || !enemy.gameObject.activeInHierarchy)
+				return;
+			if (Random.Range(0f, 1f) < stat.critPercent)
+				stat.attackDamage = (int)(stat.attackDamage * stat.critDamagePercent);
+			info = new SInfoAttack(player.gameObject, enemy.gameObject, stat.attackDamage);
+			enemy.TakeDamage(info.damage);
+			Debug.Log($"Player attack {enemy.gameObject.name}, Damage {info.damage}");
+			player.Pool.Push(this);
 		}
 
 		public void SetInfo(PlayerModel player)
