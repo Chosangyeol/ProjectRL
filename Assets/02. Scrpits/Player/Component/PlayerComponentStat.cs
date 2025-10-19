@@ -18,13 +18,13 @@ namespace Player.Component
 		public PlayerComponentStat(PlayerModel model, PlayerComponentStatSO so)
 		{
 			playerModel = model;
-			playerModel.ActionCallbackBuffChanged += () => RecalculateStat();
-			playerModel.ActionCallbackItemChanged += () => RecalculateStat();
+			playerModel.ActionCallbackBuffChanged += RecalculateStat;
+			playerModel.ActionCallbackItemChanged += RecalculateStat;
 			Equalize(so);
 			return ;
 		}
 
-		private void RecalculateStat()
+		private void RecalculateStat(PlayerModel model = null)
 		{
 			stat = origin;
 			ActionCalculateStat?.Invoke(ref stat);

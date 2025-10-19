@@ -42,14 +42,10 @@ namespace Player
 			{
 				DealDamageToEnemy(other.GetComponent<EnemyBase>());
 			}
-			else if (other.CompareTag("Ground"))
-			{
-				player.Pool.Push(this);
-			}
 			return ;
 		}
 
-		public void DealDamageToEnemy(EnemyBase enemy)
+		public virtual void DealDamageToEnemy(EnemyBase enemy)
 		{
 			SPlayerStat stat = player.Stat.Stat;
 			SInfoAttack info;
@@ -64,9 +60,10 @@ namespace Player
 			player.Pool.Push(this);
 		}
 
-		public void SetInfo(PlayerModel player)
+		public void SetInfo(PlayerModel player, float destroyTime = 10.0f)
 		{
 			this.player = player;
+			this.destroyTime = destroyTime;
 			return ;
 		}
 

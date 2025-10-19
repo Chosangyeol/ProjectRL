@@ -11,37 +11,37 @@ namespace Player
 #if UNITY_EDITOR
 		[Header("For Unity Editor")]
 		[SerializeField]
-		private int _playerNum;
+		private int							_playerNum;
 #endif
 
 		[Header("Player Object")]
 		[SerializeField]
-		private PlayerModel _playerModel;
+		private PlayerModel					_playerModel;
 		[SerializeField]
-		private PlayerCamera _playerCamera;
+		private PlayerCamera				_playerCamera;
 
 		[Header("Game Charactor Prefabs")]
 		[SerializeField]
-		private GameObject[] _charactorPrefabs;
+		private GameObject[]				_charactorPrefabs;
 
 		[Header("Input Mouse")]
 		[SerializeField]
-		private float _mouseRX;
+		private float						_mouseRX;
 		[SerializeField]
-		private float _mouseRY;
+		private float						_mouseRY;
 
-		private bool isFixedCursor = true;
+		private bool						isFixedCursor = true;
 
-		public PlayerModel Player { get => _playerModel; }
-		public PlayerCamera Camera { get => _playerCamera; }
+		public PlayerModel					Player { get => _playerModel; }
+		public PlayerCamera					Camera { get => _playerCamera; }
 
-		public float interactRange;
-		public LayerMask interactLayer;
+		public float						interactRange;
+		public LayerMask					interactLayer;
 
-		public event Action ActionCallbackMove;
-		public event Action ActionCallbackJump;
-		public event Action ActionCallbackTurn;
-		public event Action<Index, bool> ActionCallbackTrySkill;
+		public event Action					ActionCallbackMove;
+		public event Action					ActionCallbackJump;
+		public event Action					ActionCallbackTurn;
+		public event Action<short, bool>	ActionCallbackTrySkill;
 
 		private void Awake()
 		{
@@ -95,6 +95,7 @@ namespace Player
 			GameObject obj = Instantiate(_charactorPrefabs[index], transform);
 
 			_playerModel = obj.GetComponent<PlayerModel>();
+			_playerModel.SetRaycaster(Camera);
 			return ;
 		}
 
@@ -139,18 +140,31 @@ namespace Player
 		{
 			short index = -1;
 			bool trySkill;
+			KeyCode skillKey = KeyCode.None;
 
 			if (ConfigUserInput.Instance.GetKeyDown("keySkill1"))
+			{
 				index = 0;
+				skillKey = ConfigUserInput.Instance.GetKeyCode("keySkill1");
+			}
 			if (ConfigUserInput.Instance.GetKeyDown("keySkill2"))
+			{
 				index = 1;
+				skillKey = ConfigUserInput.Instance.GetKeyCode("keySkill2");
+			}
 			if (ConfigUserInput.Instance.GetKeyDown("keySkill3"))
+			{
 				index = 2;
+				skillKey = ConfigUserInput.Instance.GetKeyCode("keySkill3");
+			}
 			if (ConfigUserInput.Instance.GetKeyDown("keySkill4"))
+			{
 				index = 3;
+				skillKey = ConfigUserInput.Instance.GetKeyCode("keySkill4");
+			}
 			if (index != -1)
 			{
-				trySkill = Player.UseSkill(index);
+				trySkill = Player.UseSkill(index, skillKey);
 				ActionCallbackTrySkill?.Invoke(index, trySkill);
 			}
 			return ;
@@ -177,35 +191,35 @@ namespace Player
 		{
 			if (ConfigUserInput.Instance.GetKeyDown("keyInteract"))
 			{
-                Collider[] colliders = Physics.OverlapSphere(transform.position, interactRange, interactLayer);
+				Collider[] colliders = Physics.OverlapSphere(transform.position, interactRange, interactLayer);
 
-                IInteractable target = null;
-                float closestDist = float.MaxValue;
+				IInteractable target = null;
+				float closestDist = float.MaxValue;
 
-                foreach (var col in colliders)
-                {
-                    if (col.TryGetComponent<IInteractable>(out var interactable))
-                    {
-                        float dist = Vector3.Distance(transform.position, col.transform.position);
+				foreach (var col in colliders)
+				{
+					if (col.TryGetComponent<IInteractable>(out var interactable))
+					{
+						float dist = Vector3.Distance(transform.position, col.transform.position);
 
-                        if (dist < closestDist)
-                        {
-                            closestDist = dist;
-                            target = interactable;
-                        }
-                    }
-                }
+						if (dist < closestDist)
+						{
+							closestDist = dist;
+							target = interactable;
+						}
+					}
+				}
 
-                if (target != null)
-                {
-                    target.OnInteract();
-                    Debug.Log("»óÈ£ÀÛ¿ë ½ÇÇà");
-                }
-                else
-                {
-                    Debug.Log("»óÈ£ÀÛ¿ë ½ÇÆÐ");
-                }
-            }
+				if (target != null)
+				{
+					target.OnInteract();
+					Debug.Log("ìƒí˜¸ìž‘ìš© ì‹¤í–‰");
+				}
+				else
+				{
+					Debug.Log("ìƒí˜¸ìž‘ìš© ì‹¤íŒ¨");
+				}
+			}
 		}
 	}
 }

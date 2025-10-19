@@ -1,11 +1,9 @@
 using Config;
-using System;
-using System.Text;
 using UnityEngine;
 
 namespace Player
 {
-	public class PlayerCamera : MonoBehaviour
+	public class PlayerCamera : MonoBehaviour, IRaycastable
 	{
 		[SerializeField]
 		private Camera _playerCamera;
@@ -59,6 +57,11 @@ namespace Player
 				result = origin + direction.normalized * distance;
 			}
 			return (result);
+		}
+
+		public Vector3 GetRaycastHitPoint()
+		{
+			return (RaycastByAngle());
 		}
 
 		private void SetCamPos()

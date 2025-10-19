@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Player.Component
 {
@@ -42,13 +43,13 @@ namespace Player.Component
 			return (result);
 		}
 
-		public bool UseSkill(short index)
+		public bool UseSkill(short index, KeyCode skillKey)
 		{
 			if (index > activeSkill.Length || index < 0)
 				return (false);
 			if (activeSkill[index] == null)
 				throw new Exception($"unknown skill {index}");
-			return (activeSkill[index].UseSkill(playerModel));
+			return (activeSkill[index].UseSkill(playerModel, skillKey));
 		}
 
 		public bool SetSkill(short targetIndex, short skillIndex)

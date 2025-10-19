@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace Player.Skill
 {
-	public class PlayerSkillDash : PlayerSkill
+	public class PlayerSkillBuckShot : PlayerSkill
 	{
-		public PlayerSkillDash(PlayerSkillDataSO dataSO, int tmp) : base(dataSO)
+		public PlayerSkillBuckShot(PlayerSkillDataSO dataSO, int tmp) : base(dataSO)
 		{
 			return ;
 		}
 
 		public override IEnumerator SkillCoroutine(PlayerModel model, KeyCode skillKey)
 		{
-			model.Dash();
+			model.Shoot("BuckShot", 7f, 0f);
 			yield break ;
 		}
 	}

@@ -58,15 +58,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cpnStatSO: {fileID: 11400000, guid: cebee7838d2c7224ca321271738263c7, type: 2}
-  _bulletPrefab: {fileID: 2847967053485417111, guid: f1e57927fc887d04ea4536496f203e52, type: 3}
+  _bulletPrefabs:
+  - {fileID: 2847967053485417111, guid: f1e57927fc887d04ea4536496f203e52, type: 3}
+  - {fileID: 2847967053485417111, guid: ff7da023a72c6e44ab6bf51f71c66e52, type: 3}
+  - {fileID: 2847967053485417111, guid: 5467dcd7a29e31d4fb355b0a5f708880, type: 3}
   _bulletSummonTr: {fileID: 5484158569492881901}
   _attackCooltime: 0.2
   _skillDataSO:
   - {fileID: 11400000, guid: a5b9fb6aa1e171c43ae64170fbc1e75f, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 5e1caa0f472d6564fb7688ddeee5fbb0, type: 2}
+  - {fileID: 11400000, guid: 255277472b9dff84dbc85393c959d909, type: 2}
   - {fileID: 0}
   angleCamera: {x: 0, y: 0, z: 0}
+  moveDirection: {x: 0, y: 0, z: 0}
 --- !u!23 &607817568511697050
 MeshRenderer:
   m_ObjectHideFlags: 0
