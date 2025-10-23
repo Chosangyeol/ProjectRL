@@ -20,7 +20,7 @@ namespace Player
 			return ;
 		}
 
-		public Vector3 Turn(Transform parent, float y)
+		public Quaternion Turn(Transform parent, float y)
 		{
 			Vector3 rot = parent.rotation.eulerAngles;
 
@@ -29,7 +29,7 @@ namespace Player
 			nowX -= y;
 			nowX = Mathf.Clamp(nowX, minX, maxX);
 			transform.rotation = Quaternion.Euler(nowX, rot.y, 0f);
-			return (_playerCamera.transform.forward);
+			return (_playerCamera.transform.rotation);
 		}
 
 		public Vector3 RaycastByAngle(Transform origin, Vector3 direction = default, float distance = 50f)

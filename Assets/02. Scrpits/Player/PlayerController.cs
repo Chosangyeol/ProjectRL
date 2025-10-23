@@ -182,7 +182,7 @@ namespace Player
 			float mouseY = Input.GetAxis("Mouse Y") * _mouseRY * timeSecond;
 
 			Player.Rotate(transform, mouseX);
-			Player.SetAngle(Camera.Turn(transform, mouseY));
+			Player.SetCameraRotation(Camera.Turn(transform, mouseY));
 			ActionCallbackTurn?.Invoke();
 			return ;
 		}

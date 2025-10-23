@@ -226,6 +226,10 @@ MonoBehaviour:
   - {fileID: 1097957100818599232, guid: c4f950c8df6b30741b75c89ca5eed349, type: 3}
   _mouseRX: 60
   _mouseRY: 60
+  interactRange: 0
+  interactLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!54 &5181564216334671426
 Rigidbody:
   m_ObjectHideFlags: 0

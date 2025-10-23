@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
-using JetBrains.Annotations;
 using System.Reflection;
 
 namespace Player
@@ -34,7 +33,7 @@ namespace Player
 		[SerializeField]
 		protected Inventory					inventory;
 
-		public Vector3						angleCamera;
+		public Quaternion					cameraRotation;
 		public Vector3						moveDirection;
 
 		protected Transform					bulletParent;
@@ -199,9 +198,9 @@ namespace Player
 			return (transform.rotation);
 		}
 
-		public void SetAngle(Vector3 angle)
+		public void SetCameraRotation(Quaternion rotation)
 		{
-			angleCamera = angle;
+			cameraRotation = rotation;
 			return ;
 		}
 
