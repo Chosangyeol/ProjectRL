@@ -12,8 +12,9 @@ namespace Config
 		public event Action ActionCallbackConfigChanged;
 
 		private readonly string path = "Config/InputSetting";
-		
-		public SInputSetting input;
+
+		private SInputSetting input;
+		public SInputSetting InputKey { get => input; private set => input = value; }
 
 		private Dictionary<string, KeyCode> dict;
 		private Dictionary<string, InputKeyAxe> axis;
@@ -71,33 +72,32 @@ namespace Config
 
 				if (field.FieldType != typeof(KeyCode))
 					continue ;
-				dict[field.Name] = (KeyCode)(field.GetValue(input));
+				dict[field.Name] = (KeyCode)(field.GetValue(InputKey));
 			}
 			// ==========
 			axis = new Dictionary<string, InputKeyAxe>();
 			
 			axis["Horizontal"] = new InputKeyAxe();
-			axis["Horizontal"].InitKeyCode(input.keyMoveRight, input.keyMoveLeft);
+			axis["Horizontal"].InitKeyCode(InputKey.keyMoveRight, InputKey.keyMoveLeft);
 			axis["Horizontal"].InitField(0.001f, 3f, 3f);
 			axis["Vertical"] = new InputKeyAxe();
-			axis["Vertical"].InitKeyCode(input.keyMoveFront, input.keyMoveBack);
+			axis["Vertical"].InitKeyCode(InputKey.keyMoveFront, InputKey.keyMoveBack);
 			axis["Vertical"].InitField(0.001f, 3f, 3f);
 			return ;
 		}
 
 		public void LoadData()
 		{
-			input = SCJson.LoadFromJson<SInputSetting>(path, true);
-			
+			InputKey = SCJson.LoadFromJson<SInputSetting>(path, true);
 
-			input.Init();
+			InputKey.Init();
 			SetDict();
 			return ;
 		}
 
 		public void SaveData()
 		{
-			SCJson.SaveToJson(input, path, true);
+			SCJson.SaveToJson(InputKey, path, true);
 			return;
 		}
 

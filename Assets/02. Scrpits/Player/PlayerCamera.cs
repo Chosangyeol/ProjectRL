@@ -24,7 +24,7 @@ namespace Player
 		{
 			Vector3 rot = parent.rotation.eulerAngles;
 
-			if (ConfigUserInput.Instance.input.isAxisYFlipped)
+			if (ConfigUserInput.Instance.InputKey.isAxisYFlipped)
 				y = - y;
 			nowX -= y;
 			nowX = Mathf.Clamp(nowX, minX, maxX);
