@@ -11,6 +11,7 @@ namespace Achievement
 		{
 			Name = "Test_Achievement";
 			IsUnlocked = false;
+			return ;
 		}
 
 		public void Initialize(EventBus eventBus)

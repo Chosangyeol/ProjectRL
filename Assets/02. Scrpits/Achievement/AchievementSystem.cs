@@ -20,7 +20,7 @@ namespace Achievement
 		public void Initailize()
 		{
 			achievements.Clear();
-			// TODO! - setup
+			achievements.Add(new AchievementTest());
 			foreach (IAchievement achievement in achievements)
 			{
 				achievement.Initialize(eventbus);
@@ -35,6 +35,15 @@ namespace Achievement
 				achievement.Shutdown(eventbus);
 			}
 			achievements.Clear();
+			return ;
+		}
+
+		public void AddAchievement(IAchievement achievement)
+		{
+			if (achievements.Find(ac => ac.GetType() == achievement.GetType()) != null)
+				return ;
+			achievements.Add(achievement);
+			achievement.Initialize(eventbus);
 			return ;
 		}
 

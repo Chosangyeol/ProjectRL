@@ -1,3 +1,4 @@
+using Achievement;
 using UnityEngine;
 
 namespace Player
@@ -18,6 +19,13 @@ namespace Player
 		private void TurnGun()
 		{
 			_gunParentTrans.localRotation = Quaternion.Euler(cameraRotation.eulerAngles.x, 0, 0);
+			return ;
+		}
+
+		public override void Shoot(Vector3 targetPos, string name, float speed = 5, float spread = 0.04F)
+		{
+			base.Shoot(targetPos, name, speed, spread);
+			AchievementSystem.Instance.Publish(new SEventTest());
 			return ;
 		}
 	}
