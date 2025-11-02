@@ -36,16 +36,14 @@ public class EventBus
 	{
 		Type type = typeof(GType01);
 		List<Delegate> list;
-		Delegate[] delegates;
 
 		if (!eventDic.TryGetValue(type, out list))
 			return ;
-		delegates = list.ToArray();
-		for (int i = 0; i < delegates.Length; i++)
+		for (int i = 0; i < list.Count; i++)
 		{
 			try
 			{
-				((Action<GType01>)delegates[i])?.Invoke(evt);
+				((Action<GType01>)list[i])?.Invoke(evt);
 			}
 			catch (Exception e)
 			{

@@ -20,7 +20,7 @@ namespace Player
 
 		[Header("Attack")]
 		[SerializeField]
-		protected PoolableMono[]			_bulletPrefabs;
+		protected PlayerBullet[]			_bulletPrefabs;
 		[SerializeField]
 		protected Transform					_bulletSummonTr;
 		[SerializeField]
@@ -259,11 +259,11 @@ namespace Player
 
 			try
 			{
-				bullet = pool.Pop(name).GetComponent<PlayerBullet>();
+				bullet = (pool.Pop(name) as PlayerBullet);
 			}
 			catch (Exception e)
 			{
-				bullet = pool.Pop(_bulletPrefabs[0].gameObject.name).GetComponent<PlayerBullet>();
+				bullet = (pool.Pop(_bulletPrefabs[0].gameObject.name) as PlayerBullet);
 				Debug.LogError($"[PlayerModel_Shoot_Pool]\n{e.Message}");
 			}
 			bullet.SetInfo(this);
