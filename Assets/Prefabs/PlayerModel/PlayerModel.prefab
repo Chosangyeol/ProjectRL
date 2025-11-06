@@ -58,6 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cpnStatSO: {fileID: 11400000, guid: cebee7838d2c7224ca321271738263c7, type: 2}
+  test: {fileID: 7009882177099176503, guid: 68b404a06a5cdc149b1d5312f54c3d7a, type: 3}
   _bulletPrefab: {fileID: 2847967053485417111, guid: f1e57927fc887d04ea4536496f203e52, type: 3}
   _bulletSummonTr: {fileID: 6174526834603475693}
   _attackCooltime: 0.2

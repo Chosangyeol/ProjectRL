@@ -5,15 +5,21 @@ using UnityEngine.Pool;
 
 public class PoolManager : MonoBehaviour
 {
-    public static PoolManager Instance;
+    public static PoolManager Instance { get; private set; }
 
     private Dictionary<string, Pool<PoolableMono>> _pools = new Dictionary<string, Pool<PoolableMono>>();
 
     private Transform _trmParent;
 
-    public PoolManager(Transform trmParent)
+    private void Awake()
     {
-        _trmParent = trmParent;
+        Instance = this;
+
+        GameObject parentObj = new GameObject("PoolRoot");
+        _trmParent = parentObj.transform;
+        _trmParent.SetParent(transform);
+
+        DontDestroyOnLoad(gameObject);
     }
 
     public void CreatePool(PoolableMono prefab, int count = 10)

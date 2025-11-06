@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace Player.Item
 {
-	public class DropItemModel : MonoBehaviour, IInteractable
+	public class DropItemModel : PoolableMono, IInteractable
 	{
 		[SerializeField]
 		private AItemDataSO _itemDataSO;
-        private AItem _item;
+        public AItem _item { get; private set; }
         public string interactName { get; }
 
         public bool isInRange = false;
@@ -62,6 +62,7 @@ namespace Player.Item
                 return;
 
             model.AddItem(_item);
+            PoolManager.Instance.Push(this);
             // 오브젝트풀로 돌리기
         }
         #endregion
