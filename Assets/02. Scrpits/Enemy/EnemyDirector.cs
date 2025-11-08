@@ -23,10 +23,6 @@ public class EnemyDirector : MonoBehaviour
     private void Awake()
     {
         CreateEnemyPool();
-        ProjectileList.PoolList.ForEach(p =>
-        {
-            PoolManager.Instance.CreatePool(p.Prefab, p.Count);
-        });
     }
     private void Start()
     {
@@ -45,7 +41,13 @@ public class EnemyDirector : MonoBehaviour
 
     private void CreateEnemyPool()
     {
+
         EnemyList.PoolList.ForEach(p =>
+        {
+            PoolManager.Instance.CreatePool(p.Prefab, p.Count);
+        });
+
+        ProjectileList.PoolList.ForEach(p =>
         {
             PoolManager.Instance.CreatePool(p.Prefab, p.Count);
         });

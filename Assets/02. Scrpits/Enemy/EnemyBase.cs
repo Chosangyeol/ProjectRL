@@ -23,7 +23,6 @@ public class EnemyBase : PoolableMono
 
     private StateMachine fsm;
 
-
     #region Unity Event
     private void Awake()
     {
@@ -86,6 +85,61 @@ public class EnemyBase : PoolableMono
     
     public void Die()
     {
-        PoolManager.Instance.Push(this);
+        if (Random.Range(0, 100f) <= enemySO.itemDropPersent)
+        {
+            // 아이템 드랍
+            TryDropItem(enemySO.itemDropTable);
+            PoolManager.Instance.Push(this);
+        }
+        else
+        {
+            PoolManager.Instance.Push(this);
+        }
+    }
+
+    // 아이템 드랍
+    public void TryDropItem(DropTableSO table)
+    {
+        if (table == null) return;
+
+        // 드랍될 아이템의 등급 정하기
+        float groupResult = Random.Range(0f, 100f);
+        float groupWeight = 0f;
+
+        DropTableSO.RarityGroup selectedGroup = null;
+
+        foreach (var group in table.rarityGroup)
+        {
+            groupWeight += group.rarityWeight;
+            if (groupResult <= groupWeight)
+            {
+                selectedGroup = group;
+                break;
+            }
+        }
+
+        if (selectedGroup == null || selectedGroup.items.Count == 0) return;
+
+        // 정해진 등급 안에서 아이템 드랍하기
+        float itemResult = Random.Range(0f, 100f);
+        float itemWeight = 0f;
+
+        PoolableMono selectedItem = null;
+
+        foreach (var item in selectedGroup.items)
+        {
+            itemWeight += item.weight;
+            if (itemResult <= itemWeight)
+            {
+                selectedItem = item.item;
+                break;
+            }
+        }
+
+        if (selectedItem != null)
+        {
+            PoolableMono dropItem = PoolManager.Instance.Pop(selectedItem.name);
+            dropItem.gameObject.transform.position = this.gameObject.transform.position;
+        }
     }
 }
