@@ -45,7 +45,7 @@ namespace Player
 
 		private void Awake()
 		{
-
+			FixCursor(isFixedCursor);
 #if UNITY_EDITOR
 			try
 			{

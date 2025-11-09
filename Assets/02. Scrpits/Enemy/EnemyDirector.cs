@@ -45,7 +45,6 @@ public class EnemyDirector : MonoBehaviour
 
     private void CreateEnemyPool()
     {
-        PoolManager.Instance = new PoolManager(transform);
         EnemyList.PoolList.ForEach(p =>
         {
             PoolManager.Instance.CreatePool(p.Prefab, p.Count);

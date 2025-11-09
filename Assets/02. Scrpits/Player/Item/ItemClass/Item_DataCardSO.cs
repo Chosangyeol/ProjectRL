@@ -8,11 +8,22 @@ namespace Player.Item
     public class Item_DataCardSO : AItemDataSO
     {
         public int increAmount;
+        public CanIncreStats canIncreStats;
 
         public override AItem CreateItem()
         {
             return new Item_DataCard(this);
         }
+    }
+
+    public enum CanIncreStats
+    {
+        hpMax = 0,
+        hpRegenPerSecond,
+        speedMove,
+        attackDamage,
+        critPercent,
+        critDamagePercent
     }
 }
 

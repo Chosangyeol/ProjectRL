@@ -49,7 +49,8 @@ namespace Player.Item
 			if (items.Contains(item))
 			{
 				ActionBeforeRemoveItem?.Invoke();
-				items.Remove(item);
+				item.OnRemoveInventory(playerModel);
+                items.Remove(item);
 				ActionAfterRemoveItem?.Invoke();
 				return (true);
 			}
