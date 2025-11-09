@@ -1,8 +1,10 @@
 using Player.Skill;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Player.Component
 {
@@ -42,13 +44,38 @@ namespace Player.Component
 			return (result);
 		}
 
-		public bool UseSkill(short index)
+		public bool UseSkill(short index, KeyCode skillKey)
 		{
 			if (index > activeSkill.Length || index < 0)
 				return (false);
 			if (activeSkill[index] == null)
 				throw new Exception($"unknown skill {index}");
-			return (activeSkill[index].UseSkill(playerModel));
+			return (activeSkill[index].UseSkill(playerModel, skillKey));
+		}
+
+		public bool SetSkill(short targetIndex, string skillName)
+		{
+			if (targetIndex > activeSkill.Length || targetIndex < 0)
+				return (false);
+			try
+			{
+				Type type;
+				APlayerSkill skill;
+
+				if (activeSkill[targetIndex] != null)
+					return (false);
+				type = PlayerSkill.skillTypes[skillName];
+				skill = skills.FirstOrDefault(s => s.GetType() == type);
+				if (skill == null)
+					return (false);
+				SetSkill(targetIndex, skill);
+			}
+			catch (Exception e)
+			{
+				Debug.LogError(e.Message);
+				return (false);
+			}
+			return (true);
 		}
 
 		public bool SetSkill(short targetIndex, short skillIndex)
@@ -59,8 +86,17 @@ namespace Player.Component
 				return (false);
 			if (skills[skillIndex] == null)
 				return (false);
-			activeSkill[targetIndex] = skills[skillIndex];
+			SetSkill(targetIndex, skills[skillIndex]);
 			return (true);
+		}
+
+		private void SetSkill(short targetIndex, APlayerSkill skill)
+		{
+			int idx = Array.FindIndex(activeSkill, a => a.GetType() == skill.GetType());
+			activeSkill[targetIndex] = skill;
+			if (idx != -1)
+				activeSkill[idx] = null;
+			return ;
 		}
 
 		public APlayerSkill[] GetActiveSkill()

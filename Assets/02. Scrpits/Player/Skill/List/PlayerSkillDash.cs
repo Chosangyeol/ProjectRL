@@ -1,4 +1,5 @@
-using UnityEngine.Rendering;
+using System.Collections;
+using UnityEngine;
 
 namespace Player.Skill
 {
@@ -9,10 +10,10 @@ namespace Player.Skill
 			return ;
 		}
 
-		public override void Activate(PlayerModel model)
+		public override IEnumerator SkillCoroutine(PlayerModel model, KeyCode skillKey)
 		{
 			model.Dash();
-			return ;
+			yield break ;
 		}
 	}
 }
