@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,7 +38,7 @@ namespace dron
                 {
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        Player playerScript = player.GetComponent<Player>();
+                        PlayerKM playerScript = player.GetComponent<PlayerKM>();
                         if (playerScript != null && playerScript.money >= 25)
                         {
                             playerScript.money -= 25;

@@ -29,16 +29,16 @@ namespace hpmoney
 
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        Player playerScript = player.GetComponent<Player>();
+                        PlayerKM playerScript = player.GetComponent<PlayerKM>();
                         if (playerScript != null && playerScript.HP >= 25)
                         {
-                            playerScript.HP -= 25; // µ∑ ¬˜∞®
-                            playerScript.money += 25; // «« ¡ı∞°
+                            playerScript.HP -= 25; // Îèà Ï∞®Í∞ê
+                            playerScript.money += 25; // Ìîº Ï¶ùÍ∞Ä
                             isActivated = true;
                         }
                         else
                         {
-                            Debug.Log("«« ∫Œ¡∑.");
+                            Debug.Log("Ìîº Î∂ÄÏ°±.");
                         }
                     }
                 }

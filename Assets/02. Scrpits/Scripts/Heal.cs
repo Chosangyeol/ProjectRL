@@ -8,25 +8,25 @@ namespace heal
 {
     public class Heal : MonoBehaviour
     {
-        public int amt = 25;          // È¸º¹ÇÏ´Â ·®
-        public float dur = 5f;        // È¸º¹ÇÏ´Âµ¥ °É¸®´Â ½Ã°£
-        private float rate;           // ÃÊ´ç È¸º¹·®
+        public int amt = 25;          // íšŒë³µí•˜ëŠ” ëŸ‰
+        public float dur = 5f;        // íšŒë³µí•˜ëŠ”ë° ê±¸ë¦¬ëŠ” ì‹œê°„
+        private float rate;           // ì´ˆë‹¹ íšŒë³µëŸ‰
 
         private bool healing = false;
-        private float prog = 0f;      // ÁøÇàµµ
-        private int done = 0;         // ´©Àû È¸º¹·®
-        private Player player;
+        private float prog = 0f;      // ì§„í–‰ë„
+        private int done = 0;         // ëˆ„ì  íšŒë³µëŸ‰
+        private PlayerKM player;
 
         void Start()
         {
-            rate = amt / dur;         // ÃÊ´ç È¸º¹·® °è»ê
+            rate = amt / dur;         // ì´ˆë‹¹ íšŒë³µëŸ‰ ê³„ì‚°
         }
 
         void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Player"))
             {
-                player = other.GetComponent<Player>();
+                player = other.GetComponent<PlayerKM>();
                 if (player != null)
                 {
                     healing = true;
@@ -47,22 +47,22 @@ namespace heal
 
         void Update()
         {
-            // ÇÃ·¹ÀÌ¾î°¡ ÀÖ°í, ¾ÆÁ÷ È¸º¹ÇÒ ¾çÀÌ ³²¾Æ ÀÖ´Ù¸é
+            // í”Œë ˆì´ì–´ê°€ ìˆê³ , ì•„ì§ íšŒë³µí•  ì–‘ì´ ë‚¨ì•„ ìˆë‹¤ë©´
             if (healing && player != null && done < amt)
             {
-                prog += rate * Time.deltaTime;  // ÁøÇàµµ Áõ°¡
+                prog += rate * Time.deltaTime;  // ì§„í–‰ë„ ì¦ê°€
 
-                int healNow = Mathf.FloorToInt(prog);  // Á¤¼ö ´ÜÀ§ È¸º¹
+                int healNow = Mathf.FloorToInt(prog);  // ì •ìˆ˜ ë‹¨ìœ„ íšŒë³µ
                 if (healNow > 0)
                 {
-                    prog -= healNow;  // ¼Ò¼öÁ¡ ÀÜ¿© À¯Áö
+                    prog -= healNow;  // ì†Œìˆ˜ì  ì”ì—¬ ìœ ì§€
                     int left = amt - done;
-                    int apply = Mathf.Min(healNow, left);  // ³²Àº ¾ç¸¸Å­¸¸ È¸º¹
+                    int apply = Mathf.Min(healNow, left);  // ë‚¨ì€ ì–‘ë§Œí¼ë§Œ íšŒë³µ
 
                     player.HP += apply;
                     done += apply;
 
-                    // ÃÖ´ë Ã¼·Â ÃÊ°ú ¹æÁö
+                    // ìµœëŒ€ ì²´ë ¥ ì´ˆê³¼ ë°©ì§€
                     if (player.HP > 100)
                     {
                         player.HP = 100;

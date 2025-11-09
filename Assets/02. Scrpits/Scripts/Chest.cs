@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 namespace chest
@@ -26,7 +26,7 @@ namespace chest
             {
                 if (!opened && Input.GetKeyDown(KeyCode.E))
                 {
-                    Player pScript = plyr.GetComponent<Player>();
+                    PlayerKM pScript = plyr.GetComponent<PlayerKM>();
                     if (pScript != null && pScript.money >= price)
                     {
                         pScript.money -= price;

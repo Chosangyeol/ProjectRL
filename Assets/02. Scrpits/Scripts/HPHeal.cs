@@ -10,13 +10,13 @@ namespace hpHeal
         private Transform player;
         private bool isActivated = false;
 
-        public GameObject targetObject; // È°¼ºÈ­ÇÒ ¿ÀºêÁ§Æ®
-        public int cost = 25; // »ç¿ëÇÒ µ·
-        public float activeDuration = 4f; // ¿ÀºêÁ§Æ® À¯Áö ½Ã°£(Èú ÀåÆÇ)
+        public GameObject targetObject; // í™œì„±í™”í•  ì˜¤ë¸Œì íŠ¸
+        public int cost = 25; // ì‚¬ìš©í•  ëˆ
+        public float activeDuration = 4f; // ì˜¤ë¸Œì íŠ¸ ìœ ì§€ ì‹œê°„(í ì¥íŒ)
 
         void Start()
         {
-            // ½ÃÀÛÇÒ ¶§ ¿ÀºêÁ§Æ®¸¦ ºñÈ°¼ºÈ­
+            // ì‹œì‘í•  ë•Œ ì˜¤ë¸Œì íŠ¸ë¥¼ ë¹„í™œì„±í™”
             if (targetObject != null)
             {
                 targetObject.SetActive(false);
@@ -39,13 +39,13 @@ namespace hpHeal
                 {
                     if (Input.GetKeyDown(KeyCode.E))
                     {
-                        Player playerScript = player.GetComponent<Player>();
+                        PlayerKM playerScript = player.GetComponent<PlayerKM>();
                         if (playerScript != null && playerScript.money >= cost)
                         {
-                            // µ· Â÷°¨
+                            // ëˆ ì°¨ê°
                             playerScript.money -= cost;
 
-                            // ¿ÀºêÁ§Æ® È°¼ºÈ­
+                            // ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
                             if (targetObject != null)
                             {
                                 targetObject.SetActive(true);
@@ -56,7 +56,7 @@ namespace hpHeal
                         }
                         else
                         {
-                            Debug.Log("µ· ºÎÁ·");
+                            Debug.Log("ëˆ ë¶€ì¡±");
                         }
                     }
                 }

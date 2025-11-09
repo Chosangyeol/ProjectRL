@@ -22,6 +22,7 @@ namespace UI
         {
             obj.SetActive(true);
         }
+
         public void ObjectHide(GameObject obj)
         {
             obj.SetActive(false);

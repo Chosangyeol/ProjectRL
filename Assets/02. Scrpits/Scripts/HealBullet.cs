@@ -25,11 +25,11 @@ namespace healBullet
         {
             if (other.CompareTag("Player"))
             {
-                Player player = other.GetComponent<Player>();
+                PlayerKM player = other.GetComponent<PlayerKM>();
                 if (player != null)
                 {
                     player.HP += healAmount;
-                    Debug.Log("ÇÃ·¹ÀÌ¾î È¸º¹ +" + healAmount + " ¡æ ÇöÀç HP: " + player.HP);
+                    Debug.Log("í”Œë ˆì´ì–´ íšŒë³µ +" + healAmount + " â†’ í˜„ì¬ HP: " + player.HP);
                 }
 
                 Destroy(gameObject);
