@@ -170,7 +170,7 @@ namespace Player
 
 		public void Dash(Action callback = null)
 		{
-			Dash(Stat.Stat.powerDash, moveDirection);
+			Dash(Stat.Stat.powerDash, moveDirection, callback);
 			return;
 		}
 
