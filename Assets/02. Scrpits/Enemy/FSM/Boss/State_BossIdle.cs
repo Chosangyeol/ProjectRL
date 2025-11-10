@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class State_Attack : IState
+public class State_BossIdle : IState
 {
     readonly EnemyBase enemy;
     readonly StateMachine fsm;
 
-    public State_Attack(EnemyBase enemy, StateMachine fsm)
+    public State_BossIdle(EnemyBase enemy, StateMachine fsm)
     {
         this.enemy = enemy;
         this.fsm = fsm;
@@ -15,24 +15,31 @@ public class State_Attack : IState
 
     public void OnEnter()
     {
-        enemy.Agent.ResetPath();
-        enemy.Anim.SetBool("isMoving", false);
+        enemy.Anim.SetBool("isBossIdle", true);
     }
 
     public void Tick()
     {
         float dist = Vector3.Distance(enemy.transform.position, enemy.player.position);
 
-        if (dist > enemy.enemySO.attackRange)
+        if (dist <= enemy.enemySO.attackRange)
         {
-            fsm.ChangeState(new State_Chase(enemy, fsm));
-            return;
+            // АјАн
         }
+        else if (dist <= enemy.enemySO.detectRange)
+        {
 
-        enemy.StartAttack();
+        }
+        Debug.Log("BossIdle");
     }
 
-    public void FixedTick() { }
+    public void FixedTick()
+    {
 
-    public void OnExit() { }
+    }
+
+    public void OnExit()
+    {
+
+    }
 }

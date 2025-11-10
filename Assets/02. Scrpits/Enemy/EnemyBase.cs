@@ -6,31 +6,39 @@ using UnityEngine.AI;
 public class EnemyBase : PoolableMono
 {
     public EnemySO enemySO;
-    private EnemyStat Stat;
+    protected EnemyStat Stat;
 
+    protected NavMeshAgent agent;
     [HideInInspector]
-    public NavMeshAgent agent;
+    public NavMeshAgent Agent => agent;
     [HideInInspector]
-    public Rigidbody rb;
+    protected Rigidbody rb;
+    
+    protected Animator anim;
     [HideInInspector]
-    public Animator anim;
+    public Animator Anim => anim;
     [HideInInspector]
     public float lastAttackTime;
     [HideInInspector]
     public Transform player;
 
-    public IAttackBehavior attackBehavior;
+    protected IAttackBehavior attackBehavior;
+    [HideInInspector]
+    public IAttackBehavior AttackBehavior => attackBehavior;
 
-    private StateMachine fsm;
+    protected StateMachine fsm;
+    [HideInInspector]
+    public StateMachine Fsm => fsm;
 
     #region Unity Event
-    private void Awake()
+    protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         fsm = new StateMachine();
+        Reset();
     }
 
     private void Start()
@@ -48,7 +56,7 @@ public class EnemyBase : PoolableMono
         fsm.FixedTick();
     }
 
-    public virtual void OnEnable()
+    protected virtual void OnEnable()
     {
         fsm.ChangeState(new State_Patrol(this, fsm));
     }
@@ -64,7 +72,7 @@ public class EnemyBase : PoolableMono
         return Stat;
     }
 
-    public void StartAttack()
+    public virtual void StartAttack()
     {
         if (Time.time - lastAttackTime >= Stat.attackSpeed)
         {
@@ -74,7 +82,7 @@ public class EnemyBase : PoolableMono
         }
     }
 
-    public void TakeDamage(float amount)
+    public virtual void TakeDamage(float amount)
     {
         Stat.curHp -= amount;
         if (Stat.curHp <= 0)
@@ -83,7 +91,7 @@ public class EnemyBase : PoolableMono
         }
     }
     
-    public void Die()
+    protected virtual void Die()
     {
         if (Random.Range(0, 100f) <= enemySO.itemDropPersent)
         {
