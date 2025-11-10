@@ -349,7 +349,6 @@ namespace Player
 		public virtual int Damaged(SInfoAttack info)
 		{
 			int result;
-
 			ActionOnBeforeDamage?.Invoke(ref info);
 			result = Damaged(info.damage);
 			ActionOnAfterDamage?.Invoke(info);
@@ -358,9 +357,8 @@ namespace Player
 
 		protected int Damaged(int damage)
 		{
-			int result = Stat.Damaged(damage);
-
-			IsAlive = Stat.IsAlive();
+            int result = Stat.Damaged(damage);
+            IsAlive = Stat.IsAlive();
 			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
 		}

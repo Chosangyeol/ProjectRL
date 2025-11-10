@@ -16,7 +16,7 @@ MonoBehaviour:
   cost: 0
   weight: 0
   spawnCount: 0
-  baseHp: 1000
+  baseHp: 200
   baseDamage: 10
   attackRange: 5
   patrolRange: 0
