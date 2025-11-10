@@ -21,7 +21,7 @@ public class Stage1Boss : BossBase
         lr.positionCount = 2;
         lr.enabled = false;
 
-        
+ 
     }
 
     public override void TakeDamage(float amount)
