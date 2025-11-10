@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -12,25 +13,25 @@ namespace Config
 		{
 			return (new Dictionary<string, KeyCode>
 			{
-				{ "keyMoveFront", KeyCode.W },
-				{ "keyMoveBack",  KeyCode.S },
-				{ "keyMoveLeft",  KeyCode.A },
-				{ "keyMoveRight", KeyCode.D },
+				{ nameof(keyMoveFront), KeyCode.W },
+				{ nameof(keyMoveBack),  KeyCode.S },
+				{ nameof(keyMoveLeft),  KeyCode.A },
+				{ nameof(keyMoveRight), KeyCode.D },
 
-				{ "keySprint", KeyCode.LeftShift },
-				{ "keyDash",   KeyCode.LeftControl },
-				{ "keyJump",   KeyCode.Space },
+				{ nameof(keySprint), KeyCode.LeftShift },
+				{ nameof(keyDash),   KeyCode.LeftControl },
+				{ nameof(keyJump),   KeyCode.Space },
 
-				{ "keyInteract", KeyCode.F },
-				{ "keyInventory", KeyCode.I },
-				{ "keySkillTree", KeyCode.K },
+				{ nameof(keyInteract), KeyCode.F },
+				{ nameof(keyInventory), KeyCode.I },
+				{ nameof(keySkillTree), KeyCode.K },
 
-				{ "keySkill1", KeyCode.Q },
-				{ "keySkill2", KeyCode.E },
-				{ "keySkill3", KeyCode.R },
-				{ "keySkill4", KeyCode.G },
+				{ nameof(keySkill1), KeyCode.Q },
+				{ nameof(keySkill2), KeyCode.E },
+				{ nameof(keySkill3), KeyCode.R },
+				{ nameof(keySkill4), KeyCode.G },
 
-				{ "keyPause", KeyCode.Escape }
+				{ nameof(keyPause), KeyCode.Escape }
 			});
 		}
 
@@ -58,13 +59,21 @@ namespace Config
 		// ===== User Setting =====
 		public bool isAxisYFlipped;
 
-		public void Init()
+		public void Init(ref SInputSetting self)
 		{
-			foreach (var field in typeof(SInputSetting).GetFields())
+			Dictionary<string, KeyCode> defaultKeys = GetDefaultKey();
+			FieldInfo[] fields = typeof(SInputSetting).GetFields(BindingFlags.Public | BindingFlags.Instance);
+
+			for (int i = 0; i < fields.Length; i++)
 			{
-				if (field.FieldType == typeof(KeyCode) && (KeyCode)field.GetValue(this) == KeyCode.None)
+				FieldInfo field = fields[i];
+				if (field.FieldType != typeof(KeyCode))
+					continue ;
+
+				KeyCode currentValue = (KeyCode)field.GetValue(self);
+				if (currentValue == KeyCode.None && defaultKeys.TryGetValue(field.Name, out var defaultValue))
 				{
-					field.SetValueDirect(__makeref(this), GetDefaultKey()[field.Name]);
+					field.SetValueDirect(__makeref(self), defaultValue);
 				}
 			}
 			return;
