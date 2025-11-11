@@ -14,11 +14,5 @@ public class ItemPool : MonoBehaviour
         {
             PoolManager.Instance.CreatePool(p.Prefab,p.Count);
         });
-
-        for (int i = 0; i < 4; i++)
-        {
-            PoolManager.Instance.Pop(test.name);
-
-        }
     }
 }
