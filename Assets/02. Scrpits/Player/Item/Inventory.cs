@@ -1,7 +1,6 @@
 using Info;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 namespace Player.Item
 {
@@ -11,6 +10,8 @@ namespace Player.Item
 		private readonly PlayerModel playerModel;
 
 		private List<AItem> items;
+
+		public List<AItem> Items { get => items; }
 
 		public event Action ActionBeforeAddItem;
 		public event Action ActionAfterAddItem;
