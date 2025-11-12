@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Config;
 using Player.Item;
+using Player;
 
 namespace UI.InventoryUI
 {
@@ -48,7 +49,7 @@ namespace UI.InventoryUI
 
         void Update()
         {
-            if (CUI.GetKeyDown("keyInventory")) // I·Î µÇ¾îÀÖ±ä ÇÑµ¥ TABÀ¸·Î ¹Ù²ÙÀÚ´Â ¾ê±â ÀÖ¾úÀ½
+            if (CUI.GetKeyDown("keyInventory")) // Ië¡œ ë˜ì–´ìˆê¸´ í•œë° TABìœ¼ë¡œ ë°”ê¾¸ìëŠ” ì–˜ê¸° ìˆì—ˆìŒ
             {
                 if (OpenBigPanel)
                 {
@@ -66,14 +67,14 @@ namespace UI.InventoryUI
             }
         }
 
-        public void ItemGetAnnounce() //Inventory¶û ¿¬°áÇÏ¸é µüÀÎµğ ¾î¾ß ÇÒ±î¿ä ÀÌ°Å
+        public void ItemGetAnnounce() //Inventoryë‘ ì—°ê²°í•˜ë©´ ë”±ì¸ë”” ì–´ì•¼ í• ê¹Œìš” ì´ê±°
         {
             SmallInventoryIconUpdate();
             BigInventoryIconUpdate();
 
-            ItemGetAnnouncePanelIcon.GetComponent<Image>().sprite = Inv.items[Inv.items.Count].itemData.itemSprite;
-            ItemGetAnnouncePanelName.GetComponent<Text>().text = Inv.items[Inv.items.Count].itemData.itemName;
-            ItemGetAnnouncePanelDesc.GetComponent<Text>().text = Inv.items[Inv.items.Count].itemData.tooltip;
+            ItemGetAnnouncePanelIcon.GetComponent<Image>().sprite = Inv.Items[Inv.Items.Count].itemData.itemSprite;
+            ItemGetAnnouncePanelName.GetComponent<Text>().text = Inv.Items[Inv.Items.Count].itemData.itemName;
+            ItemGetAnnouncePanelDesc.GetComponent<Text>().text = Inv.Items[Inv.Items.Count].itemData.tooltip;
             ItemGetAnnouncePanel.SetActive(true);
             StartCoroutine(Wait(3));
             ItemGetAnnouncePanel.SetActive(false);
@@ -81,25 +82,25 @@ namespace UI.InventoryUI
         }
         void SmallInventoryIconUpdate()
         {
-            for (int i = 0; i < Inv.items.Count && i < 9; i++){
-                SmallInvItemIcon[i].GetComponent<Image>().sprite = Inv.items[i].itemData.itemSprite;
+            for (int i = 0; i < Inv.Items.Count && i < 9; i++){
+                SmallInvItemIcon[i].GetComponent<Image>().sprite = Inv.Items[i].itemData.itemSprite;
                 SmallInvItemIcon[i].SetActive(true);
             }
         }
         void BigInventoryIconUpdate()
         {
-            for (int i = 0; i < Inv.items.Count; i++)
+            for (int i = 0; i < Inv.Items.Count; i++)
             {
-                BigInvItemIcon[i].GetComponent<Image>().sprite = Inv.items[i].itemData.itemSprite;
+                BigInvItemIcon[i].GetComponent<Image>().sprite = Inv.Items[i].itemData.itemSprite;
                 BigInvItemIcon[i].SetActive(true);
             }
         }
 
         public void MouseOverIcon(int index)
         {
-            ItemDescPanelIcon.GetComponent<Image>().sprite = Inv.items[index].itemData.itemSprite;
-            ItemDescPanelName.GetComponent<Text>().text = Inv.items[index].itemData.itemName;
-            ItemDescPanelDesc.GetComponent<Text>().text = Inv.items[index].itemData.tooltip;
+            ItemDescPanelIcon.GetComponent<Image>().sprite = Inv.Items[index].itemData.itemSprite;
+            ItemDescPanelName.GetComponent<Text>().text = Inv.Items[index].itemData.itemName;
+            ItemDescPanelDesc.GetComponent<Text>().text = Inv.Items[index].itemData.tooltip;
         }
 
         void OpenBigInv()
