@@ -90,7 +90,7 @@ namespace Config
 		{
 			InputKey = SCJson.LoadFromJson<SInputSetting>(path, true);
 
-			InputKey.Init();
+			input.Init(ref input);
 			SetDict();
 			return ;
 		}

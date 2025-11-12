@@ -14,7 +14,7 @@ public class MainUIManager : MonoBehaviour
     
     public TMP_Text timeText;
 
-    // ÃßÈÄ GameManager·Î ÀÌµ¿
+    // ì¶”í›„ GameManagerë¡œ ì´ë™
     private float time;
 
     private void Awake()
@@ -30,7 +30,7 @@ public class MainUIManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
 
-        // 00:00 Çü½ÄÀ¸·Î Ç¥½Ã
+        // 00:00 í˜•ì‹ìœ¼ë¡œ í‘œì‹œ
         timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
