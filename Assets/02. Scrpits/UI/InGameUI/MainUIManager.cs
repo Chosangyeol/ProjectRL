@@ -11,7 +11,9 @@ public class MainUIManager : MonoBehaviour
 
     public Slider hpSlider;
     public TMP_Text hpText;
-    
+    public Slider expSlider;
+    public TMP_Text lvText;
+
     public TMP_Text timeText;
 
     // 추후 GameManager로 이동
@@ -19,7 +21,7 @@ public class MainUIManager : MonoBehaviour
 
     private void Awake()
     {
-        _model = GameObject.FindGameObjectWithTag("Player").transform.GetChild(1).GetComponent<PlayerModel>();
+        _model = GameObject.FindAnyObjectByType <PlayerModel>();
         UpdateHp(_model);
     }
 
@@ -49,5 +51,12 @@ public class MainUIManager : MonoBehaviour
         hpSlider.maxValue = model.Stat.Stat.hpMax;
         hpSlider.value = model.Stat.Stat.hpCurrent;
         hpText.text = model.Stat.Stat.hpCurrent + " / " + model.Stat.Stat.hpMax;
+    }
+
+    public void UpdateExp(PlayerModel model)
+    {
+        expSlider.maxValue = model.Stat.Stat.expMax;
+        expSlider.value = model.Stat.Stat.expCurrent;
+        lvText.text = "Lv. " + model.Stat.Stat.levelCurrent.ToString();
     }
 }

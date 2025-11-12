@@ -10,13 +10,15 @@ public class EnemyDirector : MonoBehaviour
     [SerializeField]
     private PoolingListSO ProjectileList;
     public float spawnRadius = 15f;
-    public float interval = 10f;
+    public float interval = 60f;
 
     public float cost = 0f;
-    public float costPerSeconds = 1f;
+    public float costPerSeconds = 10f;
     public float timer = 0f;
 
     private Transform player;
+
+    public List<Transform> spawnPosList; 
 
 
     #region Unity Events
@@ -35,7 +37,7 @@ public class EnemyDirector : MonoBehaviour
         timer += Time.deltaTime;
         // 난이도 상승에 따른 몬스터 소환 코스트 증가량 수정 필요
         // 시간 난이도 + 월드 난이도 반영
-        cost += costPerSeconds;
+        cost += Time.deltaTime;
     }
     #endregion
 
@@ -84,8 +86,8 @@ public class EnemyDirector : MonoBehaviour
 
     void SpawnEnemy(EnemyBase enemyPrefab, int count)
     {
-        Vector2 randomCircle = Random.insideUnitCircle.normalized * spawnRadius; ;
-        Vector3 spawnPosition = player.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+        int posIndex = Random.Range(0,spawnPosList.Count);
+        Vector3 spawnPosition = spawnPosList[posIndex].position;
 
         for (int i = 0; i < count; i++)
         {

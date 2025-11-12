@@ -219,7 +219,7 @@ namespace Player
 			if (canAttack)
 			{
 				canAttack = false;
-				Shoot(targetPos);
+				Shoot(targetPos,0,30f,0.02f);
 				StartCoroutine(WaitAttack());
 			}
 			return ;

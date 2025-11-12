@@ -21,7 +21,7 @@ public class State_Attack : IState
 
     public void Tick()
     {
-        float dist = Vector3.Distance(enemy.transform.position, enemy.player.position);
+        float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
 
         if (dist > enemy.enemySO.attackRange)
         {

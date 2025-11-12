@@ -1,3 +1,4 @@
+using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,7 +37,7 @@ public class EnemyBase : PoolableMono
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindAnyObjectByType<PlayerController>().transform;
         fsm = new StateMachine();
         Reset();
     }
@@ -95,12 +96,16 @@ public class EnemyBase : PoolableMono
     {
         if (Random.Range(0, 100f) <= enemySO.itemDropPersent)
         {
+            player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
+            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
             // 아이템 드랍
             TryDropItem(enemySO.itemDropTable);
             PoolManager.Instance.Push(this);
         }
         else
         {
+            player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
+            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
             PoolManager.Instance.Push(this);
         }
     }

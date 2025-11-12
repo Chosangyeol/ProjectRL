@@ -23,7 +23,7 @@ public class State_Patrol : IState
         if (!enemy.Agent.hasPath || enemy.Agent.remainingDistance < 0.5f)
             SetRandomDestination();
 
-        float dist = Vector3.Distance(enemy.transform.position, enemy.player.position);
+        float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
         if (dist <= enemy.enemySO.detectRange)
         {
             fsm.ChangeState(new State_Chase(enemy, fsm));

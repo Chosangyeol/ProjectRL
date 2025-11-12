@@ -23,7 +23,7 @@ namespace Config
 				{ nameof(keyJump),   KeyCode.Space },
 
 				{ nameof(keyInteract), KeyCode.F },
-				{ nameof(keyInventory), KeyCode.I },
+				{ nameof(keyInventory), KeyCode.Tab },
 				{ nameof(keySkillTree), KeyCode.K },
 
 				{ nameof(keySkill1), KeyCode.Q },

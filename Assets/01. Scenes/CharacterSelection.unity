@@ -214,7 +214,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: EnemyScene
+          m_StringArgument: EnemyItemTest
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &142296567
@@ -1656,6 +1656,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa9f1b44bf88d604f92903141ce96f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PausePanel: {fileID: 0}
+  BlurPanel: {fileID: 0}
 --- !u!114 &618721045
 MonoBehaviour:
   m_ObjectHideFlags: 0

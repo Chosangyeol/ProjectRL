@@ -23,5 +23,6 @@ MonoBehaviour:
   detectRange: 6
   moveSpeed: 4
   attackSpeed: 2
+  gainExp: 10
   itemDropTable: {fileID: 11400000, guid: ef99215bb357bfa439a107d0964fc6b9, type: 2}
   itemDropPersent: 100

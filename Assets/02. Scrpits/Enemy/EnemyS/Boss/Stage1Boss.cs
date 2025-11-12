@@ -68,7 +68,7 @@ public class Stage1Boss : BossBase
     {
         if (player == null) return;
 
-        Vector3 pos = player.position + new Vector3(0, 0.1f, 0);
+        Vector3 pos = player.transform.position + new Vector3(0, 0.1f, 0);
 
         StartCoroutine(DropActive(pos));
     }

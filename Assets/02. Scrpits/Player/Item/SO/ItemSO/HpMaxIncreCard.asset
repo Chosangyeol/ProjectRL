@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: "\uD504\uB85C\uADF8\uB7A8 : \uD5EC\uC2A4 \uC0D0\uB7EC\uB4DC \uB370\uC774\uD130
     \uCE69"
+  itemRarity: 0
+  isUnique: 0
   tooltip: "\uD50C\uB808\uC774\uC5B4\uC758 \uCD5C\uB300 \uCCB4\uB825\uC744 \uC601\uAD6C\uC801\uC73C\uB85C
     10 \uC99D\uAC00\uC2DC\uD0A8\uB2E4."
-  itemSprite: {fileID: 0}
+  itemSprite: {fileID: 21300000, guid: e16d43acb53eaa44bb9ad9d71dcda3a3, type: 3}
   itemPrefab: {fileID: 0}
   increAmount: 10
   canIncreStats: 0

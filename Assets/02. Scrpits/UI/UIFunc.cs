@@ -15,7 +15,7 @@ namespace UI
 
         private void Update()
         {
-            if (CUI.GetKeyDown("keyPause")) // Esc
+            if (ConfigUserInput.Instance.GetKeyDown("keyPause")) // Esc
             {
                 // 나중에 특정 씬에서는 안 펼쳐지게 하면 될 듯
                 ObjectShow(PausePanel);

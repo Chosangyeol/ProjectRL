@@ -20,7 +20,7 @@ public class State_Chase : IState
 
     public void Tick()
     {
-        float dist = Vector3.Distance(enemy.transform.position, enemy.player.position);
+        float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
 
         if (dist > enemy.enemySO.detectRange * 1.2f)
         {
@@ -32,7 +32,7 @@ public class State_Chase : IState
         }
         else
         {
-            enemy.Agent.SetDestination(enemy.player.position);
+            enemy.Agent.SetDestination(enemy.player.transform.position);
         }
         Debug.Log("Chase");
     }
