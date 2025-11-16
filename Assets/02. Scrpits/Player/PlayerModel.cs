@@ -40,6 +40,7 @@ namespace Player
 		protected PlayerComponentSkill		cpnSkill;
 		protected PlayerComponentBuff		cpnBuff;
 		protected PlayerComponentStat		cpnStat;
+		protected PlayerComponentAnimation	cpnAnimation;
 		protected Rigidbody					rigid;
 		protected PlayerPool				pool;
 		protected WaitForSeconds			attackCooldown;
@@ -50,6 +51,7 @@ namespace Player
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
 		public PlayerComponentStat			Stat { get => cpnStat; }
+		public PlayerComponentAnimation		Animation { get => cpnAnimation; }
 		public Inventory					Inventory { get => inventory; }
 		public PlayerPool					Pool { get => pool; }
 
@@ -90,6 +92,7 @@ namespace Player
 			cpnSkill = new PlayerComponentSkill(this, _skillDataSO);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
+			cpnAnimation = new PlayerComponentAnimation(this);
 			pool = new PlayerPool(bulletParent);
 			inventory = new Inventory(this);
 			attackCooldown = new WaitForSeconds(_attackCooltime);
@@ -110,6 +113,7 @@ namespace Player
 			}
 			cpnSkill.UpdateSkill(Time.deltaTime);
 			inventory.UpdateItem(Time.deltaTime);
+			cpnAnimation.Update(Time.deltaTime);
 			return ;
 		}
 
