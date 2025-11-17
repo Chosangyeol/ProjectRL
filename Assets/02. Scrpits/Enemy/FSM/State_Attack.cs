@@ -15,13 +15,13 @@ public class State_Attack : IState
 
     public void OnEnter()
     {
-        enemy.agent.ResetPath();
-        enemy.anim.SetBool("isMoving", false);
+        enemy.Agent.ResetPath();
+        enemy.Anim.SetBool("isMoving", false);
     }
 
     public void Tick()
     {
-        float dist = Vector3.Distance(enemy.transform.position, enemy.player.position);
+        float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
 
         if (dist > enemy.enemySO.attackRange)
         {

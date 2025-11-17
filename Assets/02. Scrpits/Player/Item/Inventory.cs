@@ -1,7 +1,6 @@
 using Info;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 namespace Player.Item
 {
@@ -12,10 +11,12 @@ namespace Player.Item
 
 		private List<AItem> items;
 
-		public event Action ActionBeforeAddItem;
-		public event Action ActionAfterAddItem;
-		public event Action ActionBeforeRemoveItem;
-		public event Action ActionAfterRemoveItem;
+		public List<AItem> Items { get => items; }
+
+		public event Action<AItem> ActionBeforeAddItem;
+		public event Action<AItem> ActionAfterAddItem;
+		public event Action<AItem> ActionBeforeRemoveItem;
+		public event Action<AItem> ActionAfterRemoveItem;
 
 		public Inventory(PlayerModel playerModel)
 		{
@@ -26,10 +27,10 @@ namespace Player.Item
 
 		public void AddItem(AItem item)
 		{
-			ActionBeforeAddItem?.Invoke();
+			ActionBeforeAddItem?.Invoke(item);
 			item.OnAddInventory(playerModel);
 			items.Add(item);
-			ActionAfterAddItem?.Invoke();
+			ActionAfterAddItem?.Invoke(item);
 			return ;
 		}
 
@@ -48,9 +49,10 @@ namespace Player.Item
 		{
 			if (items.Contains(item))
 			{
-				ActionBeforeRemoveItem?.Invoke();
-				items.Remove(item);
-				ActionAfterRemoveItem?.Invoke();
+				ActionBeforeRemoveItem?.Invoke(item);
+				item.OnRemoveInventory(playerModel);
+                items.Remove(item);
+				ActionAfterRemoveItem?.Invoke(item);
 				return (true);
 			}
 			return (false);

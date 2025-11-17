@@ -3,12 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Config;
 
 namespace UI
 {
     public class UIFunc : MonoBehaviour
     {
-        
+        ConfigUserInput CUI;
+        public GameObject PausePanel;
+        public GameObject BlurPanel;
+
+        private void Update()
+        {
+            if (ConfigUserInput.Instance.GetKeyDown("keyPause")) // Esc
+            {
+                // 나중에 특정 씬에서는 안 펼쳐지게 하면 될 듯
+                ObjectShow(PausePanel);
+                ObjectShow(BlurPanel);
+            }
+        }
+
         public void ChangeScene(string sceneName)
         {
             UI.SceneManage.LoadSceneManagement.LoadScene(sceneName);
@@ -22,11 +36,10 @@ namespace UI
         {
             obj.SetActive(true);
         }
+
         public void ObjectHide(GameObject obj)
         {
             obj.SetActive(false);
         }
-
-        
     }
 }

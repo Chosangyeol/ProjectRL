@@ -1,15 +1,16 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Rendering;
+using UnityEngine;
 
 namespace Player.Skill
 {
 	public abstract class APlayerSkill
 	{
 		public APlayerSkillDataSO dataSO;
-		private float coolTime;
-		private float nowTime;
-		private bool canUse;
+		protected float coolTime;
+		protected float nowTime;
+		protected bool canUse;
 
 		public APlayerSkill(APlayerSkillDataSO dataSO)
 		{
@@ -20,19 +21,23 @@ namespace Player.Skill
 			return ;
 		}
 
-		public virtual bool UseSkill(PlayerModel model)
+		public virtual bool UseSkill(PlayerModel model, KeyCode skillKey)
 		{
 			if (canUse)
 			{
-				Activate(model);
-				canUse = false;
 				nowTime = coolTime;
+				canUse = false;
+				Activate(model, skillKey);
 				return (true);
 			}
 			return (false);
 		}
 
-		public abstract void Activate(PlayerModel model);
+		public virtual void Activate(PlayerModel model, KeyCode skillKey)
+		{
+			model.StartCoroutine(SkillCoroutine(model, skillKey));
+			return ;
+		}
 
 		public virtual void UpdateSkill(float delta)
 		{
@@ -42,6 +47,8 @@ namespace Player.Skill
 			canUse = (nowTime < 0f);
 			return ;
 		}
+
+		public abstract IEnumerator SkillCoroutine(PlayerModel model, KeyCode skillKey);
 	}
 
 	public class PlayerSkill : APlayerSkill
@@ -49,6 +56,8 @@ namespace Player.Skill
 		public static readonly Dictionary<string, Type> skillTypes = new Dictionary<string, Type>()
 		{
 			{ "PlayerSkillDash", typeof(PlayerSkillDash)},
+			{ "PlayerSkillBuckShot", typeof(PlayerSkillBuckShot)},
+			{ "PlayerSkillEscapeShot", typeof(PlayerSkillEscapeShot)},
 		};
 
 		public PlayerSkill(PlayerSkillDataSO dataSO) : base(dataSO)
@@ -56,9 +65,10 @@ namespace Player.Skill
 			return ;
 		}
 
-		public override void Activate(PlayerModel model)
+		public override IEnumerator SkillCoroutine(PlayerModel model, KeyCode skillKey)
 		{
-			return ;
+			Debug.Log($"if you see this log, something is wrong in PlayerSkill");
+			yield break ;
 		}
 	}
 }

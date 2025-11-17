@@ -197,3 +197,4 @@ MonoBehaviour:
   anim: {fileID: 0}
   lastAttackTime: 0
   player: {fileID: 0}
+  itemDropPersent: 0

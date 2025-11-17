@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
-using JetBrains.Annotations;
+using System.Reflection;
 
 namespace Player
 {
@@ -20,7 +20,7 @@ namespace Player
 
 		[Header("Attack")]
 		[SerializeField]
-		protected PoolableMono				_bulletPrefab;
+		protected PlayerBullet[]			_bulletPrefabs;
 		[SerializeField]
 		protected Transform					_bulletSummonTr;
 		[SerializeField]
@@ -33,31 +33,41 @@ namespace Player
 		[SerializeField]
 		protected Inventory					inventory;
 
-		public Vector3						angleCamera;
+		public Quaternion					cameraRotation;
+		public Vector3						moveDirection;
 
 		protected Transform					bulletParent;
 		protected PlayerComponentSkill		cpnSkill;
 		protected PlayerComponentBuff		cpnBuff;
 		protected PlayerComponentStat		cpnStat;
+		protected PlayerComponentAnimation	cpnAnimation;
 		protected Rigidbody					rigid;
 		protected PlayerPool				pool;
 		protected WaitForSeconds			attackCooldown;
+		protected IRaycastable				raycaster;
+
 		protected bool						canAttack = true;
 		protected bool						isGrounded = true;
+		protected bool						canDamaged = true;
+		protected bool						isWaitDamaged = false;
+		protected Coroutine					waitDamagedCoroutine;
 
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
 		public PlayerComponentStat			Stat { get => cpnStat; }
+		public PlayerComponentAnimation		Animation { get => cpnAnimation; }
 		public Inventory					Inventory { get => inventory; }
 		public PlayerPool					Pool { get => pool; }
+
+		public bool							CanDamaged { get => (canDamaged || isWaitDamaged); }
 
 		public bool							IsAlive { get; private set; }
 		public bool							IsMoveable { get; private set; }
 
-		public event Action					ActionCallbackBuffChanged;
-		public event Action					ActionCallbackStatChanged;
-		public event Action					ActionCallbackItemChanged;
-		public event Action					ActionCallbackLanded;
+		public event Action<PlayerModel>	ActionCallbackBuffChanged;
+		public event Action<PlayerModel>	ActionCallbackStatChanged;
+		public event Action<PlayerModel>	ActionCallbackItemChanged;
+		public event Action<PlayerModel>	ActionCallbackLanded;
 
 		public delegate void InfoIntHandler(ref SInfoInt info);
 		public delegate void InfoAttackHandler(ref SInfoAttack info);
@@ -81,15 +91,22 @@ namespace Player
 
 		protected virtual void Awake()
 		{
+			int i = 1;
+
 			rigid = GetComponentInParent<Rigidbody>();
 			bulletParent = new GameObject("PlayerBulletParent").transform;
 			cpnSkill = new PlayerComponentSkill(this, _skillDataSO);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
+			cpnAnimation = new PlayerComponentAnimation(this);
 			pool = new PlayerPool(bulletParent);
 			inventory = new Inventory(this);
 			attackCooldown = new WaitForSeconds(_attackCooltime);
-			pool.CreatePool(_bulletPrefab, 40);
+			pool.CreatePool(_bulletPrefabs[0], 40);
+			while (i < _bulletPrefabs.Length)
+			{
+				pool.CreatePool(_bulletPrefabs[i++], 10);
+			}
 			IsMoveable = true;
 			return ;
 		}
@@ -98,10 +115,11 @@ namespace Player
 		{
 			if (cpnBuff.UpdateBuff(Time.deltaTime))
 			{
-				ActionCallbackBuffChanged?.Invoke();
+				ActionCallbackBuffChanged?.Invoke(this);
 			}
 			cpnSkill.UpdateSkill(Time.deltaTime);
 			inventory.UpdateItem(Time.deltaTime);
+			cpnAnimation.Update(Time.deltaTime);
 			return ;
 		}
 
@@ -109,6 +127,12 @@ namespace Player
 		{
 			if (bulletParent != null)
 				Destroy(bulletParent.gameObject);
+			return ;
+		}
+
+		public void SetRaycaster(IRaycastable raycastable)
+		{
+			raycaster = raycastable;
 			return ;
 		}
 
@@ -124,6 +148,7 @@ namespace Player
 				return (0);
 			speed = Stat.GetSpeed(isSprint);
 			parent.position += movement * speed;
+			moveDirection = movement.normalized;
 			callback?.Invoke();
 			return (movement.sqrMagnitude * speed);
 		}
@@ -155,22 +180,25 @@ namespace Player
 
 		public void Dash(Action callback = null)
 		{
-			Dash(Stat.Stat.powerDash);
+			Dash(Stat.Stat.powerDash, moveDirection, callback);
 			return;
 		}
 
-		public virtual void Dash(float power, Action callback = null)
+		public virtual void Dash(float power, Vector3 movement, Action callback = null)
 		{
-			rigid.velocity = power * angleCamera.normalized;
+			if (movement.sqrMagnitude > 0)
+				rigid.velocity += power * movement.normalized;
+			else
+				rigid.velocity += power * transform.forward;
 			callback?.Invoke();
 			return ;
 		}
 
-		public void OnGround()
+		public virtual void OnGround()
 		{
 			Stat.ResetJumpCount();
 			isGrounded = true;
-			ActionCallbackLanded?.Invoke();
+			ActionCallbackLanded?.Invoke(this);
 			return;
 		}
 
@@ -180,9 +208,9 @@ namespace Player
 			return (transform.rotation);
 		}
 
-		public void SetAngle(Vector3 angle)
+		public void SetCameraRotation(Quaternion rotation)
 		{
-			angleCamera = angle;
+			cameraRotation = rotation;
 			return ;
 		}
 
@@ -195,17 +223,59 @@ namespace Player
 			if (canAttack)
 			{
 				canAttack = false;
-				Shoot(targetPos);
+				Shoot(targetPos,0,30f,0.02f);
 				StartCoroutine(WaitAttack());
 			}
 			return ;
 		}
 
-		public virtual void Shoot(Vector3 targetPos, float speed = 5f, float spread = 0.04f)
+		public void Shoot(int index = 0, float speed = 5f, float spread = 0.04f)
 		{
-			PlayerBullet bullet = pool.Pop(_bulletPrefab.gameObject.name).GetComponent<PlayerBullet>();
+			Vector2 targetPos;
+
+			if (raycaster == null)
+				throw (new Exception("Cannot Found Raycaster in PlayerModel!"));
+			targetPos = raycaster.GetRaycastHitPoint();
+			Shoot(targetPos, index, speed, spread);
+			return ;
+		}
+
+		public void Shoot(string name, float speed = 5f, float spread = 0.04f)
+		{
+			Vector3 targetPos;
+
+			if (raycaster == null)
+				throw (new Exception("Cannot Found Raycaster in PlayerModel!"));
+			targetPos = raycaster.GetRaycastHitPoint();
+			Shoot(targetPos, name, speed, spread);
+			return ;
+		}
+
+		public void Shoot(Vector3 targetPos, int index = 0, float speed = 5f, float spread = 0.04f)
+		{
+			if (index >= _bulletPrefabs.Length)
+			{
+				index = _bulletPrefabs.Length - 1;
+				Debug.LogError($"Cannot found bullet {index}");
+			}
+			Shoot(targetPos, _bulletPrefabs[index].gameObject.name, speed, spread);
+			return ;
+		}
+
+		public virtual void Shoot(Vector3 targetPos, string name, float speed = 5f, float spread = 0.04f)
+		{
+			PlayerBullet bullet;
 			Vector3 direction = GetSpreadDirection((targetPos - _bulletSummonTr.position).normalized, spread);
 
+			try
+			{
+				bullet = (pool.Pop(name) as PlayerBullet);
+			}
+			catch (Exception e)
+			{
+				bullet = (pool.Pop(_bulletPrefabs[0].gameObject.name) as PlayerBullet);
+				Debug.LogError($"[PlayerModel_Shoot_Pool]\n{e.Message}");
+			}
 			bullet.SetInfo(this);
 			bullet.transform.position = _bulletSummonTr.position;
 			bullet.transform.LookAt(_bulletSummonTr.position + direction);
@@ -246,7 +316,7 @@ namespace Player
 		{
 			int result = Stat.AddShield(add);
 
-			ActionCallbackStatChanged?.Invoke();
+			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
 		}
 
@@ -264,7 +334,7 @@ namespace Player
 		{
 			int result = Stat.RemoveShield(remove);
 
-			ActionCallbackStatChanged?.Invoke();
+			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
 		}
 
@@ -282,14 +352,35 @@ namespace Player
 		{
 			int result = Stat.Healed(heal);
 
-			ActionCallbackStatChanged?.Invoke();
+			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
 		}
 
-		public virtual int Damaged(SInfoAttack info)
+		public int Damaged(SInfoAttack info)
+		{
+			return (Damaged(info, false, 1f));
+		}
+
+		public int Damaged(SInfoAttack info, bool isIgnoreWaitDamaged)
+		{
+			return (Damaged(info, isIgnoreWaitDamaged, 1f));
+		}
+
+		public int Damaged(SInfoAttack info, float waitDamagedTime)
+		{
+			return (Damaged(info, false, waitDamagedTime));
+		}
+
+		public virtual int Damaged(SInfoAttack info, bool isIgnoreWaitDamaged, float waitDamagedTime)
 		{
 			int result;
 
+			if (!isIgnoreWaitDamaged && isWaitDamaged)
+				return (-1);
+			if (isIgnoreWaitDamaged && waitDamagedCoroutine != null && waitDamagedTime > 0f)
+				StopCoroutine(waitDamagedCoroutine);
+			if (waitDamagedTime > 0f)
+				waitDamagedCoroutine = StartCoroutine(WaitDamaged(waitDamagedTime));
 			ActionOnBeforeDamage?.Invoke(ref info);
 			result = Damaged(info.damage);
 			ActionOnAfterDamage?.Invoke(info);
@@ -301,8 +392,16 @@ namespace Player
 			int result = Stat.Damaged(damage);
 
 			IsAlive = Stat.IsAlive();
-			ActionCallbackStatChanged?.Invoke();
+			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
+		}
+
+		protected virtual IEnumerator WaitDamaged(float time)
+		{
+			isWaitDamaged = true;
+			yield return (new WaitForSeconds(time));
+			isWaitDamaged = false;
+			yield break ;
 		}
 
 		// TODO!
@@ -324,7 +423,7 @@ namespace Player
 		public virtual void AddBuff(SInfoBuff info)
 		{
 			cpnBuff.AddBuff(info);
-			ActionCallbackBuffChanged?.Invoke();
+			ActionCallbackBuffChanged?.Invoke(this);
 			return ;
 		}
 
@@ -332,10 +431,10 @@ namespace Player
 
 		#region Skill
 
-		public virtual bool UseSkill(short index)
+		public virtual bool UseSkill(short index, KeyCode skillKey)
 		{
 			Debug.Log($"PlayerModel : Skill {index} use input");
-			return (cpnSkill.UseSkill(index));
+			return (cpnSkill.UseSkill(index, skillKey));
 		}
 
 		#endregion
@@ -345,14 +444,14 @@ namespace Player
 		public void AddItem(AItem item)
 		{
 			inventory.AddItem(item);
-			ActionCallbackItemChanged?.Invoke();
+			ActionCallbackItemChanged?.Invoke(this);
 			return ;
 		}
 
 		public void RemovevItem(AItem item)
 		{
 			if (inventory.RemoveItem(item))
-				ActionCallbackItemChanged?.Invoke();
+				ActionCallbackItemChanged?.Invoke(this);
 			return ;
 		}
 

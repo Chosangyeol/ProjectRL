@@ -15,12 +15,12 @@ public class State_Chase : IState
 
     public void OnEnter()
     {
-        enemy.anim.SetBool("isMoving", true);
+        enemy.Anim.SetBool("isMoving", true);
     }
 
     public void Tick()
     {
-        float dist = Vector3.Distance(enemy.transform.position, enemy.player.position);
+        float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
 
         if (dist > enemy.enemySO.detectRange * 1.2f)
         {
@@ -32,7 +32,7 @@ public class State_Chase : IState
         }
         else
         {
-            enemy.agent.SetDestination(enemy.player.position);
+            enemy.Agent.SetDestination(enemy.player.transform.position);
         }
         Debug.Log("Chase");
     }
@@ -40,6 +40,6 @@ public class State_Chase : IState
     public void FixedTick() { }
     public void OnExit()
     {
-        enemy.agent.ResetPath();
+        enemy.Agent.ResetPath();
     }
 }

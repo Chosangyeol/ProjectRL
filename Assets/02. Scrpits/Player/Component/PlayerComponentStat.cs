@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 
 namespace Player.Component
 {
@@ -8,40 +7,27 @@ namespace Player.Component
 		public PlayerModel playerModel;
 
 		private SPlayerStat origin;
-		private SPlayerStat stat;
 
-		public SPlayerStat Stat { get => stat; }
+		public SPlayerStat Stat { get => origin; }
 
 		public delegate void StatCalculator(ref SPlayerStat stat);
-		public event StatCalculator ActionCalculateStat;
 
 		public PlayerComponentStat(PlayerModel model, PlayerComponentStatSO so)
 		{
 			playerModel = model;
-			playerModel.ActionCallbackBuffChanged += () => RecalculateStat();
-			playerModel.ActionCallbackItemChanged += () => RecalculateStat();
 			Equalize(so);
-			return ;
-		}
-
-		private void RecalculateStat()
-		{
-			stat = origin;
-			ActionCalculateStat?.Invoke(ref stat);
 			return ;
 		}
 
 		public void EditOriginStat(StatCalculator calculator)
 		{
 			calculator(ref origin);
-			RecalculateStat();
 			return ;
 		}
 
 		public void AddStat(SPlayerStat add)
 		{
 			origin += add;
-			RecalculateStat();
 			return ;
 		}
 
@@ -54,7 +40,6 @@ namespace Player.Component
 			{
 				add = origin.shield - Int32.MaxValue;
 			}
-			stat.shield = origin.shield;
 			return (add);
 		}
 
@@ -68,7 +53,6 @@ namespace Player.Component
 				remove += origin.shield;
 				origin.shield = 0;
 			}
-			stat.shield = origin.shield;
 			return (remove);
 		}
 
@@ -82,7 +66,6 @@ namespace Player.Component
 				heal = origin.hpCurrent - origin.hpMax;
 				origin.hpCurrent = origin.hpMax;
 			}
-			stat.hpCurrent = origin.hpCurrent;
 			return (heal);
 		}
 
@@ -101,13 +84,12 @@ namespace Player.Component
 				damage = 0;
 			}
 			origin.hpCurrent = Math.Max(origin.hpCurrent - damage, 0);
-			stat.hpCurrent = origin.hpCurrent;
 			return (damage);
 		}
 
 		public bool IsAlive()
 		{
-			return (stat.hpCurrent > 0);
+			return (origin.hpCurrent > 0);
 		}
 
 		public int AddExp(int exp)
@@ -134,46 +116,41 @@ namespace Player.Component
 				origin.expMax += origin.expExtendWhenLevelUp;
 				result++;
 			}
-			stat.levelCurrent = origin.levelCurrent;
-			stat.expCurrent = origin.expCurrent;
-			stat.expMax = origin.expMax;
-			stat.expExtendWhenLevelUp = origin.expExtendWhenLevelUp;
 			return (result);
 		}
 
 		public void CountJump()
 		{
-			stat.jumpCountCurrent++;
+			origin.jumpCountCurrent++;
 			return ;
 		}
 
 		public void ResetJumpCount()
 		{
-			stat.jumpCountCurrent = 0;
+			origin.jumpCountCurrent = 0;
 			return ;
 		}
 
 		public bool CanJump()
 		{
-			return (stat.jumpCountCurrent < stat.jumpCountMax);
+			return (origin.jumpCountCurrent < origin.jumpCountMax);
 		}
 
 		public float GetSpeed(bool isSprint)
 		{
 			if (isSprint)
-				return (stat.speedSprint);
-			return (stat.speedMove);
+				return (origin.speedSprint);
+			return (origin.speedMove);
 		}
 
 		public float GetJumpPower()
 		{
-			return (stat.jumpPower);
+			return (origin.jumpPower);
 		}
 
 		private void Equalize(PlayerComponentStatSO so)
 		{
 			origin.Equalize(so);
-			stat = origin;
 			return ;
 		}
 	}
