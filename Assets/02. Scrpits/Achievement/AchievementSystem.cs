@@ -20,7 +20,6 @@ namespace Achievement
 		public void Initailize()
 		{
 			achievements.Clear();
-			achievements.Add(new AchievementTest());
 			foreach (IAchievement achievement in achievements)
 			{
 				achievement.Initialize(eventbus);

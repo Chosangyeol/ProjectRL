@@ -25,7 +25,6 @@ namespace Player
 		public override void Shoot(Vector3 targetPos, string name, float speed = 5, float spread = 0.04F)
 		{
 			base.Shoot(targetPos, name, speed, spread);
-			AchievementSystem.Instance.Publish(new SEventTest());
 			return ;
 		}
 	}
