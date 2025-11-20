@@ -6,9 +6,20 @@ public class TestEnemy2 : EnemyBase
 {
     public GameObject projectile;
     public Transform firePos;
-    void Start()
+    public float attackPreDelay;
+
+    protected override void Awake()
     {
-        attackBehavior = new RangedAttack(projectile, firePos);
+        base.Awake();
+        lr = GetComponent<LineRenderer>();
+
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        attackBehavior = new RangedAttack(projectile, firePos, attackPreDelay);
     }
 
 }

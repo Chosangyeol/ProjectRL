@@ -194,9 +194,15 @@ MonoBehaviour:
   enemySO: {fileID: 11400000, guid: 22507c9b4e3f95d4eb4043b5a84d93c3, type: 2}
   lastAttackTime: 0
   player: {fileID: 0}
+  isFixedType: 1
+  patternCount: 0
   warningPrefab: {fileID: 9212035575336418314, guid: fa4afb0b6aab3784aa0157f3ccdb0402, type: 3}
   fallingPrefab: {fileID: 8752472503428245831, guid: 659f2fdaf7e589c448ac3f4c3d023897, type: 3}
   warningDuration: 2
   fallHeight: 20
   fallSpeed: 25
-  warningSize: 2
+  rotationSpeed: 180
+  laserRange: 30
+  laserColor: {r: 1, g: 0, b: 0, a: 1}
+  laserWidth: 0.05
+  spinDuration: 10
