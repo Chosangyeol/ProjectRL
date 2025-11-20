@@ -7,13 +7,15 @@ using UnityEngine;
 public class Stage1Boss : BossBase
 {
     public GameObject pattern2Projectile;
+    public GameObject pattern3Projectile;
     public Transform firePos;
+    public Transform missilePos;
 
 #pragma warning disable CS0114 // 멤버가 상속된 멤버를 숨깁니다. override 키워드가 없습니다.
     private void Start()
 #pragma warning restore CS0114 // 멤버가 상속된 멤버를 숨깁니다. override 키워드가 없습니다.
     {
-        attackBehavior = new Stage1BossAttack(pattern2Projectile,firePos);
+        attackBehavior = new Stage1BossAttack(pattern2Projectile, pattern3Projectile,firePos, missilePos);
 
         // 레이저 세팅
         lr = GetComponent<LineRenderer>();      
@@ -40,7 +42,7 @@ public class Stage1Boss : BossBase
         if (Stat.curHp < (Stat.totalHp * 0.5f) && !isSpinning)
         {
             Debug.Log("레이저 공격");
-            StopCoroutine(attackCoroutine);
+            StopAllCoroutines();
             fsm.ChangeState(new State_BossSpecialPattern(this, fsm, patternCount));
             StartCoroutine(LaserSpin());
         }
@@ -109,6 +111,7 @@ public class Stage1Boss : BossBase
 
     #region Boss Laser
     [Header("레이저 공격 설정")]
+    public GameObject laserPos;
     [Tooltip("회전 속도")]
     public float rotationSpeed = 180f;
     [Tooltip("레이저 사거리")]
@@ -131,8 +134,8 @@ public class Stage1Boss : BossBase
         lr.positionCount = 2;
         lr.startWidth = laserWarningWidth;
         lr.endWidth = laserWarningWidth;
-        lr.SetPosition(0, transform.position);
-        lr.SetPosition(1, transform.position + transform.forward * laserRange);
+        lr.SetPosition(0, laserPos.transform.position);
+        lr.SetPosition(1, laserPos.transform.position + transform.forward * laserRange);
 
         lr.enabled = true;
 
@@ -162,19 +165,32 @@ public class Stage1Boss : BossBase
 
     private void LaserFire()
     {
-        Debug.Log("회전 중");
-        Vector3 pos = transform.position;
-        Vector3 dir = transform.forward;
+        Vector3 pos = laserPos.transform.position;
+        Vector3 dir = laserPos.transform.forward;
 
-        Ray ray = new Ray(pos, dir);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, laserRange))
+        bool rayBlocked = Physics.Raycast(pos, dir, out hit, laserRange);
+
+        if (rayBlocked)
         {
             lr.SetPosition(0, pos);
-            lr.SetPosition(1, hit.point);
+            lr.SetPosition(1, hit.point);             
+        }
+        else
+        {
+            lr.SetPosition(0, pos);
+            lr.SetPosition(1, pos + dir * laserRange);
+        }
 
-            PlayerModel player = hit.collider.GetComponent<PlayerModel>();
+        float castDist = rayBlocked ? hit.distance : laserRange;
+
+        Vector3 box = new Vector3(laserWidth/2, laserWidth/2, laserWidth / 2);
+        RaycastHit boxHit;
+
+        if (Physics.BoxCast(pos,box,dir,out boxHit, laserPos.transform.rotation, castDist))
+        {
+            PlayerModel player = boxHit.collider.GetComponent<PlayerModel>();
             if (player != null)
             {
                 SInfoAttack laserDamage = new SInfoAttack(
@@ -186,12 +202,6 @@ public class Stage1Boss : BossBase
 
                 player.Damaged(laserDamage);
             }
-                
-        }
-        else
-        {
-            lr.SetPosition(0, pos);
-            lr.SetPosition(1, pos + dir * laserRange);
         }
     }
     #endregion

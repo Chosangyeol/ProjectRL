@@ -45,7 +45,7 @@ public class EnemyBase : PoolableMono
     {
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         player = GameObject.FindAnyObjectByType<PlayerController>().transform;
         fsm = new StateMachine();
         Reset();
