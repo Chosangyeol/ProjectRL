@@ -388,7 +388,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: GunplaySingle
+  m_Name: GunplayAuto
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -402,7 +402,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 0ff3b4f6373e49741bc988cb202672b9, type: 3}
+  m_Motion: {fileID: -203655887218126122, guid: fee8e7f03fe544f4790744b78290c589, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
