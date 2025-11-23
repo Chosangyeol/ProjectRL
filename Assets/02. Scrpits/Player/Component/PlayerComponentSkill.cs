@@ -11,10 +11,10 @@ namespace Player.Component
 	[Serializable]
 	public class PlayerComponentSkill
 	{
-		private PlayerModel playerModel;
+		protected PlayerModel playerModel;
 
-		private APlayerSkill[] skills;
-		private APlayerSkill[] activeSkill;
+		protected APlayerSkill[] skills;
+		protected APlayerSkill[] activeSkill;
 
 		public PlayerComponentSkill(PlayerModel model, APlayerSkillDataSO[] skillDatas)
 		{
@@ -32,7 +32,7 @@ namespace Player.Component
 			return ;
 		}
 
-		public bool UpdateSkill(float delta)
+		public virtual bool UpdateSkill(float delta)
 		{
 			bool result = false;
 
@@ -43,7 +43,7 @@ namespace Player.Component
 			return (result);
 		}
 
-		public bool UseSkill(short index, KeyCode skillKey)
+		public virtual bool UseSkill(short index, KeyCode skillKey)
 		{
 			if (index > activeSkill.Length || index < 0)
 				return (false);
@@ -52,7 +52,7 @@ namespace Player.Component
 			return (activeSkill[index].UseSkill(playerModel, skillKey));
 		}
 
-		public bool SetSkill(short targetIndex, string skillName)
+		public virtual bool SetSkill(short targetIndex, string skillName)
 		{
 			if (targetIndex > activeSkill.Length || targetIndex < 0)
 				return (false);
@@ -89,7 +89,7 @@ namespace Player.Component
 			return (true);
 		}
 
-		private void SetSkill(short targetIndex, APlayerSkill skill)
+		protected virtual void SetSkill(short targetIndex, APlayerSkill skill)
 		{
 			int idx = Array.FindIndex(activeSkill, a => a.GetType() == skill.GetType());
 			activeSkill[targetIndex] = skill;

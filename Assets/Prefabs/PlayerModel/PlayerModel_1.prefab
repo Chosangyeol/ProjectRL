@@ -9,10 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5964715187772593779}
+  - component: {fileID: 7332178377188861517}
+  - component: {fileID: 8554800944438718068}
   - component: {fileID: 799139899837026990}
   - component: {fileID: 607817568511697050}
   - component: {fileID: 4664592410333050878}
-  - component: {fileID: 8554800944438718068}
   m_Layer: 0
   m_Name: PlayerModel_1
   m_TagString: Untagged
@@ -37,6 +38,54 @@ Transform:
   - {fileID: 5753969484284456649}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &7332178377188861517
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097957100818599232}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8554800944438718068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097957100818599232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f564733b7371de41868075eaf491b81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cpnStatSO: {fileID: 11400000, guid: cebee7838d2c7224ca321271738263c7, type: 2}
+  _bulletPrefabs:
+  - {fileID: 2847967053485417111, guid: f1e57927fc887d04ea4536496f203e52, type: 3}
+  - {fileID: 2847967053485417111, guid: ff7da023a72c6e44ab6bf51f71c66e52, type: 3}
+  - {fileID: 2847967053485417111, guid: 5467dcd7a29e31d4fb355b0a5f708880, type: 3}
+  _bulletSummonTr: {fileID: 5484158569492881901}
+  _attackCooltime: 0.2
+  _skillDataSO:
+  - {fileID: 11400000, guid: a5b9fb6aa1e171c43ae64170fbc1e75f, type: 2}
+  - {fileID: 11400000, guid: 5e1caa0f472d6564fb7688ddeee5fbb0, type: 2}
+  - {fileID: 11400000, guid: 255277472b9dff84dbc85393c959d909, type: 2}
+  - {fileID: 0}
+  cameraRotation: {x: 0, y: 0, z: 0, w: 0}
+  moveDirection: {x: 0, y: 0, z: 0}
+  _gunParentTrans: {fileID: 5753969484284456649}
 --- !u!33 &799139899837026990
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -110,33 +159,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8554800944438718068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1097957100818599232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f564733b7371de41868075eaf491b81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cpnStatSO: {fileID: 11400000, guid: cebee7838d2c7224ca321271738263c7, type: 2}
-  _bulletPrefabs:
-  - {fileID: 2847967053485417111, guid: f1e57927fc887d04ea4536496f203e52, type: 3}
-  - {fileID: 2847967053485417111, guid: ff7da023a72c6e44ab6bf51f71c66e52, type: 3}
-  - {fileID: 2847967053485417111, guid: 5467dcd7a29e31d4fb355b0a5f708880, type: 3}
-  _bulletSummonTr: {fileID: 5484158569492881901}
-  _attackCooltime: 0.2
-  _skillDataSO:
-  - {fileID: 11400000, guid: a5b9fb6aa1e171c43ae64170fbc1e75f, type: 2}
-  - {fileID: 11400000, guid: 5e1caa0f472d6564fb7688ddeee5fbb0, type: 2}
-  - {fileID: 11400000, guid: 255277472b9dff84dbc85393c959d909, type: 2}
-  - {fileID: 0}
-  cameraRotation: {x: 0, y: 0, z: 0, w: 0}
-  moveDirection: {x: 0, y: 0, z: 0}
-  _gunParentTrans: {fileID: 5753969484284456649}
 --- !u!1 &1515407526333384644
 GameObject:
   m_ObjectHideFlags: 0

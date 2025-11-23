@@ -40,7 +40,7 @@ namespace Player
 		protected PlayerComponentSkill		cpnSkill;
 		protected PlayerComponentBuff		cpnBuff;
 		protected PlayerComponentStat		cpnStat;
-		protected PlayerComponentAnimation	cpnAnimation;
+		protected APlayerComponentAnimation	cpnAnimation;
 		protected Rigidbody					rigid;
 		protected PlayerPool				pool;
 		protected WaitForSeconds			attackCooldown;
@@ -55,7 +55,7 @@ namespace Player
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
 		public PlayerComponentStat			Stat { get => cpnStat; }
-		public PlayerComponentAnimation		Animation { get => cpnAnimation; }
+		public APlayerComponentAnimation		Animation { get => cpnAnimation; }
 		public Inventory					Inventory { get => inventory; }
 		public PlayerPool					Pool { get => pool; }
 
@@ -98,7 +98,6 @@ namespace Player
 			cpnSkill = new PlayerComponentSkill(this, _skillDataSO);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
-			cpnAnimation = new PlayerComponentAnimation(this);
 			pool = new PlayerPool(bulletParent);
 			inventory = new Inventory(this);
 			attackCooldown = new WaitForSeconds(_attackCooltime);
@@ -140,17 +139,17 @@ namespace Player
 
 		#region Move & Jump & Turn
 
-		public virtual float Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
+		public virtual Vector3 Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
 		{
 			float speed;
 
 			if (!IsMoveable)
-				return (0);
+				return (Vector3.zero);
 			speed = Stat.GetSpeed(isSprint);
 			parent.position += movement * speed;
 			moveDirection = movement.normalized;
 			callback?.Invoke();
-			return (movement.sqrMagnitude * speed);
+			return (movement * speed);
 		}
 
 		public bool Jump(Action callback = null)
@@ -218,15 +217,16 @@ namespace Player
 
 		#region Attack
 
-		public virtual void Attack(Vector3 targetPos)
+		public virtual bool Attack(Vector3 targetPos)
 		{
 			if (canAttack)
 			{
 				canAttack = false;
 				Shoot(targetPos,0,30f,0.02f);
 				StartCoroutine(WaitAttack());
+				return (true);
 			}
-			return ;
+			return (false);
 		}
 
 		public void Shoot(int index = 0, float speed = 5f, float spread = 0.04f)
