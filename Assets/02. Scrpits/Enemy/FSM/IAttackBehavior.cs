@@ -3,6 +3,7 @@ using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public interface IAttackBehavior
 {
@@ -254,7 +255,7 @@ public class Stage1BossAttack : IAttackBehavior
                 warning.transform.position = hit.point;
             }
             yield return new WaitForSeconds(0.5f);
-            enemy.StartAttackCoroutine(DestroyWarning(warning));
+            enemy.StartAttackCoroutine(DestroyWarning(warning, enemy));
 
             PoolableMono obj = PoolManager.Instance.Pop(pattern3Projectile.gameObject.name);
             obj.transform.position = warning.transform.position + Vector3.up * 10f;
@@ -267,10 +268,36 @@ public class Stage1BossAttack : IAttackBehavior
         enemy.StartAttackCoroutine(enemy.AttackDelay(3f));
     }
 
-    IEnumerator DestroyWarning(PoolableMono warning)
+    IEnumerator DestroyWarning(PoolableMono warning, EnemyBase enemy)
     {
+        Debug.Log("∞Ê∞Ì ¿Ã∆Â∆Æ Ω√¿€");
         yield return new WaitForSeconds(1f);
         //∆¯πﬂ ¿Ã∆Â∆Æ
+        Debug.Log("∞Ê∞Ì ¿Ã∆Â∆Æ ¡æ∑·");
+
+        Vector3 centor = warning.transform.position + Vector3.up * 5f;
+
+        Collider[] hits = Physics.OverlapCapsule(point0: centor + Vector3.up * 5f, point1: centor + Vector3.down * 5f, radius: 3f);
+
+        SInfoAttack damage = new SInfoAttack(
+                    enemy.gameObject,
+                    enemy.player.gameObject,
+                    Mathf.RoundToInt(enemy.GetStat().totalDamage),
+                    null
+                );
+
+
+        foreach (Collider hit in hits)
+        {
+            if (hit.CompareTag("Player"))
+            {
+                PlayerModel player = hit.GetComponentInChildren<PlayerModel>();
+                if (player != null)
+                {
+                    player.Damaged(damage);
+                }
+            }
+        }
         PoolManager.Instance.Push(warning);
     }
     #endregion

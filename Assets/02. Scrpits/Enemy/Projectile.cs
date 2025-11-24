@@ -12,6 +12,8 @@ public class Projectile : PoolableMono
     public float destroyTime;
     public float speed;
 
+    public bool isEffect = false;
+
     public override void Reset()
     {
         base.Reset();
@@ -28,7 +30,7 @@ public class Projectile : PoolableMono
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !isEffect)
         {
             Debug.Log("플레이어 적중");
             PoolManager.Instance.Push(this);

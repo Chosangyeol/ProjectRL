@@ -149,5 +149,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   damage: 0
   timer: 0
-  destroyTime: 3
-  speed: 30
+  destroyTime: 2
+  speed: 50
+  isEffect: 1
