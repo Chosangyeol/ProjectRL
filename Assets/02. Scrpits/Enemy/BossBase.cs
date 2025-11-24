@@ -6,6 +6,7 @@ using UnityEngine;
 public class BossBase : EnemyBase
 {
     public int patternCount;
+    protected bool isSpecialPattern = false;
     protected override void Awake()
     {
         base.Awake();
@@ -28,7 +29,10 @@ public class BossBase : EnemyBase
     {
         Debug.Log("보스 공격 딜레이 시작");
         yield return new WaitForSeconds(delay);
-        fsm.ChangeState(new State_BossChase(this, fsm, patternCount));
+        if (!isSpecialPattern)
+        {
+            fsm.ChangeState(new State_BossChase(this, fsm, patternCount));
+        }
         Debug.Log("보스 공격 딜레이 종료");
     }
 

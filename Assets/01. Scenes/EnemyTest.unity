@@ -6434,7 +6434,7 @@ GameObject:
   - component: {fileID: 990810411}
   - component: {fileID: 990810410}
   - component: {fileID: 990810414}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -11521,6 +11521,10 @@ PrefabInstance:
       propertyPath: missilePos
       value: 
       objectReference: {fileID: 1422653821}
+    - target: {fileID: 4694222214566572812, guid: b46e67367b7b4f845986ba340910e302, type: 3}
+      propertyPath: pattern3Warning
+      value: 
+      objectReference: {fileID: 9198931755007564555, guid: 1a9512945e09f0f4997f5657b9a8594f, type: 3}
     - target: {fileID: 4694222214566572812, guid: b46e67367b7b4f845986ba340910e302, type: 3}
       propertyPath: pattern3Projectile
       value: 

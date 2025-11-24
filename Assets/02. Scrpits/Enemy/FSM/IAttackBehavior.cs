@@ -82,12 +82,17 @@ public class Stage1BossAttack : IAttackBehavior
     public GameObject pattern3Projectile;
     public Transform firePos;
     public Transform missilePos;
-    public Stage1BossAttack(GameObject pattern2Projectile,GameObject pattern3Projectile, Transform firePos, Transform missilePos)
+    public GameObject pattern3Warning;
+
+    public bool isAttacking = false;
+
+    public Stage1BossAttack(GameObject pattern2Projectile,GameObject pattern3Projectile, Transform firePos, Transform missilePos, GameObject pattern3Warning)
     {
         this.pattern2Projectile = pattern2Projectile;
         this.pattern3Projectile = pattern3Projectile;
         this.firePos = firePos;
         this.missilePos = missilePos;
+        this.pattern3Warning = pattern3Warning;
     }
 
     public void ExecuteAttack(EnemyBase enemy, int patternIndex = 0)
@@ -104,7 +109,8 @@ public class Stage1BossAttack : IAttackBehavior
                 break;
             case 2:
                 Debug.Log(patternIndex + 1 + "번 패턴");
-                Pattern3(enemy);
+                enemy.StartAttackCoroutine(Pattern3(enemy));
+
                 break;
         }
     }
@@ -140,10 +146,13 @@ public class Stage1BossAttack : IAttackBehavior
                 }
             } 
         }
+
+        isAttacking = false;
     }
 
     IEnumerator Pattern1(EnemyBase enemy)
     {
+        isAttacking = true;
         // 전방 내려찍기
         Debug.Log("패턴1 실행");
         enemy.Lr.startWidth = 0.1f;
@@ -180,6 +189,7 @@ public class Stage1BossAttack : IAttackBehavior
     #region 패턴 2 - 샷건
     IEnumerator Pattern2(EnemyBase enemy)
     {
+        isAttacking = true;
         int projectileCount = 5;     // 원하는 발사 수
         float angleStep = 10f;       // 양쪽으로 벌어지는 각도
         float startAngle = -(projectileCount - 1) / 2f * angleStep;
@@ -200,6 +210,7 @@ public class Stage1BossAttack : IAttackBehavior
             }
             yield return new WaitForSeconds(2f);
         }
+        isAttacking = false;
         enemy.StartAttackCoroutine(enemy.AttackDelay(3f));
     }
 
@@ -217,19 +228,50 @@ public class Stage1BossAttack : IAttackBehavior
     #endregion
 
     #region 패턴 3 - 미사일
-    private void Pattern3(EnemyBase enemy)
+    IEnumerator Pattern3(EnemyBase enemy)
     {
-        PoolableMono obj = PoolManager.Instance.Pop(pattern3Projectile.gameObject.name);
-        Projectile proj = obj.GetComponent<Projectile>();
+        isAttacking = true;
+        for (int i = 0; i < 5; i++)
+        {
+            PoolableMono obj = PoolManager.Instance.Pop(pattern3Projectile.gameObject.name);
+            Projectile proj = obj.GetComponent<Projectile>();
+            proj.transform.position = missilePos.position;
+            Vector3 dir = missilePos.transform.up;
+            proj.GetComponent<Rigidbody>().velocity = dir.normalized * proj.speed;
+            yield return new WaitForSeconds(0.5f);
+            PoolManager.Instance.Push(obj);
+        }
 
-        Vector3 start = missilePos.position;
-        Vector3 target = enemy.player.GetComponent<Collider>().bounds.center;
 
-        proj.SetParabolicMove(start, target, 10f, 2f);
+        for (int i = 0; i < 5; i++)
+        {
+            Vector3 player = enemy.player.position + Vector3.up * 1f;
+            RaycastHit hit;
 
+            PoolableMono warning = PoolManager.Instance.Pop(pattern3Warning.gameObject.name);
+            if (Physics.Raycast(player, Vector3.down, out hit, 100f, LayerMask.GetMask("Ground")))
+            {
+                warning.transform.position = hit.point;
+            }
+            yield return new WaitForSeconds(0.5f);
+            enemy.StartAttackCoroutine(DestroyWarning(warning));
 
+            PoolableMono obj = PoolManager.Instance.Pop(pattern3Projectile.gameObject.name);
+            obj.transform.position = warning.transform.position + Vector3.up * 10f;
+            Projectile proj = obj.GetComponent<Projectile>();
+            Vector3 dir = Vector3.down;
+            proj.GetComponent<Rigidbody>().velocity = dir.normalized * 10f;
+        }
 
+        isAttacking = false;
         enemy.StartAttackCoroutine(enemy.AttackDelay(3f));
+    }
+
+    IEnumerator DestroyWarning(PoolableMono warning)
+    {
+        yield return new WaitForSeconds(1f);
+        //폭발 이펙트
+        PoolManager.Instance.Push(warning);
     }
     #endregion
 

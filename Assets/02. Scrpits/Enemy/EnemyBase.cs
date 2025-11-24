@@ -59,7 +59,7 @@ public class EnemyBase : PoolableMono
         lr.enabled = false;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         fsm.Tick();
     }

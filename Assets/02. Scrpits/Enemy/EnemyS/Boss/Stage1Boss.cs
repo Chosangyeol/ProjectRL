@@ -10,18 +10,33 @@ public class Stage1Boss : BossBase
     public GameObject pattern3Projectile;
     public Transform firePos;
     public Transform missilePos;
+    public GameObject pattern3Warning;
 
 #pragma warning disable CS0114 // 멤버가 상속된 멤버를 숨깁니다. override 키워드가 없습니다.
     private void Start()
 #pragma warning restore CS0114 // 멤버가 상속된 멤버를 숨깁니다. override 키워드가 없습니다.
     {
-        attackBehavior = new Stage1BossAttack(pattern2Projectile, pattern3Projectile,firePos, missilePos);
+        attackBehavior = new Stage1BossAttack(pattern2Projectile, pattern3Projectile,firePos, missilePos, pattern3Warning);
 
         // 레이저 세팅
         lr = GetComponent<LineRenderer>();      
         lr.enabled = false;
+    }
 
- 
+    private void Update()
+    {
+        CheckLaser();
+        fsm.Tick();
+    }
+
+    private void CheckLaser()
+    {
+        if (!isSpecialPattern || isSpinning) return;
+        if (!(attackBehavior is Stage1BossAttack bossAttack)) return;
+        if (bossAttack.isAttacking) return;
+
+        fsm.ChangeState(new State_BossSpecialPattern(this, fsm, patternCount));
+        StartCoroutine(LaserSpin());
     }
 
     public override void TakeDamage(float amount)
@@ -41,10 +56,9 @@ public class Stage1Boss : BossBase
         }
         if (Stat.curHp < (Stat.totalHp * 0.5f) && !isSpinning)
         {
+            isSpecialPattern = true;
             Debug.Log("레이저 공격");
-            StopAllCoroutines();
-            fsm.ChangeState(new State_BossSpecialPattern(this, fsm, patternCount));
-            StartCoroutine(LaserSpin());
+            
         }
 
     }
@@ -138,6 +152,7 @@ public class Stage1Boss : BossBase
         lr.SetPosition(1, laserPos.transform.position + transform.forward * laserRange);
 
         lr.enabled = true;
+        isSpinning = true;
 
 
         yield return new WaitForSeconds(5f);
@@ -146,7 +161,6 @@ public class Stage1Boss : BossBase
         lr.endWidth = laserWidth;
 
         float duringTime = 0f;
-        isSpinning = true;
         
 
         while (duringTime < spinDuration)
@@ -157,7 +171,7 @@ public class Stage1Boss : BossBase
             yield return new WaitForSeconds(0.1f);
         }
         lr.enabled = false;
-
+        isSpecialPattern = false;
         yield return new WaitForSeconds(3f);
         fsm.ChangeState(new State_BossChase(this, fsm, patternCount));
 
