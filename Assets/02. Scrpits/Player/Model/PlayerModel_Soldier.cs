@@ -77,7 +77,8 @@ namespace Player
 			cpnAnimation.SetIKPosition(AvatarIKGoal.LeftHand, _leftHandTr.position);
 			cpnAnimation.SetIKRotation(AvatarIKGoal.LeftHand, _leftHandTr.rotation);
 
-			
+			cpnAnimation.SetLookAtWeight(1f);
+			cpnAnimation.SetLookAtPosition(raycaster.GetRaycastHitPoint());
 			return ;
 		}
 	}

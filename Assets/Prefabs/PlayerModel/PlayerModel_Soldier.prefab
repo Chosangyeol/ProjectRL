@@ -1734,7 +1734,7 @@ MonoBehaviour:
   _cpnStatSO: {fileID: 11400000, guid: cebee7838d2c7224ca321271738263c7, type: 2}
   _bulletPrefabs:
   - {fileID: 2847967053485417111, guid: f1e57927fc887d04ea4536496f203e52, type: 3}
-  _bulletSummonTr: {fileID: 992369521560355599}
+  _bulletSummonTr: {fileID: 607594472563517861}
   _attackCooltime: 0.2
   _skillDataSO:
   - {fileID: 0}
@@ -3055,10 +3055,5 @@ PrefabInstance:
 --- !u!4 &992340778597993087 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4834902213574920, guid: ef0b61f364dfde749a007d3416e27246, type: 3}
-  m_PrefabInstance: {fileID: 996612729634622327}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &992369521560355599 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4845741587990648, guid: ef0b61f364dfde749a007d3416e27246, type: 3}
   m_PrefabInstance: {fileID: 996612729634622327}
   m_PrefabAsset: {fileID: 0}
