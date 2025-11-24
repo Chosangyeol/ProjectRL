@@ -11,7 +11,7 @@ namespace Player.Component
 
 		public override void Update(float delta)
 		{
-			return;
+			return ;
 		}
 	}
 }
