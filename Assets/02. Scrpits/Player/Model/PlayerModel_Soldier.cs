@@ -49,14 +49,16 @@ namespace Player
 		public override Vector3 Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
 		{
 			Vector3 result = base.Move(parent, movement, isSprint, callback);
+			bool isMoveBack = Vector3.Dot(transform.forward, movement) < 0f;
 
 			if (result == Vector3.zero)
 			{
 				cpnAnimation.SetFloat("fsqrSpeed", 0f);
 				return (result);
 			}
+			cpnAnimation.SetBool("bRunning", isSprint);
 			cpnAnimation.SetFloat("fsqrSpeed", 1f);
-			cpnAnimation.SetBool("bMoveBack", Vector3.Dot(transform.forward, movement) < 0f);
+			cpnAnimation.SetBool("bMoveBack", isMoveBack);
 			return (result);
 		}
 
