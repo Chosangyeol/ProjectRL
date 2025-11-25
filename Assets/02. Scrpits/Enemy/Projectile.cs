@@ -1,3 +1,5 @@
+using Info;
+using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +34,14 @@ public class Projectile : PoolableMono
     {
         if (other.CompareTag("Player") && !isEffect)
         {
-            Debug.Log("플레이어 적중");
+            SInfoAttack attackInfo = new SInfoAttack(
+                owner.gameObject,
+                other.gameObject,
+                Mathf.RoundToInt(damage),
+                null
+            );
+            other.GetComponentInChildren<PlayerModel>().Damaged(attackInfo);
+            Debug.Log($"Player Damaged : {damage}");
             PoolManager.Instance.Push(this);
         }
     }

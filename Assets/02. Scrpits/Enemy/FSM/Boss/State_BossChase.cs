@@ -22,6 +22,12 @@ public class State_BossChase : IState
 
     public void Tick()
     {
+        if (enemy.isFly)
+        {
+            fsm.ChangeState(new State_BossFlyChase(enemy, fsm, patternCount, patternIndex));
+            return;
+        }
+
         if (enemy.isFixedType)
         {
             float dist = Vector3.Distance(enemy.transform.position, enemy.player.position);
@@ -62,7 +68,8 @@ public class State_BossChase : IState
     public void FixedTick() { }
     public void OnExit()
     {
-        enemy.Agent.ResetPath();
+        if (!enemy.isFly)
+            enemy.Agent.ResetPath();
     }
 
     private void RotateToPlayer(EnemyBase enemy, float rotSpeed)

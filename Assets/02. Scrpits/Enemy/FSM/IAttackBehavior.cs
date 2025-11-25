@@ -303,3 +303,137 @@ public class Stage1BossAttack : IAttackBehavior
     #endregion
 
 }
+
+public class Stage3BossAttack : IAttackBehavior
+{
+    public GameObject pattern2Centor;
+    public GameObject pattern2Projectile;
+    private bool hasPattern1Hit = false;
+    private float timer = 0f;
+    
+    
+    public Stage3BossAttack(GameObject pattern2Centor, GameObject pattern2Projectile)
+    {
+        this.pattern2Centor = pattern2Centor;
+        this.pattern2Projectile = pattern2Projectile;
+    }
+    
+    public void ExecuteAttack(EnemyBase enemy, int patternIndex = 0)
+    {
+        switch (patternIndex)
+        {
+            case 0:
+                Debug.Log(patternIndex + 1 + "번 패턴");
+                enemy.StartAttackCoroutine(Pattern1(enemy));
+                break;
+            case 1:
+                Debug.Log(patternIndex + 1 + "번 패턴");
+                enemy.StartAttackCoroutine(Pattern2(enemy));
+                break;
+            case 2:
+                Debug.Log(patternIndex + 1 + "번 패턴");
+                Pattern3(enemy);
+                break;
+        }
+    }
+
+
+    IEnumerator Pattern1(EnemyBase enemy)
+    {
+        hasPattern1Hit = false;
+        timer = 0f;
+        
+        // 패턴 1 구현
+        Vector3 targetPos = enemy.player.GetComponent<Collider>().bounds.center;
+        Vector3 dir = (targetPos - enemy.transform.position).normalized;
+
+        while (true)
+        {
+            enemy.transform.position += dir * 20f * Time.deltaTime;
+            if (!hasPattern1Hit)
+            {
+                Collider[] cols = Physics.OverlapSphere(enemy.transform.position, 3f);
+                foreach (var col in cols)
+                {
+                    PlayerModel player = col.GetComponentInChildren<PlayerModel>();
+                    if (player != null)
+                    {
+                        hasPattern1Hit = true;
+
+                        SInfoAttack damage = new SInfoAttack(
+                            enemy.gameObject,
+                            player.gameObject,
+                            Mathf.RoundToInt(enemy.GetStat().totalDamage),
+                            null
+                        );
+                        player.Damaged(damage);
+                        hasPattern1Hit = true;
+                        yield return RecoverHeight(enemy);
+                        enemy.StartAttackCoroutine(enemy.AttackDelay(6f));
+                        yield break;
+                    }
+                }
+            }
+
+            float dist = Vector3.Distance(enemy.transform.position, targetPos);
+
+            if (dist <= 1f)
+            {
+                yield return RecoverHeight(enemy);
+                enemy.StartAttackCoroutine(enemy.AttackDelay(6f));
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    IEnumerator RecoverHeight(EnemyBase enemy)
+    {
+        float speed = 5f;
+
+        while (Mathf.Abs(enemy.transform.position.y - enemy.flyHeight) > 0.1f)
+        {
+            Vector3 pos = enemy.transform.position;
+            pos.y = Mathf.Lerp(pos.y, enemy.flyHeight, Time.deltaTime * speed);
+            enemy.transform.position = pos;
+            yield return null;
+        }
+    }
+
+    IEnumerator Pattern2(EnemyBase enemy)
+    {
+        float rangeX = 20f;
+        float rangeZ = 20f;
+
+        int count = 0;
+
+        while (count < 5)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                PoolableMono obj = PoolManager.Instance.Pop(pattern2Projectile.gameObject.name);
+                Projectile proj = obj.GetComponent<Projectile>();
+
+                proj.owner = enemy;
+                proj.damage = enemy.GetStat().totalDamage;
+
+                proj.transform.position = new Vector3(
+                    Random.Range(enemy.transform.position.x - rangeX, enemy.transform.position.x + rangeX),
+                    30f,
+                    Random.Range(enemy.transform.position.z - rangeZ, enemy.transform.position.z + rangeZ)
+                );
+
+                proj.GetComponent<Rigidbody>().velocity = Vector3.down * proj.GetComponent<Projectile>().speed;
+            }
+            count++;
+            yield return new WaitForSeconds(1f);
+        }
+        enemy.StartAttackCoroutine(enemy.AttackDelay(4f));
+    }
+
+    public void Pattern3(EnemyBase enemy)
+    {
+        enemy.StartAttackCoroutine(enemy.AttackDelay(4f));
+
+    }
+}

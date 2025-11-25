@@ -39,11 +39,16 @@ public class EnemyBase : PoolableMono
 
     public Coroutine attackCoroutine;
 
+    public bool isFly = false;
+    public float flyHeight = 0f;
+
 
     #region Unity Event
     protected virtual void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        if (!isFly)
+            agent = GetComponent<NavMeshAgent>();
+
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         player = GameObject.FindAnyObjectByType<PlayerController>().transform;
