@@ -68,7 +68,7 @@ namespace Player.Component
 			if (hashedParameters.ContainsKey(key))
 			{
 				animator.SetBool(hashedParameters[key], value);
-				return;
+				return ;
 			}
 			throw (new ArgumentException($"key [{key}] is not found"));
 		}
@@ -87,7 +87,7 @@ namespace Player.Component
 			if (hashedParameters.ContainsKey(key))
 			{
 				animator.SetInteger(hashedParameters[key], value);
-				return;
+				return ;
 			}
 			throw (new ArgumentException($"key [{key}] is not found"));
 		}
@@ -97,7 +97,7 @@ namespace Player.Component
 			if (hashedParameters.ContainsKey(key))
 			{
 				animator.SetTrigger(hashedParameters[key]);
-				return;
+				return ;
 			}
 			throw (new ArgumentException($"key [{key}] is not found"));
 		}
@@ -107,7 +107,7 @@ namespace Player.Component
 			if (hashedParameters.ContainsKey(key))
 			{
 				animator.ResetTrigger(hashedParameters[key]);
-				return;
+				return ;
 			}
 			throw (new ArgumentException($"key [{key}] is not found"));
 		}
@@ -175,7 +175,7 @@ namespace Player.Component
 		public void SetIKHintPositionWeight(AvatarIKHint hint, float value)
 		{
 			animator.SetIKHintPositionWeight(hint, value);
-			return;
+			return ;
 		}
 
 		public void SetLookAtPosition(Vector3 lookAtPosition)
