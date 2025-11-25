@@ -1,173 +1,491 @@
 fileFormatVersion: 2
 guid: 7848e185e4297fe4488526eaf7da2710
-timeCreated: 1575392477
-licenseType: Store
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: Armor_Head_Down_MEsh
-    100002: Armor_Head_Top_Mesh
-    100004: ball_l
-    100006: ball_r
-    100008: calf_l
-    100010: calf_r
-    100012: Character_Jacket_Mesh
-    100014: Character_Pants_Mesh
-    100016: clavicle_l
-    100018: clavicle_r
-    100020: //RootNode
-    100022: Eyes_Mesh
-    100024: foot_l
-    100026: foot_r
-    100028: Group001
-    100030: Hair_Mesh
-    100032: hand_l
-    100034: hand_r
-    100036: head
-    100038: Head_01_Mesh
-    100040: Head_02_Mesh
-    100042: ik_foot_root
-    100044: ik_hand_root
-    100046: index_01_l
-    100048: index_01_r
-    100050: index_02_l
-    100052: index_02_r
-    100054: index_03_l
-    100056: index_03_r
-    100058: Jaw
-    100060: Jaw_Mesh
-    100062: lowerarm_l
-    100064: lowerarm_r
-    100066: lowerarm_twist_01_l
-    100068: lowerarm_twist_01_r
-    100070: middle_01_l
-    100072: middle_01_r
-    100074: middle_02_l
-    100076: middle_02_r
-    100078: middle_03_l
-    100080: middle_03_r
-    100082: neck_01
-    100084: pelvis
-    100086: pinky_01_l
-    100088: pinky_01_r
-    100090: pinky_02_l
-    100092: pinky_02_r
-    100094: pinky_03_l
-    100096: pinky_03_r
-    100098: ring_01_l
-    100100: ring_01_r
-    100102: ring_02_l
-    100104: ring_02_r
-    100106: ring_03_l
-    100108: ring_03_r
-    100110: root
-    100112: spine_01
-    100114: spine_02
-    100116: spine_03
-    100118: thigh_l
-    100120: thigh_r
-    100122: thumb_01_l
-    100124: thumb_01_r
-    100126: thumb_02_l
-    100128: thumb_02_r
-    100130: thumb_03_l
-    100132: thumb_03_r
-    100134: upperarm_l
-    100136: upperarm_r
-    400000: Armor_Head_Down_MEsh
-    400002: Armor_Head_Top_Mesh
-    400004: ball_l
-    400006: ball_r
-    400008: calf_l
-    400010: calf_r
-    400012: Character_Jacket_Mesh
-    400014: Character_Pants_Mesh
-    400016: clavicle_l
-    400018: clavicle_r
-    400020: //RootNode
-    400022: Eyes_Mesh
-    400024: foot_l
-    400026: foot_r
-    400028: Group001
-    400030: Hair_Mesh
-    400032: hand_l
-    400034: hand_r
-    400036: head
-    400038: Head_01_Mesh
-    400040: Head_02_Mesh
-    400042: ik_foot_root
-    400044: ik_hand_root
-    400046: index_01_l
-    400048: index_01_r
-    400050: index_02_l
-    400052: index_02_r
-    400054: index_03_l
-    400056: index_03_r
-    400058: Jaw
-    400060: Jaw_Mesh
-    400062: lowerarm_l
-    400064: lowerarm_r
-    400066: lowerarm_twist_01_l
-    400068: lowerarm_twist_01_r
-    400070: middle_01_l
-    400072: middle_01_r
-    400074: middle_02_l
-    400076: middle_02_r
-    400078: middle_03_l
-    400080: middle_03_r
-    400082: neck_01
-    400084: pelvis
-    400086: pinky_01_l
-    400088: pinky_01_r
-    400090: pinky_02_l
-    400092: pinky_02_r
-    400094: pinky_03_l
-    400096: pinky_03_r
-    400098: ring_01_l
-    400100: ring_01_r
-    400102: ring_02_l
-    400104: ring_02_r
-    400106: ring_03_l
-    400108: ring_03_r
-    400110: root
-    400112: spine_01
-    400114: spine_02
-    400116: spine_03
-    400118: thigh_l
-    400120: thigh_r
-    400122: thumb_01_l
-    400124: thumb_01_r
-    400126: thumb_02_l
-    400128: thumb_02_r
-    400130: thumb_03_l
-    400132: thumb_03_r
-    400134: upperarm_l
-    400136: upperarm_r
-    2100000: 23 - Default
-    2100002: 06 - Default
-    2100004: 20 - Default
-    4300000: Character_Pants_Mesh
-    4300002: Character_Jacket_Mesh
-    4300004: Hair_Mesh
-    4300006: Head_01_Mesh
-    4300008: Eyes_Mesh
-    4300010: Armor_Head_Down_MEsh
-    4300012: Head_02_Mesh
-    4300014: Jaw_Mesh
-    4300016: Armor_Head_Top_Mesh
-    9500000: //RootNode
-    13700000: Armor_Head_Down_MEsh
-    13700002: Armor_Head_Top_Mesh
-    13700004: Character_Jacket_Mesh
-    13700006: Character_Pants_Mesh
-    13700008: Eyes_Mesh
-    13700010: Hair_Mesh
-    13700012: Head_01_Mesh
-    13700014: Head_02_Mesh
-    13700016: Jaw_Mesh
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Armor_Head_Down_MEsh
+  - first:
+      1: 100002
+    second: Armor_Head_Top_Mesh
+  - first:
+      1: 100004
+    second: ball_l
+  - first:
+      1: 100006
+    second: ball_r
+  - first:
+      1: 100008
+    second: calf_l
+  - first:
+      1: 100010
+    second: calf_r
+  - first:
+      1: 100012
+    second: Character_Jacket_Mesh
+  - first:
+      1: 100014
+    second: Character_Pants_Mesh
+  - first:
+      1: 100016
+    second: clavicle_l
+  - first:
+      1: 100018
+    second: clavicle_r
+  - first:
+      1: 100020
+    second: //RootNode
+  - first:
+      1: 100022
+    second: Eyes_Mesh
+  - first:
+      1: 100024
+    second: foot_l
+  - first:
+      1: 100026
+    second: foot_r
+  - first:
+      1: 100028
+    second: Group001
+  - first:
+      1: 100030
+    second: Hair_Mesh
+  - first:
+      1: 100032
+    second: hand_l
+  - first:
+      1: 100034
+    second: hand_r
+  - first:
+      1: 100036
+    second: head
+  - first:
+      1: 100038
+    second: Head_01_Mesh
+  - first:
+      1: 100040
+    second: Head_02_Mesh
+  - first:
+      1: 100042
+    second: ik_foot_root
+  - first:
+      1: 100044
+    second: ik_hand_root
+  - first:
+      1: 100046
+    second: index_01_l
+  - first:
+      1: 100048
+    second: index_01_r
+  - first:
+      1: 100050
+    second: index_02_l
+  - first:
+      1: 100052
+    second: index_02_r
+  - first:
+      1: 100054
+    second: index_03_l
+  - first:
+      1: 100056
+    second: index_03_r
+  - first:
+      1: 100058
+    second: Jaw
+  - first:
+      1: 100060
+    second: Jaw_Mesh
+  - first:
+      1: 100062
+    second: lowerarm_l
+  - first:
+      1: 100064
+    second: lowerarm_r
+  - first:
+      1: 100066
+    second: lowerarm_twist_01_l
+  - first:
+      1: 100068
+    second: lowerarm_twist_01_r
+  - first:
+      1: 100070
+    second: middle_01_l
+  - first:
+      1: 100072
+    second: middle_01_r
+  - first:
+      1: 100074
+    second: middle_02_l
+  - first:
+      1: 100076
+    second: middle_02_r
+  - first:
+      1: 100078
+    second: middle_03_l
+  - first:
+      1: 100080
+    second: middle_03_r
+  - first:
+      1: 100082
+    second: neck_01
+  - first:
+      1: 100084
+    second: pelvis
+  - first:
+      1: 100086
+    second: pinky_01_l
+  - first:
+      1: 100088
+    second: pinky_01_r
+  - first:
+      1: 100090
+    second: pinky_02_l
+  - first:
+      1: 100092
+    second: pinky_02_r
+  - first:
+      1: 100094
+    second: pinky_03_l
+  - first:
+      1: 100096
+    second: pinky_03_r
+  - first:
+      1: 100098
+    second: ring_01_l
+  - first:
+      1: 100100
+    second: ring_01_r
+  - first:
+      1: 100102
+    second: ring_02_l
+  - first:
+      1: 100104
+    second: ring_02_r
+  - first:
+      1: 100106
+    second: ring_03_l
+  - first:
+      1: 100108
+    second: ring_03_r
+  - first:
+      1: 100110
+    second: root
+  - first:
+      1: 100112
+    second: spine_01
+  - first:
+      1: 100114
+    second: spine_02
+  - first:
+      1: 100116
+    second: spine_03
+  - first:
+      1: 100118
+    second: thigh_l
+  - first:
+      1: 100120
+    second: thigh_r
+  - first:
+      1: 100122
+    second: thumb_01_l
+  - first:
+      1: 100124
+    second: thumb_01_r
+  - first:
+      1: 100126
+    second: thumb_02_l
+  - first:
+      1: 100128
+    second: thumb_02_r
+  - first:
+      1: 100130
+    second: thumb_03_l
+  - first:
+      1: 100132
+    second: thumb_03_r
+  - first:
+      1: 100134
+    second: upperarm_l
+  - first:
+      1: 100136
+    second: upperarm_r
+  - first:
+      4: 400000
+    second: Armor_Head_Down_MEsh
+  - first:
+      4: 400002
+    second: Armor_Head_Top_Mesh
+  - first:
+      4: 400004
+    second: ball_l
+  - first:
+      4: 400006
+    second: ball_r
+  - first:
+      4: 400008
+    second: calf_l
+  - first:
+      4: 400010
+    second: calf_r
+  - first:
+      4: 400012
+    second: Character_Jacket_Mesh
+  - first:
+      4: 400014
+    second: Character_Pants_Mesh
+  - first:
+      4: 400016
+    second: clavicle_l
+  - first:
+      4: 400018
+    second: clavicle_r
+  - first:
+      4: 400020
+    second: //RootNode
+  - first:
+      4: 400022
+    second: Eyes_Mesh
+  - first:
+      4: 400024
+    second: foot_l
+  - first:
+      4: 400026
+    second: foot_r
+  - first:
+      4: 400028
+    second: Group001
+  - first:
+      4: 400030
+    second: Hair_Mesh
+  - first:
+      4: 400032
+    second: hand_l
+  - first:
+      4: 400034
+    second: hand_r
+  - first:
+      4: 400036
+    second: head
+  - first:
+      4: 400038
+    second: Head_01_Mesh
+  - first:
+      4: 400040
+    second: Head_02_Mesh
+  - first:
+      4: 400042
+    second: ik_foot_root
+  - first:
+      4: 400044
+    second: ik_hand_root
+  - first:
+      4: 400046
+    second: index_01_l
+  - first:
+      4: 400048
+    second: index_01_r
+  - first:
+      4: 400050
+    second: index_02_l
+  - first:
+      4: 400052
+    second: index_02_r
+  - first:
+      4: 400054
+    second: index_03_l
+  - first:
+      4: 400056
+    second: index_03_r
+  - first:
+      4: 400058
+    second: Jaw
+  - first:
+      4: 400060
+    second: Jaw_Mesh
+  - first:
+      4: 400062
+    second: lowerarm_l
+  - first:
+      4: 400064
+    second: lowerarm_r
+  - first:
+      4: 400066
+    second: lowerarm_twist_01_l
+  - first:
+      4: 400068
+    second: lowerarm_twist_01_r
+  - first:
+      4: 400070
+    second: middle_01_l
+  - first:
+      4: 400072
+    second: middle_01_r
+  - first:
+      4: 400074
+    second: middle_02_l
+  - first:
+      4: 400076
+    second: middle_02_r
+  - first:
+      4: 400078
+    second: middle_03_l
+  - first:
+      4: 400080
+    second: middle_03_r
+  - first:
+      4: 400082
+    second: neck_01
+  - first:
+      4: 400084
+    second: pelvis
+  - first:
+      4: 400086
+    second: pinky_01_l
+  - first:
+      4: 400088
+    second: pinky_01_r
+  - first:
+      4: 400090
+    second: pinky_02_l
+  - first:
+      4: 400092
+    second: pinky_02_r
+  - first:
+      4: 400094
+    second: pinky_03_l
+  - first:
+      4: 400096
+    second: pinky_03_r
+  - first:
+      4: 400098
+    second: ring_01_l
+  - first:
+      4: 400100
+    second: ring_01_r
+  - first:
+      4: 400102
+    second: ring_02_l
+  - first:
+      4: 400104
+    second: ring_02_r
+  - first:
+      4: 400106
+    second: ring_03_l
+  - first:
+      4: 400108
+    second: ring_03_r
+  - first:
+      4: 400110
+    second: root
+  - first:
+      4: 400112
+    second: spine_01
+  - first:
+      4: 400114
+    second: spine_02
+  - first:
+      4: 400116
+    second: spine_03
+  - first:
+      4: 400118
+    second: thigh_l
+  - first:
+      4: 400120
+    second: thigh_r
+  - first:
+      4: 400122
+    second: thumb_01_l
+  - first:
+      4: 400124
+    second: thumb_01_r
+  - first:
+      4: 400126
+    second: thumb_02_l
+  - first:
+      4: 400128
+    second: thumb_02_r
+  - first:
+      4: 400130
+    second: thumb_03_l
+  - first:
+      4: 400132
+    second: thumb_03_r
+  - first:
+      4: 400134
+    second: upperarm_l
+  - first:
+      4: 400136
+    second: upperarm_r
+  - first:
+      21: 2100000
+    second: 23 - Default
+  - first:
+      21: 2100002
+    second: 06 - Default
+  - first:
+      21: 2100004
+    second: 20 - Default
+  - first:
+      43: 4300000
+    second: Character_Pants_Mesh
+  - first:
+      43: 4300002
+    second: Character_Jacket_Mesh
+  - first:
+      43: 4300004
+    second: Hair_Mesh
+  - first:
+      43: 4300006
+    second: Head_01_Mesh
+  - first:
+      43: 4300008
+    second: Eyes_Mesh
+  - first:
+      43: 4300010
+    second: Armor_Head_Down_MEsh
+  - first:
+      43: 4300012
+    second: Head_02_Mesh
+  - first:
+      43: 4300014
+    second: Jaw_Mesh
+  - first:
+      43: 4300016
+    second: Armor_Head_Top_Mesh
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: Armor_Head_Down_MEsh
+  - first:
+      137: 13700002
+    second: Armor_Head_Top_Mesh
+  - first:
+      137: 13700004
+    second: Character_Jacket_Mesh
+  - first:
+      137: 13700006
+    second: Character_Pants_Mesh
+  - first:
+      137: 13700008
+    second: Eyes_Mesh
+  - first:
+      137: 13700010
+    second: Hair_Mesh
+  - first:
+      137: 13700012
+    second: Head_01_Mesh
+  - first:
+      137: 13700014
+    second: Head_02_Mesh
+  - first:
+      137: 13700016
+    second: Jaw_Mesh
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -176,6 +494,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -184,6 +503,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
+    importConstraints: 0
     animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -198,32 +518,49 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human:
     - boneName: pelvis
       humanName: Hips
@@ -994,14 +1331,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

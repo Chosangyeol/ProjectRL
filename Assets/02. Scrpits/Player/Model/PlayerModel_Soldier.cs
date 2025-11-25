@@ -37,7 +37,7 @@ namespace Player
 		{
 			base.Update();
 			TurnGun();
-			return;
+			return ;
 		}
 
 		private void TurnGun()
