@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace Player.Component
 {
-	// TODO!
 	[Serializable]
 	public class PlayerComponentSkill
 	{
