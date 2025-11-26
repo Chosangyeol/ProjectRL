@@ -38,6 +38,8 @@ namespace Player.Component
 		{
 			for (int i = 0; i < skills.Length; i++)
 			{
+				if (skills[i] == null)
+					continue ;
 				SPlayerSkillData data = new SPlayerSkillData(i, skills[i].dataSO, skills[i].IsSelected);
 
 				skillDataSets.Add(new SPlayerSkillDataSet(i, data));
@@ -80,7 +82,7 @@ namespace Player.Component
 			return (activeSkill[index].UseSkill(playerModel, skillKey));
 		}
 
-		public virtual bool SetSkill(short targetIndex, string skillName)
+		public bool SetSkill(short targetIndex, string skillName)
 		{
 			if (targetIndex > activeSkill.Length || targetIndex < 0)
 				return (false);
