@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 namespace UI.Option
 {
@@ -14,5 +15,29 @@ namespace UI.Option
             뭐 더 만들 설정 있나...
 
         */
+        public GameObject CurrentActive;
+
+        public void ChangeCurrentActive(GameObject obj)
+        {
+            CurrentActive = obj;
+        }
+        public void SlideChange(GameObject obj)
+        {
+            if(obj != CurrentActive)
+            {
+                CurrentActive.GetComponent<RectTransform>().DOAnchorPos(new Vector2(-2000, CurrentActive.GetComponent<RectTransform>().anchoredPosition.y), 0.5f);
+                CurrentActive.SetActive(false);
+                CurrentActive.GetComponent<RectTransform>().anchoredPosition = new Vector2(2000, CurrentActive.GetComponent<RectTransform>().anchoredPosition.y);
+                StartCoroutine(Wait());
+                obj.SetActive(true);
+                obj.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, CurrentActive.GetComponent<RectTransform>().anchoredPosition.y), 0.5f);
+                CurrentActive = obj;
+            }   
+        }
+
+        IEnumerator Wait()
+        {
+            yield return new WaitForSeconds(0.4f);
+        }
     }
 }

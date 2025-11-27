@@ -1,9 +1,11 @@
+using Config;
+using Player;
+using Player.Item;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Config;
-using Player.Item;
+using DG.Tweening;
 
 namespace UI.InventoryUI
 {
@@ -42,64 +44,63 @@ namespace UI.InventoryUI
                 BigInvItemIcon[i] = BigInvPanel.transform.GetChild(i).gameObject;
                 BigInvItemIcon[i].SetActive(false);
             }
+            //Inv = FindFirstObjectByType<PlayerModel>().Inventory;
+
+            //Inv.ActionAfterAddItem += OnItemAdded;
+            //Inv.ActionAfterRemoveItem += OnItemRemoved;
+
             CloseBigInv();
             OpenBigPanel = false;
         }
 
         void Update()
         {
-            if (CUI.GetKeyDown("keyInventory")) // I로 되어있긴 한데 TAB으로 바꾸자는 얘기 있었음
+            if (ConfigUserInput.Instance.GetKeyDown("keyInventory"))
             {
                 if (OpenBigPanel)
                 {
+                    InventoryPanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 710f), 1f).SetEase(Ease.OutCubic);
                     CloseBigInv();
                     OpenBigPanel = false;
-                    InventoryPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 710f);
-
                 }
                 else
                 {
+                    InventoryPanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 210f), 1f).SetEase(Ease.OutCubic);
                     OpenBigInv();
                     OpenBigPanel = true;
-                    InventoryPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 210f);
                 }
             }
         }
 
-        public void ItemGetAnnounce() //Inventory랑 연결하면 딱인디 어야 할까요 이거
+        public void ItemGetAnnounce(AItem item)
         {
-            SmallInventoryIconUpdate();
-            BigInventoryIconUpdate();
-
-            ItemGetAnnouncePanelIcon.GetComponent<Image>().sprite = Inv.items[Inv.items.Count].itemData.itemSprite;
-            ItemGetAnnouncePanelName.GetComponent<Text>().text = Inv.items[Inv.items.Count].itemData.itemName;
-            ItemGetAnnouncePanelDesc.GetComponent<Text>().text = Inv.items[Inv.items.Count].itemData.tooltip;
+            ItemGetAnnouncePanelIcon.GetComponent<Image>().sprite = item.itemData.itemSprite;
+            ItemGetAnnouncePanelName.GetComponent<Text>().text = item.itemData.itemName;
+            ItemGetAnnouncePanelDesc.GetComponent<Text>().text = item.itemData.tooltip;
             ItemGetAnnouncePanel.SetActive(true);
-            StartCoroutine(Wait(3));
-            ItemGetAnnouncePanel.SetActive(false);
-            
+            StartCoroutine(Wait(3));      
         }
         void SmallInventoryIconUpdate()
         {
-            for (int i = 0; i < Inv.items.Count && i < 9; i++){
-                SmallInvItemIcon[i].GetComponent<Image>().sprite = Inv.items[i].itemData.itemSprite;
+            for (int i = 0; i < Inv.Items.Count && i < 9; i++){
+                SmallInvItemIcon[i].GetComponent<Image>().sprite = Inv.Items[i].itemData.itemSprite;
                 SmallInvItemIcon[i].SetActive(true);
             }
         }
         void BigInventoryIconUpdate()
         {
-            for (int i = 0; i < Inv.items.Count; i++)
+            for (int i = 0; i < Inv.Items.Count; i++)
             {
-                BigInvItemIcon[i].GetComponent<Image>().sprite = Inv.items[i].itemData.itemSprite;
+                BigInvItemIcon[i].GetComponent<Image>().sprite = Inv.Items[i].itemData.itemSprite;
                 BigInvItemIcon[i].SetActive(true);
             }
         }
 
         public void MouseOverIcon(int index)
         {
-            ItemDescPanelIcon.GetComponent<Image>().sprite = Inv.items[index].itemData.itemSprite;
-            ItemDescPanelName.GetComponent<Text>().text = Inv.items[index].itemData.itemName;
-            ItemDescPanelDesc.GetComponent<Text>().text = Inv.items[index].itemData.tooltip;
+            ItemDescPanelIcon.GetComponent<Image>().sprite = Inv.Items[index].itemData.itemSprite;
+            ItemDescPanelName.GetComponent<Text>().text = Inv.Items[index].itemData.itemName;
+            ItemDescPanelDesc.GetComponent<Text>().text = Inv.Items[index].itemData.tooltip;
         }
 
         void OpenBigInv()
@@ -113,10 +114,25 @@ namespace UI.InventoryUI
             SmallInvPanel.SetActive(true);
         }
 
+        private void OnItemAdded(AItem item)
+        {
+            SmallInventoryIconUpdate();
+            BigInventoryIconUpdate();
+            ItemGetAnnounce(item);
+        }
+
+        private void OnItemRemoved(AItem item)
+        {
+            SmallInventoryIconUpdate();
+            BigInventoryIconUpdate();
+        }
+
 
         IEnumerator Wait(int second)
         {
             yield return new WaitForSeconds(second);
+            ItemGetAnnouncePanel.SetActive(false);
+            ItemGetAnnouncePanel.GetComponent<DOTweenAnimation>().DORewind();
         }
     }
 }
