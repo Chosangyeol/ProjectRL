@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using Player.Component;
 using System;
 using UnityEngine;
@@ -65,8 +64,15 @@ namespace Player
 		private void OnAnimatorIK(int layerIndex)
 		{
 			if (layerIndex != 0)
+			{
+				if (IsAlive)
+					cpnAnimation.SetLayerWeight(layerIndex, 1f);
+				else
+					cpnAnimation.SetLayerWeight(layerIndex, 0f);
 				return ;
-
+			}
+			if (!IsAlive)
+				return ;
 			cpnAnimation.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
 			cpnAnimation.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
 

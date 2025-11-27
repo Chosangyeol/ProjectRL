@@ -214,6 +214,27 @@ namespace Player.Component
 			return ;
 		}
 
+		public int GetLayerIndex(string layerName)
+		{
+			return (animator.GetLayerIndex(layerName));
+		}
+
+		public string GetLayerName(int layerIndex)
+		{
+			return (animator.GetLayerName(layerIndex));
+		}
+
+		public float GetLayerWeight(int layerIndex)
+		{
+			return (animator.GetLayerWeight(layerIndex));
+		}
+
+		public void SetLayerWeight(int layerIndex, float weight)
+		{
+			animator.SetLayerWeight(layerIndex, weight);
+			return ;
+		}
+
 		public abstract void Update(float delta);
 	}
 }

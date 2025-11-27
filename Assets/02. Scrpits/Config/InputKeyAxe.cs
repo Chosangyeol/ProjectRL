@@ -28,7 +28,7 @@ namespace Config
 			return ;
 		}
 
-		public float GetAxis(float deltaTime)
+		public void UpdateAxis(float deltaTime)
 		{
 			float value = 0f;
 
@@ -43,6 +43,11 @@ namespace Config
 				axis = Mathf.MoveTowards(axis, value, sensitivity * deltaTime);
 			else
 				axis = Mathf.MoveTowards(axis, 0, gravity * deltaTime);
+			return ;
+		}
+
+		public float GetAxis()
+		{
 			return (axis);
 		}
 	}

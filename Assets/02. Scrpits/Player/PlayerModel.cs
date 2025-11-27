@@ -55,14 +55,14 @@ namespace Player
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
 		public PlayerComponentStat			Stat { get => cpnStat; }
-		public APlayerComponentAnimation		Animation { get => cpnAnimation; }
+		public APlayerComponentAnimation	Animation { get => cpnAnimation; }
 		public Inventory					Inventory { get => inventory; }
 		public PlayerPool					Pool { get => pool; }
 
 		public bool							CanDamaged { get => (canDamaged || isWaitDamaged); }
 
-		public bool							IsAlive { get; private set; }
-		public bool							IsMoveable { get; private set; }
+		public bool							IsAlive { get; protected set; } = true;
+		public bool							IsMoveable { get; protected set; } = true;
 
 		public event Action<PlayerModel>	ActionCallbackBuffChanged;
 		public event Action<PlayerModel>	ActionCallbackStatChanged;
