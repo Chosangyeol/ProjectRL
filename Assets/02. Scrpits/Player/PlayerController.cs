@@ -132,7 +132,7 @@ namespace Player
 
 			if (movement.sqrMagnitude > 1)
 				movement.Normalize();
-			Player.Move(transform, Time.deltaTime * movement, ConfigUserInput.Instance.GetKey("keySprint"), ActionCallbackMove);
+			Player.Move(transform, timeSecond * movement, ConfigUserInput.Instance.GetKey("keySprint"), ActionCallbackMove);
 			return ;
 		}
 
