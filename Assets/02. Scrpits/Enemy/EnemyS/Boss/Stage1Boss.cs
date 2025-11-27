@@ -143,8 +143,6 @@ public class Stage1Boss : BossBase
 
     private IEnumerator LaserSpin()
     {
-        lr.material = new Material(Shader.Find("Unlit/Color"));
-        lr.material.color = laserColor;
         lr.positionCount = 2;
         lr.startWidth = laserWarningWidth;
         lr.endWidth = laserWarningWidth;

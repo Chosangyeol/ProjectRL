@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 260320471278953937}
   - component: {fileID: 203203734673528485}
   m_Layer: 6
-  m_Name: Stage3Boss_Pattern2
+  m_Name: Stage3Boss_Pattern3
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -150,5 +150,5 @@ MonoBehaviour:
   damage: 0
   timer: 0
   destroyTime: 2
-  speed: 30
+  speed: 20
   isEffect: 0
