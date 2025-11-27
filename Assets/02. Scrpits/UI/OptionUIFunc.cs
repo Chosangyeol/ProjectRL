@@ -15,6 +15,13 @@ namespace UI.Option
             뭐 더 만들 설정 있나...
 
         */
+        public void ChangingKey(GameObject obj)
+        {
+
+        }
+
+
+
         public GameObject CurrentActive;
 
         public void ChangeCurrentActive(GameObject obj)
