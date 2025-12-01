@@ -9,7 +9,7 @@ namespace Achievement
 
 		public AchievementPlayerDamageOver100()
 		{
-			Name = "Test_Achievement";
+			Name = nameof(AchievementPlayerDamageOver100);
 			IsUnlocked = false;
 			return ;
 		}

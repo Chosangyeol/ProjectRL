@@ -8,14 +8,19 @@ namespace Player.Skill
 	public abstract class APlayerSkill
 	{
 		public APlayerSkillDataSO dataSO;
+
+		protected bool isSelected;
 		protected float coolTime;
 		protected float nowTime;
 		protected bool canUse;
+
+		public bool IsSelected { get => isSelected; set => isSelected = value; }
 
 		public APlayerSkill(APlayerSkillDataSO dataSO)
 		{
 			this.dataSO = dataSO;
 			this.coolTime = dataSO.coolTime;
+			isSelected = false;
 			nowTime = 0f;
 			canUse = true;
 			return ;

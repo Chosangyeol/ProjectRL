@@ -7,7 +7,7 @@ using UnitySubCore.Singleton;
 
 namespace Config
 {
-	public class ConfigUserInput : ASingleton<ConfigUserInput>, IConfig
+	public class ConfigUserInput : AMonoSingleton<ConfigUserInput>, IConfig
 	{
 		public event Action ActionCallbackConfigChanged;
 
@@ -16,14 +16,26 @@ namespace Config
 		private SInputSetting input;
 		public SInputSetting InputKey { get => input; private set => input = value; }
 
-		private Dictionary<string, KeyCode> dict;
-		private Dictionary<string, InputKeyAxe> axis;
+		private Dictionary<string, KeyCode> dict = new();
+		private Dictionary<string, InputKeyAxe> axis = new();
+		private List<InputKeyAxe> axisList = new();
 
-		public ConfigUserInput()
+		protected override void Awake()
 		{
+			base.Awake();
 			LoadData();
 			SaveData();
+			DontDestroyOnLoad(gameObject);
 			return;
+		}
+
+		protected void Update()
+		{
+			foreach (InputKeyAxe axe in axisList)
+			{
+				axe.UpdateAxis(Time.deltaTime);
+			}
+			return ;
 		}
 
 		public bool GetKey(string key)
@@ -47,10 +59,10 @@ namespace Config
 			return (Input.GetKeyUp(code));
 		}
 
-		public float GetAxis(string key, float deltaTime)
+		public float GetAxis(string key)
 		{
 			if (axis.TryGetValue(key, out InputKeyAxe axe))
-				return (axe.GetAxis(deltaTime));
+				return (axe.GetAxis());
 			throw (new ArgumentException($"{key} is not correct key"));
 		}
 
@@ -65,7 +77,8 @@ namespace Config
 		{
 			FieldInfo[] array = typeof(SInputSetting).GetFields(BindingFlags.Public | BindingFlags.Instance);
 
-			dict = new Dictionary<string, KeyCode>();
+			dict.Clear();
+			axisList.Clear();
 			for (int i = 0; i < array.Length; i++)
 			{
 				FieldInfo field = array[i];
@@ -75,14 +88,16 @@ namespace Config
 				dict[field.Name] = (KeyCode)(field.GetValue(InputKey));
 			}
 			// ==========
-			axis = new Dictionary<string, InputKeyAxe>();
+			axis.Clear();
 			
 			axis["Horizontal"] = new InputKeyAxe();
 			axis["Horizontal"].InitKeyCode(InputKey.keyMoveRight, InputKey.keyMoveLeft);
 			axis["Horizontal"].InitField(0.001f, 3f, 3f);
+			axisList.Add(axis["Horizontal"]);
 			axis["Vertical"] = new InputKeyAxe();
 			axis["Vertical"].InitKeyCode(InputKey.keyMoveFront, InputKey.keyMoveBack);
 			axis["Vertical"].InitField(0.001f, 3f, 3f);
+			axisList.Add(axis["Vertical"]);
 			return ;
 		}
 

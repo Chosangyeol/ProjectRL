@@ -124,15 +124,15 @@ namespace Player
 
 		private void Move(float timeSecond)
 		{
-			float moveHorizontal = ConfigUserInput.Instance.GetAxis("Horizontal", timeSecond);
-			float moveVertical = ConfigUserInput.Instance.GetAxis("Vertical", timeSecond);
+			float moveHorizontal = ConfigUserInput.Instance.GetAxis("Horizontal");
+			float moveVertical = ConfigUserInput.Instance.GetAxis("Vertical");
 			Vector3 moveCamR = Vector3.Scale(Camera.transform.right, new Vector3(1, 0, 1));
 			Vector3 moveCamF = Vector3.Scale(Camera.transform.forward, new Vector3(1, 0, 1));
 			Vector3 movement = moveCamF.normalized * moveVertical + moveCamR.normalized * moveHorizontal;
 
 			if (movement.sqrMagnitude > 1)
 				movement.Normalize();
-			Player.Move(transform, Time.deltaTime * movement, ConfigUserInput.Instance.GetKey("keySprint"), ActionCallbackMove);
+			Player.Move(transform, timeSecond * movement, ConfigUserInput.Instance.GetKey("keySprint"), ActionCallbackMove);
 			return ;
 		}
 
