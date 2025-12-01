@@ -1,11 +1,40 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.Windows;
 
 namespace Config
 {
 	[Serializable]
 	public struct SInputSetting
 	{
+		public Dictionary<string, KeyCode> GetDefaultKey()
+		{
+			return (new Dictionary<string, KeyCode>
+			{
+				{ nameof(keyMoveFront), KeyCode.W },
+				{ nameof(keyMoveBack),  KeyCode.S },
+				{ nameof(keyMoveLeft),  KeyCode.A },
+				{ nameof(keyMoveRight), KeyCode.D },
+
+				{ nameof(keySprint), KeyCode.LeftShift },
+				{ nameof(keyDash),   KeyCode.LeftControl },
+				{ nameof(keyJump),   KeyCode.Space },
+
+				{ nameof(keyInteract), KeyCode.F },
+				{ nameof(keyInventory), KeyCode.Tab },
+				{ nameof(keySkillTree), KeyCode.K },
+
+				{ nameof(keySkill1), KeyCode.Q },
+				{ nameof(keySkill2), KeyCode.E },
+				{ nameof(keySkill3), KeyCode.R },
+				{ nameof(keySkill4), KeyCode.G },
+
+				{ nameof(keyPause), KeyCode.Escape }
+			});
+		}
+
 		// ===== KeyCode Mapping =====
 		public KeyCode keyMoveFront;
 		public KeyCode keyMoveBack;
@@ -15,6 +44,10 @@ namespace Config
 		public KeyCode keySprint;
 		public KeyCode keyDash;
 		public KeyCode keyJump;
+
+		public KeyCode keyInteract;
+		public KeyCode keyInventory;
+		public KeyCode keySkillTree;
 
 		public KeyCode keySkill1;
 		public KeyCode keySkill2;
@@ -26,26 +59,24 @@ namespace Config
 		// ===== User Setting =====
 		public bool isAxisYFlipped;
 
-		public void Init()
+		public void Init(ref SInputSetting self)
 		{
-			// ===== KeyCode Mapping =====
-			keyMoveFront = KeyCode.W;
-			keyMoveBack = KeyCode.S;
-			keyMoveLeft = KeyCode.A;
-			keyMoveRight = KeyCode.D;
+			Dictionary<string, KeyCode> defaultKeys = GetDefaultKey();
+			FieldInfo[] fields = typeof(SInputSetting).GetFields(BindingFlags.Public | BindingFlags.Instance);
 
-			keySprint = KeyCode.LeftShift;
-			keyDash = KeyCode.LeftControl;
-			keyJump = KeyCode.Space;
+			for (int i = 0; i < fields.Length; i++)
+			{
+				FieldInfo field = fields[i];
+				if (field.FieldType != typeof(KeyCode))
+					continue ;
 
-			keySkill1 = KeyCode.Q;
-			keySkill2 = KeyCode.E;
-			keySkill3 = KeyCode.R;
-			keySkill4 = KeyCode.G;
-			keyPause = KeyCode.Escape;
-
-			// ===== User Setting =====
-			isAxisYFlipped = false;
+				KeyCode currentValue = (KeyCode)field.GetValue(self);
+				if (currentValue == KeyCode.None && defaultKeys.TryGetValue(field.Name, out var defaultValue))
+				{
+					field.SetValueDirect(__makeref(self), defaultValue);
+				}
+			}
+			return;
 		}
 	}
 }

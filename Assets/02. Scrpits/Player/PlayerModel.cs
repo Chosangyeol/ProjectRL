@@ -6,42 +6,68 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
-using System.Security.Cryptography;
+using System.Reflection;
 
 namespace Player
 {
 	public class PlayerModel : MonoBehaviour
 	{
-		[Header("Components")]
-		[SerializeField]
-		private PlayerComponentStatSO		_cpnStatSO;
-		[SerializeField]
-		private PlayerSkillDataSO[]			_skillDataSO;
+		#region define
 
-		[Header("Inventory")]
+		[Header("Stat")]
 		[SerializeField]
-		private Inventory					inventory;
+		protected PlayerComponentStatSO		_cpnStatSO;
 
-		public Vector3						angleCamera;
+		[Header("Attack")]
+		[SerializeField]
+		protected PlayerBullet[]			_bulletPrefabs;
+		[SerializeField]
+		protected Transform					_bulletSummonTr;
+		[SerializeField]
+		protected float						_attackCooltime = 0.2f;
 
-		private PlayerComponentSkill		cpnSkill;
-		private PlayerComponentBuff			cpnBuff;
-		private PlayerComponentStat			cpnStat;
-		private Rigidbody					rigid;
-		private bool						isGrounded = true;
+		[Header("Skill")]
+		[SerializeField]
+		protected APlayerSkillDataSO[]		_skillDataSO;
+
+		[SerializeField]
+		protected Inventory					inventory;
+
+		public Quaternion					cameraRotation;
+		public Vector3						moveDirection;
+
+		protected Transform					bulletParent;
+		protected PlayerComponentSkill		cpnSkill;
+		protected PlayerComponentBuff		cpnBuff;
+		protected PlayerComponentStat		cpnStat;
+		protected PlayerComponentAnimation	cpnAnimation;
+		protected Rigidbody					rigid;
+		protected PlayerPool				pool;
+		protected WaitForSeconds			attackCooldown;
+		protected IRaycastable				raycaster;
+
+		protected bool						canAttack = true;
+		protected bool						isGrounded = true;
+		protected bool						canDamaged = true;
+		protected bool						isWaitDamaged = false;
+		protected Coroutine					waitDamagedCoroutine;
 
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
 		public PlayerComponentStat			Stat { get => cpnStat; }
+		public PlayerComponentAnimation		Animation { get => cpnAnimation; }
 		public Inventory					Inventory { get => inventory; }
+		public PlayerPool					Pool { get => pool; }
+
+		public bool							CanDamaged { get => (canDamaged || isWaitDamaged); }
 
 		public bool							IsAlive { get; private set; }
 		public bool							IsMoveable { get; private set; }
 
-		public event Action					ActionCallbackBuffChanged;
-		public event Action					ActionCallbackStatChanged;
-		public event Action					ActionCallbackItemChanged;
-		public event Action					ActionCallbackLanded;
+		public event Action<PlayerModel>	ActionCallbackBuffChanged;
+		public event Action<PlayerModel>	ActionCallbackStatChanged;
+		public event Action<PlayerModel>	ActionCallbackItemChanged;
+		public event Action<PlayerModel>	ActionCallbackLanded;
 
 		public delegate void InfoIntHandler(ref SInfoInt info);
 		public delegate void InfoAttackHandler(ref SInfoAttack info);
@@ -59,15 +85,28 @@ namespace Player
 		public event Action<SInfoAttack>	ActionOnAfterDamage;
 		public event Action<SInfoAttack>	ActionOnAfterDeal;
 
+		#endregion
+
 		#region UnityEvent
 
 		protected virtual void Awake()
 		{
+			int i = 1;
+
 			rigid = GetComponentInParent<Rigidbody>();
-			cpnSkill = new PlayerComponentSkill(this);
+			bulletParent = new GameObject("PlayerBulletParent").transform;
+			cpnSkill = new PlayerComponentSkill(this, _skillDataSO);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
+			cpnAnimation = new PlayerComponentAnimation(this);
+			pool = new PlayerPool(bulletParent);
 			inventory = new Inventory(this);
+			attackCooldown = new WaitForSeconds(_attackCooltime);
+			pool.CreatePool(_bulletPrefabs[0], 40);
+			while (i < _bulletPrefabs.Length)
+			{
+				pool.CreatePool(_bulletPrefabs[i++], 10);
+			}
 			IsMoveable = true;
 			return ;
 		}
@@ -76,26 +115,32 @@ namespace Player
 		{
 			if (cpnBuff.UpdateBuff(Time.deltaTime))
 			{
-				ActionCallbackBuffChanged?.Invoke();
+				ActionCallbackBuffChanged?.Invoke(this);
 			}
 			cpnSkill.UpdateSkill(Time.deltaTime);
 			inventory.UpdateItem(Time.deltaTime);
+			cpnAnimation.Update(Time.deltaTime);
 			return ;
 		}
 
-		public void OnGround()
+		protected virtual void OnDestroy()
 		{
-			Stat.ResetJumpCount();
-			isGrounded = true;
-			ActionCallbackLanded?.Invoke();
-			return;
+			if (bulletParent != null)
+				Destroy(bulletParent.gameObject);
+			return ;
+		}
+
+		public void SetRaycaster(IRaycastable raycastable)
+		{
+			raycaster = raycastable;
+			return ;
 		}
 
 		#endregion
 
 		#region Move & Jump & Turn
 
-		public float Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
+		public virtual float Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
 		{
 			float speed;
 
@@ -103,6 +148,7 @@ namespace Player
 				return (0);
 			speed = Stat.GetSpeed(isSprint);
 			parent.position += movement * speed;
+			moveDirection = movement.normalized;
 			callback?.Invoke();
 			return (movement.sqrMagnitude * speed);
 		}
@@ -112,7 +158,7 @@ namespace Player
 			return (Jump(Stat.GetJumpPower(), callback));
 		}
 
-		public bool Jump(float jumpForce, Action callback = null)
+		public virtual bool Jump(float jumpForce, Action callback = null)
 		{
 			if (isGrounded)
 			{
@@ -131,24 +177,132 @@ namespace Player
 			}
 			return (false);
 		}
-		
+
+		public void Dash(Action callback = null)
+		{
+			Dash(Stat.Stat.powerDash, moveDirection, callback);
+			return;
+		}
+
+		public virtual void Dash(float power, Vector3 movement, Action callback = null)
+		{
+			if (movement.sqrMagnitude > 0)
+				rigid.velocity += power * movement.normalized;
+			else
+				rigid.velocity += power * transform.forward;
+			callback?.Invoke();
+			return ;
+		}
+
+		public virtual void OnGround()
+		{
+			Stat.ResetJumpCount();
+			isGrounded = true;
+			ActionCallbackLanded?.Invoke(this);
+			return;
+		}
+
 		public Quaternion Rotate(Transform parent, float x)
 		{
 			parent.Rotate(Vector3.up, x, Space.World);
 			return (transform.rotation);
 		}
 
-		public void SetAngle(Vector3 angle)
+		public void SetCameraRotation(Quaternion rotation)
 		{
-			angleCamera = angle;
+			cameraRotation = rotation;
 			return ;
+		}
+
+		#endregion
+
+		#region Attack
+
+		public virtual void Attack(Vector3 targetPos)
+		{
+			if (canAttack)
+			{
+				canAttack = false;
+				Shoot(targetPos,0,30f,0.02f);
+				StartCoroutine(WaitAttack());
+			}
+			return ;
+		}
+
+		public void Shoot(int index = 0, float speed = 5f, float spread = 0.04f)
+		{
+			Vector2 targetPos;
+
+			if (raycaster == null)
+				throw (new Exception("Cannot Found Raycaster in PlayerModel!"));
+			targetPos = raycaster.GetRaycastHitPoint();
+			Shoot(targetPos, index, speed, spread);
+			return ;
+		}
+
+		public void Shoot(string name, float speed = 5f, float spread = 0.04f)
+		{
+			Vector3 targetPos;
+
+			if (raycaster == null)
+				throw (new Exception("Cannot Found Raycaster in PlayerModel!"));
+			targetPos = raycaster.GetRaycastHitPoint();
+			Shoot(targetPos, name, speed, spread);
+			return ;
+		}
+
+		public void Shoot(Vector3 targetPos, int index = 0, float speed = 5f, float spread = 0.04f)
+		{
+			if (index >= _bulletPrefabs.Length)
+			{
+				index = _bulletPrefabs.Length - 1;
+				Debug.LogError($"Cannot found bullet {index}");
+			}
+			Shoot(targetPos, _bulletPrefabs[index].gameObject.name, speed, spread);
+			return ;
+		}
+
+		public virtual void Shoot(Vector3 targetPos, string name, float speed = 5f, float spread = 0.04f)
+		{
+			PlayerBullet bullet;
+			Vector3 direction = GetSpreadDirection((targetPos - _bulletSummonTr.position).normalized, spread);
+
+			try
+			{
+				bullet = (pool.Pop(name) as PlayerBullet);
+			}
+			catch (Exception e)
+			{
+				bullet = (pool.Pop(_bulletPrefabs[0].gameObject.name) as PlayerBullet);
+				Debug.LogError($"[PlayerModel_Shoot_Pool]\n{e.Message}");
+			}
+			bullet.SetInfo(this);
+			bullet.transform.position = _bulletSummonTr.position;
+			bullet.transform.LookAt(_bulletSummonTr.position + direction);
+			bullet.SetSpeed(speed);
+			return ;
+		}
+
+		public Vector3 GetSpreadDirection(Vector3 forward, float spread = 0.04f)
+		{
+			Vector3 random = UnityEngine.Random.insideUnitSphere * spread;
+			Vector3 direction = (forward + random).normalized;
+
+			return (direction);
+		}
+
+		private IEnumerator WaitAttack()
+		{
+			yield return (attackCooldown);
+			canAttack = true;
+			yield break ;
 		}
 
 		#endregion
 
 		#region Stat
 
-		public int AddShield(SInfoInt info)
+		public virtual int AddShield(SInfoInt info)
 		{
 			int result;
 
@@ -162,11 +316,11 @@ namespace Player
 		{
 			int result = Stat.AddShield(add);
 
-			ActionCallbackStatChanged?.Invoke();
+			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
 		}
 
-		public int RemoveShield(SInfoInt info)
+		public virtual int RemoveShield(SInfoInt info)
 		{
 			int result;
 
@@ -180,11 +334,11 @@ namespace Player
 		{
 			int result = Stat.RemoveShield(remove);
 
-			ActionCallbackStatChanged?.Invoke();
+			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
 		}
 
-		public int Healed(SInfoInt info)
+		public virtual int Healed(SInfoInt info)
 		{
 			int result;
 
@@ -198,14 +352,35 @@ namespace Player
 		{
 			int result = Stat.Healed(heal);
 
-			ActionCallbackStatChanged?.Invoke();
+			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
 		}
 
 		public int Damaged(SInfoAttack info)
 		{
+			return (Damaged(info, false, 1f));
+		}
+
+		public int Damaged(SInfoAttack info, bool isIgnoreWaitDamaged)
+		{
+			return (Damaged(info, isIgnoreWaitDamaged, 1f));
+		}
+
+		public int Damaged(SInfoAttack info, float waitDamagedTime)
+		{
+			return (Damaged(info, false, waitDamagedTime));
+		}
+
+		public virtual int Damaged(SInfoAttack info, bool isIgnoreWaitDamaged, float waitDamagedTime)
+		{
 			int result;
 
+			if (!isIgnoreWaitDamaged && isWaitDamaged)
+				return (-1);
+			if (isIgnoreWaitDamaged && waitDamagedCoroutine != null && waitDamagedTime > 0f)
+				StopCoroutine(waitDamagedCoroutine);
+			if (waitDamagedTime > 0f)
+				waitDamagedCoroutine = StartCoroutine(WaitDamaged(waitDamagedTime));
 			ActionOnBeforeDamage?.Invoke(ref info);
 			result = Damaged(info.damage);
 			ActionOnAfterDamage?.Invoke(info);
@@ -217,12 +392,20 @@ namespace Player
 			int result = Stat.Damaged(damage);
 
 			IsAlive = Stat.IsAlive();
-			ActionCallbackStatChanged?.Invoke();
+			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
 		}
-	
+
+		protected virtual IEnumerator WaitDamaged(float time)
+		{
+			isWaitDamaged = true;
+			yield return (new WaitForSeconds(time));
+			isWaitDamaged = false;
+			yield break ;
+		}
+
 		// TODO!
-		public int Deal(GameObject target, int damage, ElementType type = null)
+		protected virtual int Deal(GameObject target, int damage, ElementType type = null)
 		{
 			SInfoAttack info = new(gameObject, target, damage, type);
 
@@ -237,10 +420,10 @@ namespace Player
 		#region Buff
 
 		// TODO!
-		public void AddBuff(SInfoBuff info)
+		public virtual void AddBuff(SInfoBuff info)
 		{
 			cpnBuff.AddBuff(info);
-			ActionCallbackBuffChanged?.Invoke();
+			ActionCallbackBuffChanged?.Invoke(this);
 			return ;
 		}
 
@@ -248,9 +431,10 @@ namespace Player
 
 		#region Skill
 
-		public bool UseSkill(short index)
+		public virtual bool UseSkill(short index, KeyCode skillKey)
 		{
-			return (cpnSkill.UseSkill(index));
+			Debug.Log($"PlayerModel : Skill {index} use input");
+			return (cpnSkill.UseSkill(index, skillKey));
 		}
 
 		#endregion
@@ -260,14 +444,14 @@ namespace Player
 		public void AddItem(AItem item)
 		{
 			inventory.AddItem(item);
-			ActionCallbackItemChanged?.Invoke();
+			ActionCallbackItemChanged?.Invoke(this);
 			return ;
 		}
 
 		public void RemovevItem(AItem item)
 		{
 			if (inventory.RemoveItem(item))
-				ActionCallbackItemChanged?.Invoke();
+				ActionCallbackItemChanged?.Invoke(this);
 			return ;
 		}
 

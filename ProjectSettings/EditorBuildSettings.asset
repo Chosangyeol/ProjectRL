@@ -4,5 +4,26 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/01. Scenes/UIPreviewScene.unity
+    guid: 2707142fe864c7e46a6a1e3cf4bb3569
+  - enabled: 1
+    path: Assets/01. Scenes/LoadingScene.unity
+    guid: 6ed23730af7a77941a58e4cd8afb50df
+  - enabled: 1
+    path: Assets/01. Scenes/ItemTestScene.unity
+    guid: 4b188e03a186b714299968e94d8da9a0
+  - enabled: 1
+    path: Assets/01. Scenes/EnemyScene.unity
+    guid: fa045251c18d36a499a2ec89470eafb7
+  - enabled: 1
+    path: Assets/01. Scenes/Dev-SSM.unity
+    guid: 75ee478cbe3f6454f9c1c977ef34041e
+  - enabled: 1
+    path: Assets/01. Scenes/CharacterSelection.unity
+    guid: 24d46961ebddc7349986e8d94740c156
+  - enabled: 1
+    path: Assets/01. Scenes/EnemyItemTest.unity
+    guid: ec3716a7e564c924fb98273ad6512702
   m_configObjects: {}

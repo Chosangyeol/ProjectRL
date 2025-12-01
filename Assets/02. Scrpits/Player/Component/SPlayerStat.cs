@@ -30,7 +30,7 @@ namespace Player.Component
 		public int jumpCountMax;
 		public float jumpPower;
 
-		public float attackDamage;
+		public int attackDamage;
 		public float critPercent;
 		public float critDamagePercent;
 
@@ -139,7 +139,7 @@ namespace Player.Component
 			result.jumpPower = first.jumpPower + second.jumpPower;
 			result.attackDamage = first.attackDamage + second.attackDamage;
 			result.critPercent = first.critPercent + second.critPercent;
-			result.critDamagePercent = first.critPercent * second.critDamagePercent;
+			result.critDamagePercent = first.critPercent + second.critDamagePercent;
 			return (result);
 		}
 	}

@@ -1,10 +1,9 @@
 using Config;
-using System;
 using UnityEngine;
 
 namespace Player
 {
-	public class PlayerCamera : MonoBehaviour
+	public class PlayerCamera : MonoBehaviour, IRaycastable
 	{
 		[SerializeField]
 		private Camera _playerCamera;
@@ -21,16 +20,48 @@ namespace Player
 			return ;
 		}
 
-		public Vector3 Turn(Transform parent, float y)
+		public Quaternion Turn(Transform parent, float y)
 		{
 			Vector3 rot = parent.rotation.eulerAngles;
 
-			if (ConfigUserInput.Instance.input.isAxisYFlipped)
+			if (ConfigUserInput.Instance.InputKey.isAxisYFlipped)
 				y = - y;
 			nowX -= y;
 			nowX = Mathf.Clamp(nowX, minX, maxX);
 			transform.rotation = Quaternion.Euler(nowX, rot.y, 0f);
-			return (transform.rotation.eulerAngles);
+			return (_playerCamera.transform.rotation);
+		}
+
+		public Vector3 RaycastByAngle(Transform origin, Vector3 direction = default, float distance = 50f)
+		{
+			return (RaycastByAngle(origin.position, direction, distance));
+		}
+
+		public Vector3 RaycastByAngle(Vector3 origin = default, Vector3 direction = default, float distance = 50f)
+		{
+			Vector3 result;
+			RaycastHit hit;
+			bool flag;
+
+			if (origin == default)
+				origin = transform.position;
+			if (direction == default)
+				direction = transform.forward;
+			flag = Physics.Raycast(origin, direction, out hit, distance);
+			if (flag)
+			{
+				result = hit.point;
+			}
+			else
+			{
+				result = origin + direction.normalized * distance;
+			}
+			return (result);
+		}
+
+		public Vector3 GetRaycastHitPoint()
+		{
+			return (RaycastByAngle());
 		}
 
 		private void SetCamPos()

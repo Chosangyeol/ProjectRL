@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 896a259ff39242046bb8e3a9b3e2842d, type: 3}
+  m_Name: HpMaxIncreCard
+  m_EditorClassIdentifier: 
+  itemName: "\uD504\uB85C\uADF8\uB7A8 : \uD5EC\uC2A4 \uC0D0\uB7EC\uB4DC \uB370\uC774\uD130
+    \uCE69"
+  itemRarity: 0
+  isUnique: 0
+  tooltip: "\uD50C\uB808\uC774\uC5B4\uC758 \uCD5C\uB300 \uCCB4\uB825\uC744 \uC601\uAD6C\uC801\uC73C\uB85C
+    10 \uC99D\uAC00\uC2DC\uD0A8\uB2E4."
+  itemSprite: {fileID: 21300000, guid: e16d43acb53eaa44bb9ad9d71dcda3a3, type: 3}
+  itemPrefab: {fileID: 0}
+  increAmount: 10
+  canIncreStats: 0
