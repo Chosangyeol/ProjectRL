@@ -5,6 +5,7 @@ using UnityEngine;
 public class StateMachine
 {
     private IState curState;
+    public IState CurState => curState;
 
     public void ChangeState(IState nextState)
     {

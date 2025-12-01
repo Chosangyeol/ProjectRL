@@ -6,11 +6,13 @@ public class State_BossIdle : IState
 {
     readonly EnemyBase enemy;
     readonly StateMachine fsm;
+    readonly int patternCount;
 
-    public State_BossIdle(EnemyBase enemy, StateMachine fsm)
+    public State_BossIdle(EnemyBase enemy, StateMachine fsm, int patternCount)
     {
         this.enemy = enemy;
         this.fsm = fsm;
+        this.patternCount = patternCount;
     }
 
     public void OnEnter()
@@ -22,13 +24,9 @@ public class State_BossIdle : IState
     {
         float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
 
-        if (dist <= enemy.enemySO.attackRange)
+        if (dist <= enemy.enemySO.detectRange)
         {
-            // АјАн
-        }
-        else if (dist <= enemy.enemySO.detectRange)
-        {
-
+            fsm.ChangeState(new State_BossChase(enemy, fsm, patternCount));
         }
         Debug.Log("BossIdle");
     }

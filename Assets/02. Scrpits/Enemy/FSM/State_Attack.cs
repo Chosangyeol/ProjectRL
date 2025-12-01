@@ -17,19 +17,12 @@ public class State_Attack : IState
     {
         enemy.Agent.ResetPath();
         enemy.Anim.SetBool("isMoving", false);
+        enemy.StartAttack();
     }
 
     public void Tick()
-    {
-        float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
+    { 
 
-        if (dist > enemy.enemySO.attackRange)
-        {
-            fsm.ChangeState(new State_Chase(enemy, fsm));
-            return;
-        }
-
-        enemy.StartAttack();
     }
 
     public void FixedTick() { }

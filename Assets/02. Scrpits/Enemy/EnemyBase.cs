@@ -12,12 +12,16 @@ public class EnemyBase : PoolableMono
     protected NavMeshAgent agent;
     [HideInInspector]
     public NavMeshAgent Agent => agent;
-    [HideInInspector]
-    protected Rigidbody rb;
-    
+
+    protected Rigidbody rb;   
     protected Animator anim;
+    protected LineRenderer lr;
+
     [HideInInspector]
     public Animator Anim => anim;
+    [HideInInspector]
+    public LineRenderer Lr => lr;
+
     [HideInInspector]
     public float lastAttackTime;
     [HideInInspector]
@@ -31,23 +35,36 @@ public class EnemyBase : PoolableMono
     [HideInInspector]
     public StateMachine Fsm => fsm;
 
+    public bool isFixedType = false;
+
+    public Coroutine attackCoroutine;
+
+    public bool isFly = false;
+    public float flyHeight = 0f;
+
+
     #region Unity Event
     protected virtual void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        if (!isFly)
+            agent = GetComponent<NavMeshAgent>();
+
         rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         player = GameObject.FindAnyObjectByType<PlayerController>().transform;
         fsm = new StateMachine();
         Reset();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
-
+        lr.startWidth = 0.1f;
+        lr.endWidth = 0.1f;
+        lr.positionCount = 2;
+        lr.enabled = false;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         fsm.Tick();
     }
@@ -73,14 +90,22 @@ public class EnemyBase : PoolableMono
         return Stat;
     }
 
-    public virtual void StartAttack()
+    public void StartAttackCoroutine(IEnumerator routine)
     {
-        if (Time.time - lastAttackTime >= Stat.attackSpeed)
-        {
-            
-            attackBehavior.ExecuteAttack(this);
-            lastAttackTime = Time.time;
-        }
+        attackCoroutine = StartCoroutine(routine);
+    }
+
+    public virtual void StartAttack(int pattenrIndex = 0)
+    {
+        attackBehavior.ExecuteAttack(this);
+    }
+
+    public virtual IEnumerator AttackDelay(float delay)
+    {
+        Debug.Log("공격 딜레이 시작");
+        yield return new WaitForSeconds(delay);
+        fsm.ChangeState(new State_Chase(this, fsm));
+        Debug.Log("공격 딜레이 종료");         
     }
 
     public virtual void TakeDamage(float amount)

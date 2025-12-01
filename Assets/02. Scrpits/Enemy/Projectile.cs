@@ -1,3 +1,5 @@
+using Info;
+using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +13,8 @@ public class Projectile : PoolableMono
     public float timer;
     public float destroyTime;
     public float speed;
+
+    public bool isEffect = false;
 
     public override void Reset()
     {
@@ -28,9 +32,16 @@ public class Projectile : PoolableMono
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !isEffect)
         {
-            Debug.Log("플레이어 적중");
+            SInfoAttack attackInfo = new SInfoAttack(
+                owner.gameObject,
+                other.gameObject,
+                Mathf.RoundToInt(damage),
+                null
+            );
+            other.GetComponentInChildren<PlayerModel>().Damaged(attackInfo);
+            Debug.Log($"Player Damaged : {damage}");
             PoolManager.Instance.Push(this);
         }
     }
