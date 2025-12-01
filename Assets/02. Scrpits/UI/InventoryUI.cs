@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace UI.InventoryUI
 {
@@ -43,10 +44,10 @@ namespace UI.InventoryUI
                 BigInvItemIcon[i] = BigInvPanel.transform.GetChild(i).gameObject;
                 BigInvItemIcon[i].SetActive(false);
             }
-            Inv = FindFirstObjectByType<PlayerModel>().Inventory;
+            //Inv = FindFirstObjectByType<PlayerModel>().Inventory;
 
-            Inv.ActionAfterAddItem += OnItemAdded;
-            Inv.ActionAfterRemoveItem += OnItemRemoved;
+            //Inv.ActionAfterAddItem += OnItemAdded;
+            //Inv.ActionAfterRemoveItem += OnItemRemoved;
 
             CloseBigInv();
             OpenBigPanel = false;
@@ -54,25 +55,24 @@ namespace UI.InventoryUI
 
         void Update()
         {
-            if (ConfigUserInput.Instance.GetKeyDown("keyInventory")) // I로 되어있긴 한데 TAB으로 바꾸자는 얘기 있었음
+            if (ConfigUserInput.Instance.GetKeyDown("keyInventory"))
             {
                 if (OpenBigPanel)
                 {
+                    InventoryPanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 710f), 1f).SetEase(Ease.OutCubic);
                     CloseBigInv();
                     OpenBigPanel = false;
-                    InventoryPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 710f);
-
                 }
                 else
                 {
+                    InventoryPanel.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 210f), 1f).SetEase(Ease.OutCubic);
                     OpenBigInv();
                     OpenBigPanel = true;
-                    InventoryPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 210f);
                 }
             }
         }
 
-        public void ItemGetAnnounce(AItem item) //Inventory랑 연결하면 딱인디 어야 할까요 이거
+        public void ItemGetAnnounce(AItem item)
         {
             ItemGetAnnouncePanelIcon.GetComponent<Image>().sprite = item.itemData.itemSprite;
             ItemGetAnnouncePanelName.GetComponent<Text>().text = item.itemData.itemName;
@@ -132,6 +132,7 @@ namespace UI.InventoryUI
         {
             yield return new WaitForSeconds(second);
             ItemGetAnnouncePanel.SetActive(false);
+            ItemGetAnnouncePanel.GetComponent<DOTweenAnimation>().DORewind();
         }
     }
 }
