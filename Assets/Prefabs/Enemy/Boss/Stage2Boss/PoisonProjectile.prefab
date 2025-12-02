@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8329270399601999815}
   - component: {fileID: 8255703520821548037}
   - component: {fileID: 421970160584389300}
-  - component: {fileID: 4225966540620433736}
+  - component: {fileID: -7266669443311038023}
   m_Layer: 0
-  m_Name: PBullet
+  m_Name: PoisonProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 6bca8fd03816b2446b538192052ded47, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -134,7 +134,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4225966540620433736
+--- !u!114 &-7266669443311038023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,9 +143,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4517557638398210154}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fa02d046b67a534fb355e09e0f3dc7a, type: 3}
+  m_Script: {fileID: 11500000, guid: ffd4ad7cc9e3a2f48b0fdcddd67827bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  lifeTime: 5
-  PoisonPrefab: {fileID: 3683739670241857210, guid: c8dc57cd5a6c33a4e968a2c86bac9b75, type: 3}
+  owner: {fileID: 0}
+  damage: 0
+  timer: 83.97632
+  destroyTime: 10
+  speed: 0
+  isEffect: 0
+  isSpawnObj: 1
+  spawnObj: {fileID: -7715328028117953324, guid: c8dc57cd5a6c33a4e968a2c86bac9b75, type: 3}

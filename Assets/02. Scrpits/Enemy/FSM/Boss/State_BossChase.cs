@@ -68,6 +68,8 @@ public class State_BossChase : IState
     public void FixedTick() { }
     public void OnExit()
     {
+        enemy.Anim.SetBool("isMoving", false);
+
         if (!enemy.isFly)
             enemy.Agent.ResetPath();
     }
