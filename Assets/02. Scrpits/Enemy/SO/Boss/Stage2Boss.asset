@@ -18,10 +18,10 @@ MonoBehaviour:
   spawnCount: 0
   baseHp: 300
   baseDamage: 10
-  attackRange: 20
+  attackRange: 40
   patrolRange: 0
   detectRange: 100
-  moveSpeed: 5
+  moveSpeed: 8
   attackSpeed: 2
   gainExp: 0
   itemDropTable: {fileID: 0}

@@ -1,10 +1,20 @@
 using DG.Tweening.Core.Easing;
+using Info;
+using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Stage2Boss : BossBase
 {
+    [Header("일반 패턴")]
+    public GameObject pattern3Warning;
+    public GameObject pattern3Effect;
+
+    public bool canRush = true;
+    public float rushTimer = 0f;
+    public GameObject rushEffect;
+    public bool isHit = false;
 
     [Header("특수 패턴 1 - 독 늪")]
     public bool poisonTrigger = false;
@@ -22,15 +32,22 @@ public class Stage2Boss : BossBase
     public bool isSpecialPlaying = false;
     public PoolableMono[] Rocks; 
     public Transform[] sequence1Targets;
+    public GameObject[] sequence1Warning;
     public Transform[] sequence2Targets;
+    public GameObject[] sequence2Warning;
     public Transform[] sequence3Targets;
+    public GameObject[] sequence3Warning;
 
-    
+
 
 
     private void Start()
     {
-        attackBehavior = new Stage2BossAttack();
+        if (agent != null)
+            agent.speed = Stat.moveSpeed;
+
+        attackBehavior = new Stage2BossAttack(pattern3Warning, pattern3Effect, rushEffect);
+        StartCoroutine(CheckRush());
     }
 
     private void Update()
@@ -86,7 +103,14 @@ public class Stage2Boss : BossBase
 
     public void Poison()
     {
+        isSpecialPattern = true;
         isPoisonPlaying = true;
+
+        Vector3 dir = player.position - transform.position;
+        dir.y = 0;
+        transform.rotation = Quaternion.LookRotation(dir);
+
+
         anim.SetTrigger("Poison");
         poisonIndex++;
     }
@@ -104,6 +128,7 @@ public class Stage2Boss : BossBase
         PoolableMono obj = PoolManager.Instance.Pop(poisonPref.name);
         Projectile proj = obj.GetComponent<Projectile>();
         proj.owner = this;
+        proj.damage = Stat.totalDamage;
         obj.transform.position = poisonFIrePos.position;
         Vector3 dir = (player.position - poisonFIrePos.position).normalized;
         obj.GetComponent<Rigidbody>().velocity = dir * poisonSpeed;
@@ -178,6 +203,7 @@ public class Stage2Boss : BossBase
     public void PatternSequence1()
     {
         int targetIndex = 0;
+        StartCoroutine(ShowWarning(1));
         for (int i = 0; i < 4; i++)
         {
             int index = Random.Range(0, 4);
@@ -199,6 +225,7 @@ public class Stage2Boss : BossBase
     public void PatternSequence2()
     {
         int targetIndex = 0;
+        StartCoroutine(ShowWarning(2));
         for (int i = 0; i < 4; i++)
         {
             int index = Random.Range(0, 4);
@@ -220,6 +247,7 @@ public class Stage2Boss : BossBase
     public void PatternSequence3()
     {
         int targetIndex = 0;
+        StartCoroutine(ShowWarning(3));
         for (int i = 0; i < 12; i++)
         {
             int index = Random.Range(0, 4);
@@ -238,7 +266,125 @@ public class Stage2Boss : BossBase
         }
     }
 
+    IEnumerator ShowWarning(int index)
+    {
+        if (index == 1)
+        {
+            for (int i = 0;i < sequence1Warning.Length;i++)
+            {
+                sequence1Warning[i].SetActive(true);
+            }
+            yield return new WaitForSeconds(2f);
+            for (int i = 0; i < sequence1Warning.Length; i++)
+            {
+                sequence1Warning[i].SetActive(false);
+            }
+        }
+        else if (index == 2)
+        {
+            for (int i = 0; i < sequence2Warning.Length; i++)
+            {
+                sequence2Warning[i].SetActive(true);
+            }
+            yield return new WaitForSeconds(2f);
+            for (int i = 0; i < sequence2Warning.Length; i++)
+            {
+                sequence2Warning[i].SetActive(false);
+            }
+        }
+        else if (index == 3)
+        {
+            for (int i = 0; i < sequence3Warning.Length; i++)
+            {
+                sequence3Warning[i].SetActive(true);
+            }
+            yield return new WaitForSeconds(2f);
+            for (int i = 0; i < sequence3Warning.Length; i++)
+            {
+                sequence3Warning[i].SetActive(false);
+            }
+        }
+    }
 
+
+    #endregion
+
+    #region 일반 패턴 2 - 회오리
+
+    public void Pattern2Attack()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 10f);
+
+        foreach (Collider col in hits)
+        {
+            if (col.CompareTag("Player"))
+            {
+                SInfoAttack damamge = new SInfoAttack(
+                    this.gameObject,
+                    player.gameObject,
+                    Mathf.RoundToInt(Stat.totalDamage),
+                    null
+                    );
+
+                PlayerModel model = col.GetComponentInChildren<PlayerModel>();
+                model.Damaged(damamge);
+
+            }
+        }
+    }
+
+    #endregion
+
+    #region 일반 패턴 3 - 강공
+
+    public void Pattern3Attack()
+    {
+        pattern3Effect.SetActive(true);
+
+        Collider[] hits = Physics.OverlapSphere(transform.position, 15f);
+
+        foreach(Collider col in hits)
+        {
+            if (col.CompareTag("Player"))
+            {
+                SInfoAttack damamge = new SInfoAttack(
+                    this.gameObject,
+                    player.gameObject,
+                    Mathf.RoundToInt(Stat.totalDamage),
+                    null
+                    );
+
+                PlayerModel model = col.GetComponentInChildren<PlayerModel>();
+                model.Damaged(damamge);
+
+            }
+        }    
+    }
+
+    public void Pattern3EffectOff()
+    {
+        pattern3Effect.SetActive(false);
+    }
+
+    #endregion
+
+    #region 일반 패턴 4 - 돌진 조건
+    IEnumerator CheckRush()
+    {
+        while (true)
+        {
+            if (!canRush)
+            {
+                rushTimer += Time.deltaTime;
+                if (rushTimer >= 20f)
+                {
+                    rushTimer = 0;
+                    canRush = true;
+                }
+            }
+            yield return null;
+        }
+    }
     #endregion
 
 }

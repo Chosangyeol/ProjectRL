@@ -49,10 +49,12 @@ public class EnemyBase : PoolableMono
         if (!isFly)
             agent = GetComponent<NavMeshAgent>();
 
+
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
         player = GameObject.FindAnyObjectByType<PlayerController>().transform;
         fsm = new StateMachine();
+
         Reset();
     }
 
@@ -62,6 +64,10 @@ public class EnemyBase : PoolableMono
         lr.endWidth = 0.1f;
         lr.positionCount = 2;
         lr.enabled = false;
+
+        if (agent != null)
+            agent.speed = Stat.moveSpeed;
+
     }
 
     protected virtual void Update()
