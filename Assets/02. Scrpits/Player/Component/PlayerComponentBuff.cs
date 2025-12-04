@@ -10,7 +10,9 @@ namespace Player.Component
 	public class PlayerComponentBuff
 	{
 		private readonly PlayerModel	playerModel;
-		private List<SInfoBuff>			ListBuff;
+		private List<SInfoBuff>			listBuff;
+
+		public ref List<SInfoBuff>		BuffList { get => ref listBuff; }
 
 		public delegate void BuffHandler(ref SInfoBuff buff);
 
@@ -22,7 +24,7 @@ namespace Player.Component
 		public PlayerComponentBuff(PlayerModel model)
 		{
 			playerModel = model;
-			ListBuff = new List<SInfoBuff>();
+			listBuff = new List<SInfoBuff>();
 			return ;
 		}
 
@@ -30,7 +32,7 @@ namespace Player.Component
 		{
 			ActionBeforeAddBuff?.Invoke(ref info);
 			info.act.OnEnable();
-			ListBuff.Add(info);
+			listBuff.Add(info);
 			ActionAfterAddBuff?.Invoke(info);
 			return ;
 		}
@@ -39,9 +41,9 @@ namespace Player.Component
 		{
 			bool result = false;
 
-			for (int i = ListBuff.Count - 1; i >= 0; i--)
+			for (int i = listBuff.Count - 1; i >= 0; i--)
 			{
-				SInfoBuff buff = ListBuff[i];
+				SInfoBuff buff = listBuff[i];
 				bool isEnd = buff.act.Update(delta);
 
 				if (isEnd)
@@ -49,7 +51,7 @@ namespace Player.Component
 					ActionBeforeRemoveBuff?.Invoke(ref buff);
 					buff.act.OnDisable();
 					ActionAfterRemoveBuff?.Invoke(buff);
-					ListBuff.RemoveAt(i);
+					listBuff.RemoveAt(i);
 				}
 			}
 			return (result);
