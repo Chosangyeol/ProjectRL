@@ -54,7 +54,7 @@ namespace Player.Component
 		private void RecalculateStat()
 		{
 			edited = origin;
-			ActionCalculateStat(ref edited);
+			ActionCalculateStat?.Invoke(ref edited);
 			return ;
 		}
 
