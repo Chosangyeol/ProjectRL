@@ -29,7 +29,7 @@ public class SpeedBuff : ABuffPlayer
         baseSprintSpeed = target.Stat.GetSpeed(true);
 
         buffMoveSpeedAmount = baseMoveSpeed * buffAmount;
-        buffSprintSpeedAmount = baseSprintSpeed* buffAmount;        
+        buffSprintSpeedAmount = baseSprintSpeed * buffAmount;        
 
         if (isBuff)
         {
