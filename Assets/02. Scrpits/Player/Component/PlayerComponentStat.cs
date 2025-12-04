@@ -1,5 +1,4 @@
 using System;
-using System.Security.Cryptography;
 
 namespace Player.Component
 {
@@ -8,13 +7,10 @@ namespace Player.Component
 		public PlayerModel playerModel;
 
 		private SPlayerStat origin;
-		private SPlayerStat edited;
 
-		public SPlayerStat Stat { get => edited; }
+		public SPlayerStat Stat { get => origin; }
 
 		public delegate void StatCalculator(ref SPlayerStat stat);
-
-		private event StatCalculator	ActionCalculateStat;
 
 		public PlayerComponentStat(PlayerModel model, PlayerComponentStatSO so)
 		{
@@ -26,35 +22,12 @@ namespace Player.Component
 		public void EditOriginStat(StatCalculator calculator)
 		{
 			calculator(ref origin);
-			RecalculateStat();
-			return ;
-		}
-
-		public void AddCalculateStat(StatCalculator calculator)
-		{
-			ActionCalculateStat += calculator;
-			RecalculateStat();
-			return ;
-		}
-
-		public void RemoveCalculateStat(StatCalculator calculator)
-		{
-			ActionCalculateStat -= calculator;
-			RecalculateStat();
 			return ;
 		}
 
 		public void AddStat(SPlayerStat add)
 		{
 			origin += add;
-			RecalculateStat();
-			return ;
-		}
-
-		private void RecalculateStat()
-		{
-			edited = origin;
-			ActionCalculateStat?.Invoke(ref edited);
 			return ;
 		}
 
@@ -62,23 +35,23 @@ namespace Player.Component
 		{
 			if (add < 0)
 				return (0);
-			edited.shield += add;
-			if (edited.shield > Int32.MaxValue)
+			origin.shield += add;
+			if (origin.shield > Int32.MaxValue)
 			{
-				add = edited.shield - Int32.MaxValue;
+				add = origin.shield - Int32.MaxValue;
 			}
 			return (add);
 		}
 
 		public int RemoveShield(int remove)
 		{
-			if (edited.shield <= 0 || remove <= 0)
+			if (origin.shield <= 0 || remove <= 0)
 				return (remove);
-			edited.shield -= remove;
-			if (edited.shield < 0)
+			origin.shield -= remove;
+			if (origin.shield < 0)
 			{
-				remove += edited.shield;
-				edited.shield = 0;
+				remove += origin.shield;
+				origin.shield = 0;
 			}
 			return (remove);
 		}
@@ -87,11 +60,11 @@ namespace Player.Component
 		{
 			if (heal < 0)
 				return (0);
-			edited.hpCurrent += heal;
-			if (edited.hpCurrent > edited.hpMax)
+			origin.hpCurrent += heal;
+			if (origin.hpCurrent > origin.hpMax)
 			{
-				heal = edited.hpCurrent - edited.hpMax;
-				edited.hpCurrent = edited.hpMax;
+				heal = origin.hpCurrent - origin.hpMax;
+				origin.hpCurrent = origin.hpMax;
 			}
 			return (heal);
 		}
@@ -100,23 +73,23 @@ namespace Player.Component
 		{
 			if (damage <= 0)
 				return (0);
-			if (edited.shield <= damage)
+			if (origin.shield <= damage)
 			{
-				damage -= edited.shield;
-				edited.shield = 0;
+				damage -= origin.shield;
+				origin.shield = 0;
 			}
 			else
 			{
-				edited.shield -= damage;
+				origin.shield -= damage;
 				damage = 0;
 			}
-			edited.hpCurrent = Math.Max(edited.hpCurrent - damage, 0);
+			origin.hpCurrent = Math.Max(origin.hpCurrent - damage, 0);
 			return (damage);
 		}
 
 		public bool IsAlive()
 		{
-			return (edited.hpCurrent > 0);
+			return (origin.hpCurrent > 0);
 		}
 
 		public int AddExp(int exp)
@@ -148,37 +121,36 @@ namespace Player.Component
 
 		public void CountJump()
 		{
-			edited.jumpCountCurrent++;
+			origin.jumpCountCurrent++;
 			return ;
 		}
 
 		public void ResetJumpCount()
 		{
-			edited.jumpCountCurrent = 0;
+			origin.jumpCountCurrent = 0;
 			return ;
 		}
 
 		public bool CanJump()
 		{
-			return (edited.jumpCountCurrent < edited.jumpCountMax);
+			return (origin.jumpCountCurrent < origin.jumpCountMax);
 		}
 
 		public float GetSpeed(bool isSprint)
 		{
 			if (isSprint)
-				return (edited.speedSprint);
-			return (edited.speedMove);
+				return (origin.speedSprint);
+			return (origin.speedMove);
 		}
 
 		public float GetJumpPower()
 		{
-			return (edited.jumpPower);
+			return (origin.jumpPower);
 		}
 
 		private void Equalize(PlayerComponentStatSO so)
 		{
 			origin.Equalize(so);
-			edited = origin;
 			return ;
 		}
 	}
