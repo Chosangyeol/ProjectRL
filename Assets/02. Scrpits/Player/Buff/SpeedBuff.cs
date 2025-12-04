@@ -12,7 +12,7 @@ public class SpeedBuff : ABuffPlayer
     private float baseSprintSpeed = 0f;
 
     private float buffMoveSpeedAmount = 0f;
-    private float baseSprintSpeedAmount = 0f;
+    private float buffSprintSpeedAmount = 0f;
     private bool isBuff = true;
 
     public SpeedBuff(PlayerModel model, float remainSecond, string desc,BuffType buffType, float buffAmount, bool isBuff)
@@ -29,14 +29,14 @@ public class SpeedBuff : ABuffPlayer
         baseSprintSpeed = target.Stat.GetSpeed(true);
 
         buffMoveSpeedAmount = baseMoveSpeed * buffAmount;
-        baseSprintSpeedAmount = baseSprintSpeed* baseSprintSpeed;        
+        buffSprintSpeedAmount = baseSprintSpeed* buffAmount;        
 
         if (isBuff)
         {
             SPlayerStat buffStat = new SPlayerStat
             {
                 speedMove = buffMoveSpeedAmount,
-                speedSprint = baseSprintSpeedAmount
+                speedSprint = buffSprintSpeedAmount
             };
 
             target.Stat.AddStat(buffStat);
@@ -47,7 +47,7 @@ public class SpeedBuff : ABuffPlayer
             SPlayerStat buffStat = new SPlayerStat
             {
                 speedMove = -buffMoveSpeedAmount,
-                speedSprint = -baseSprintSpeedAmount
+                speedSprint = -buffSprintSpeedAmount
             };
 
             target.Stat.AddStat(buffStat);
@@ -61,7 +61,7 @@ public class SpeedBuff : ABuffPlayer
             SPlayerStat buffStat = new SPlayerStat
             {
                 speedMove = -buffMoveSpeedAmount,
-                speedSprint = -baseSprintSpeedAmount
+                speedSprint = -buffSprintSpeedAmount
             };
 
             target.Stat.AddStat(buffStat);
@@ -72,7 +72,7 @@ public class SpeedBuff : ABuffPlayer
             SPlayerStat buffStat = new SPlayerStat
             {
                 speedMove = buffMoveSpeedAmount,
-                speedSprint = baseSprintSpeedAmount
+                speedSprint = buffSprintSpeedAmount
             };
 
             target.Stat.AddStat(buffStat);
