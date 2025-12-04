@@ -25,57 +25,18 @@ public class SpeedBuff : ABuffPlayer
 
     public override void OnEnable()
     {
-        baseMoveSpeed = target.Stat.GetSpeed(false);
-        baseSprintSpeed = target.Stat.GetSpeed(true);
 
-        buffMoveSpeedAmount = baseMoveSpeed * buffAmount;
-        buffSprintSpeedAmount = baseSprintSpeed * buffAmount;        
-
-        if (isBuff)
-        {
-            SPlayerStat buffStat = new SPlayerStat
-            {
-                speedMove = buffMoveSpeedAmount,
-                speedSprint = buffSprintSpeedAmount
-            };
-
-            target.Stat.AddStat(buffStat);
-
-        }
-        else
-        {
-            SPlayerStat buffStat = new SPlayerStat
-            {
-                speedMove = -buffMoveSpeedAmount,
-                speedSprint = -buffSprintSpeedAmount
-            };
-
-            target.Stat.AddStat(buffStat);
-        }
+        target.Stat.AddCalculateStat(SetBuff);
     }
 
     public override void OnDisable()
     {
-        if (isBuff)
-        {
-            SPlayerStat buffStat = new SPlayerStat
-            {
-                speedMove = -buffMoveSpeedAmount,
-                speedSprint = -buffSprintSpeedAmount
-            };
+        target.Stat.RemoveCalculateStat(SetBuff);
+    }
 
-            target.Stat.AddStat(buffStat);
-
-        }
-        else
-        {
-            SPlayerStat buffStat = new SPlayerStat
-            {
-                speedMove = buffMoveSpeedAmount,
-                speedSprint = buffSprintSpeedAmount
-            };
-
-            target.Stat.AddStat(buffStat);
-        }
+    public void SetBuff(ref SPlayerStat buffStat)
+    {
+        buffStat.speedMove = buffAmount;
+        buffStat.speedSprint = buffAmount;
     }
 }

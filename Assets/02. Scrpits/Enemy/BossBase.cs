@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BossBase : EnemyBase
 {
+    [Header("보스 패턴")]
     public int patternCount;
     protected bool isSpecialPattern = false;
     protected override void Awake()

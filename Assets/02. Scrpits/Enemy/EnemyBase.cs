@@ -43,6 +43,11 @@ public class EnemyBase : PoolableMono
     public float flyHeight = 0f;
 
 
+    protected AudioSource audioS;
+    [Header("사운드")]
+    public AudioClip attackClip;
+    public AudioClip deathClip;
+
     #region Unity Event
     protected virtual void Awake()
     {
@@ -54,6 +59,7 @@ public class EnemyBase : PoolableMono
         anim = GetComponentInChildren<Animator>();
         player = GameObject.FindAnyObjectByType<PlayerController>().transform;
         fsm = new StateMachine();
+        audioS = GetComponent<AudioSource>();
 
         Reset();
     }
@@ -109,6 +115,7 @@ public class EnemyBase : PoolableMono
     public virtual IEnumerator AttackDelay(float delay)
     {
         Debug.Log("공격 딜레이 시작");
+        anim.SetTrigger("Idle");
         yield return new WaitForSeconds(delay);
         fsm.ChangeState(new State_Chase(this, fsm));
         Debug.Log("공격 딜레이 종료");         

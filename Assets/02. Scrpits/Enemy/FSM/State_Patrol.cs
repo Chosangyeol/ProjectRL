@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,26 +22,42 @@ public class State_Patrol : IState
     public void Tick()
     {
         if (!enemy.Agent.hasPath || enemy.Agent.remainingDistance < 0.5f)
-            SetRandomDestination();
+            fsm.ChangeState(new State_Idle(enemy, fsm));
 
         float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
         if (dist <= enemy.enemySO.detectRange)
         {
             fsm.ChangeState(new State_Chase(enemy, fsm));
         }
-        Debug.Log("Patrol");
     }
 
     public void FixedTick() { }
 
-    public void OnExit() { }
-
+    public void OnExit()
+    {
+        enemy.Anim.SetBool("isMoving", false);
+    }
     private void SetRandomDestination()
     {
-        Vector3 randomPos = Random.insideUnitSphere * 100f;
-        randomPos += enemy.transform.position;
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randomPos, out hit, enemy.enemySO.patrolRange, 1);
-        enemy.Agent.SetDestination(hit.position);
+        const int maxAttempts = 20; // 최대 재시도 횟수
+        Vector3 result = enemy.transform.position;
+
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            // 구 범위 안에서 랜덤 위치 생성
+            Vector3 randomPos = Random.insideUnitSphere * enemy.enemySO.patrolRange;
+            randomPos += enemy.transform.position;
+
+            // NavMesh 위의 점 샘플링
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPos, out hit, enemy.enemySO.patrolRange, NavMesh.AllAreas))
+            {
+                result = hit.position;
+                break;
+            }
+        }
+
+        enemy.Agent.SetDestination(result);
     }
+
 }
