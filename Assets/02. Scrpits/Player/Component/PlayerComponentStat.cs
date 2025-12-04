@@ -62,24 +62,26 @@ namespace Player.Component
 		{
 			if (add < 0)
 				return (0);
-			edited.shield += add;
-			if (edited.shield > Int32.MaxValue)
+			origin.shield += add;
+			if (origin.shield > Int32.MaxValue)
 			{
-				add = edited.shield - Int32.MaxValue;
+				add = origin.shield - Int32.MaxValue;
 			}
+			RecalculateStat();
 			return (add);
 		}
 
 		public int RemoveShield(int remove)
 		{
-			if (edited.shield <= 0 || remove <= 0)
+			if (origin.shield <= 0 || remove <= 0)
 				return (remove);
-			edited.shield -= remove;
-			if (edited.shield < 0)
+			origin.shield -= remove;
+			if (origin.shield < 0)
 			{
-				remove += edited.shield;
-				edited.shield = 0;
+				remove += origin.shield;
+				origin.shield = 0;
 			}
+			RecalculateStat();
 			return (remove);
 		}
 
@@ -87,12 +89,13 @@ namespace Player.Component
 		{
 			if (heal < 0)
 				return (0);
-			edited.hpCurrent += heal;
-			if (edited.hpCurrent > edited.hpMax)
+			origin.hpCurrent += heal;
+			if (origin.hpCurrent > origin.hpMax)
 			{
-				heal = edited.hpCurrent - edited.hpMax;
-				edited.hpCurrent = edited.hpMax;
+				heal = origin.hpCurrent - origin.hpMax;
+				origin.hpCurrent = origin.hpMax;
 			}
+			RecalculateStat();
 			return (heal);
 		}
 
@@ -100,23 +103,24 @@ namespace Player.Component
 		{
 			if (damage <= 0)
 				return (0);
-			if (edited.shield <= damage)
+			if (origin.shield <= damage)
 			{
-				damage -= edited.shield;
-				edited.shield = 0;
+				damage -= origin.shield;
+				origin.shield = 0;
 			}
 			else
 			{
-				edited.shield -= damage;
+				origin.shield -= damage;
 				damage = 0;
 			}
-			edited.hpCurrent = Math.Max(edited.hpCurrent - damage, 0);
+			origin.hpCurrent = Math.Max(origin.hpCurrent - damage, 0);
+			RecalculateStat();
 			return (damage);
 		}
 
 		public bool IsAlive()
 		{
-			return (edited.hpCurrent > 0);
+			return (origin.hpCurrent > 0);
 		}
 
 		public int AddExp(int exp)
@@ -127,6 +131,7 @@ namespace Player.Component
 				return (result);
 			origin.expCurrent += exp;
 			result = LevelUp();
+			RecalculateStat();
 			return (result);
 		}
 
