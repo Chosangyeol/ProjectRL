@@ -116,6 +116,7 @@ public class Stage2BossAttack : IAttackBehavior
         if (enemy is Stage2Boss boss) boss.canRush = false;
         enemy.Anim.SetTrigger("Pattern4");
         pattern4Effect.SetActive(true);
+        pattern4Effect.GetComponent<Stage2Boss_Rush>().Init(enemy, enemy.GetStat().totalDamage);
 
         Vector3 dir = enemy.player.position - enemy.transform.position;
         dir.y = 0;
@@ -130,6 +131,8 @@ public class Stage2BossAttack : IAttackBehavior
             timer += Time.deltaTime;
             yield return null;
         }
+        pattern4Effect.GetComponent<Stage2Boss_Rush>().isHit = false;
+
         pattern4Effect.SetActive(false);
 
         isAttacking = false;

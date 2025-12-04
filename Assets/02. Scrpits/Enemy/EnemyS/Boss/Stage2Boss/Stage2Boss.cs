@@ -309,6 +309,34 @@ public class Stage2Boss : BossBase
 
     #endregion
 
+    #region 일반 패턴 1 - 전방 베기
+
+    public void Pattern1Attack()
+    {
+        Vector3 centor = transform.position + transform.forward * 5 + transform.up * 5;
+        Vector3 size = new Vector3(5, 5, 5);
+        Collider[] hits = Physics.OverlapBox(centor, size, Quaternion.identity);
+
+        foreach (Collider col in hits)
+        {
+            if (col.CompareTag("Player"))
+            {
+                SInfoAttack damamge = new SInfoAttack(
+                    this.gameObject,
+                    player.gameObject,
+                    Mathf.RoundToInt(Stat.totalDamage),
+                    null
+                    );
+
+                PlayerModel model = col.GetComponentInChildren<PlayerModel>();
+                model.Damaged(damamge);
+
+            }
+        }
+    }
+
+    #endregion
+
     #region 일반 패턴 2 - 회오리
 
     public void Pattern2Attack()
@@ -386,5 +414,23 @@ public class Stage2Boss : BossBase
         }
     }
     #endregion
+
+    private void OnDrawGizmos()
+    {
+        Vector3 centor = transform.position + transform.forward * 5 + transform.up * 5;
+        Vector3 halfSize = new Vector3(5, 5, 5); // OverlapBox에 넣은 값(half extents)
+
+        Gizmos.color = Color.red;
+
+        // 위치 + 크기 + 회전을 적용한 박스를 그리기 위해
+        Gizmos.matrix = Matrix4x4.TRS(
+            centor,               // 박스 중심
+            Quaternion.identity,  // 회전
+            Vector3.one           // 스케일(필요 없으면 1,1,1)
+        );
+
+        // 실제 크기 = halfSize * 2
+        Gizmos.DrawWireCube(Vector3.zero, halfSize * 2f);
+    }
 
 }

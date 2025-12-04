@@ -80,5 +80,6 @@ public class Projectile : PoolableMono
             pos.y += 0.05f; // »ìÂ¦ ¶ç¿ö¼­ Áö¸é °£¼· Á¦°Å
             spawnObj.transform.position = pos;
         }
+        PoolManager.Instance.Push(this);
     }
 }
