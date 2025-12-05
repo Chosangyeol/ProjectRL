@@ -72349,8 +72349,8 @@ MonoBehaviour:
   isFixedType: 0
   isFly: 0
   flyHeight: 0
-  attack: {fileID: 0}
-  death: {fileID: 0}
+  attackClip: {fileID: 0}
+  deathClip: {fileID: 0}
   patternCount: 3
   pattern3Warning: {fileID: 5345327575248554455}
   pattern3Effect: {fileID: 6246334660746652123}

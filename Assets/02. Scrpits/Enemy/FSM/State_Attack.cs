@@ -15,7 +15,8 @@ public class State_Attack : IState
 
     public void OnEnter()
     {
-        enemy.Agent.ResetPath();
+        if (enemy.Agent != null)
+            enemy.Agent.ResetPath();
         enemy.Anim.SetBool("isMoving", false);
         enemy.Anim.SetBool("Chase", false);
         enemy.StartAttack();

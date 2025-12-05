@@ -1,8 +1,10 @@
 using Player;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class EnemyBase : PoolableMono
 {
@@ -41,9 +43,10 @@ public class EnemyBase : PoolableMono
 
     public bool isFly = false;
     public float flyHeight = 0f;
-
+    public float hover = 0.5f;
 
     protected AudioSource audioS;
+    public AudioSource AudioS => audioS;
     [Header("사운드")]
     public AudioClip attackClip;
     public AudioClip deathClip;
@@ -54,9 +57,9 @@ public class EnemyBase : PoolableMono
         if (!isFly)
             agent = GetComponent<NavMeshAgent>();
 
-
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
+        lr = GetComponent<LineRenderer>();
         player = GameObject.FindAnyObjectByType<PlayerController>().transform;
         fsm = new StateMachine();
         audioS = GetComponent<AudioSource>();
@@ -66,14 +69,13 @@ public class EnemyBase : PoolableMono
 
     protected virtual void Start()
     {
-        lr.startWidth = 0.1f;
-        lr.endWidth = 0.1f;
-        lr.positionCount = 2;
-        lr.enabled = false;
-
-        if (agent != null)
-            agent.speed = Stat.moveSpeed;
-
+        if (lr != null)
+        {
+            lr.startWidth = 0.1f;
+            lr.endWidth = 0.1f;
+            lr.positionCount = 2;
+            lr.enabled = false;
+        }    
     }
 
     protected virtual void Update()
@@ -95,6 +97,11 @@ public class EnemyBase : PoolableMono
     public override void Reset()
     {
         Stat = new EnemyStat(enemySO);
+        if (agent != null)
+        {
+            agent.speed = Stat.moveSpeed;
+            Debug.Log("이동속도 세팅");
+        }
     }
 
     public EnemyStat GetStat()
@@ -117,7 +124,10 @@ public class EnemyBase : PoolableMono
         Debug.Log("공격 딜레이 시작");
         anim.SetTrigger("Idle");
         yield return new WaitForSeconds(delay);
-        fsm.ChangeState(new State_Chase(this, fsm));
+        if (isFly)
+            fsm.ChangeState(new State_FlyChase(this, fsm));
+        else
+            fsm.ChangeState(new State_Chase(this, fsm));
         Debug.Log("공격 딜레이 종료");         
     }
 
