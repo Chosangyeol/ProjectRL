@@ -29,6 +29,8 @@ namespace Player
 		[Header("Skill")]
 		[SerializeField]
 		protected APlayerSkillDataSO[]		_skillDataSO;
+		[SerializeField]
+		protected PoolableMono[]			_summonablePrefabs;
 
 		[SerializeField]
 		protected Inventory					inventory;
@@ -105,6 +107,11 @@ namespace Player
 			while (i < _bulletPrefabs.Length)
 			{
 				pool.CreatePool(_bulletPrefabs[i++], 10);
+			}
+			i = 0;
+			while (i < _summonablePrefabs.Length)
+			{
+				pool.CreatePool(_summonablePrefabs[i++], 3);
 			}
 			IsMoveable = true;
 			return ;
@@ -222,7 +229,7 @@ namespace Player
 			if (canAttack)
 			{
 				canAttack = false;
-				Shoot(targetPos,0,30f,0.02f);
+				Shoot(targetPos, 0,30f, 0.02f);
 				StartCoroutine(WaitAttack());
 				return (true);
 			}
@@ -296,6 +303,59 @@ namespace Player
 			yield return (attackCooldown);
 			canAttack = true;
 			yield break ;
+		}
+
+		public void Summon(int index = 0, float speed = 5f, float spread = 0.04f)
+		{
+			Vector2 targetPos;
+
+			if (raycaster == null)
+				throw (new Exception("Cannot Found Raycaster in PlayerModel!"));
+			targetPos = raycaster.GetRaycastHitPoint();
+			Summon(targetPos, index, speed, spread);
+			return;
+		}
+
+		public void Summon(string name, float speed = 5f, float spread = 0.04f)
+		{
+			Vector3 targetPos;
+
+			if (raycaster == null)
+				throw (new Exception("Cannot Found Raycaster in PlayerModel!"));
+			targetPos = raycaster.GetRaycastHitPoint();
+			Summon(targetPos, name, speed, spread);
+			return;
+		}
+
+		public void Summon(Vector3 targetPos, int index = 0, float speed = 5f, float spread = 0.04f)
+		{
+			if (index >=_summonablePrefabs.Length)
+			{
+				index = _summonablePrefabs.Length - 1;
+				Debug.LogError($"Cannot found bullet {index}");
+			}
+			Summon(targetPos, _summonablePrefabs[index].gameObject.name, speed, spread);
+			return;
+		}
+
+		// TODO!
+		public virtual void Summon(Vector3 targetPos, string name, float speed = 5f, float spread = 0.04f)
+		{
+			PoolableMono target;
+			Vector3 direction = GetSpreadDirection((targetPos - _bulletSummonTr.position).normalized, spread);
+
+			try
+			{
+				target = (pool.Pop(name));
+			}
+			catch (Exception e)
+			{
+				target = pool.Pop(_summonablePrefabs[0].gameObject.name);
+				Debug.LogError($"[PlayerModel_Shoot_Pool]\n{e.Message}");
+			}
+			target.transform.position = _bulletSummonTr.position;
+			target.transform.LookAt(_bulletSummonTr.position + direction);
+			return;
 		}
 
 		#endregion
