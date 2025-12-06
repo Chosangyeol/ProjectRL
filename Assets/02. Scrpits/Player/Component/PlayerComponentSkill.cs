@@ -14,7 +14,7 @@ namespace Player.Component
 		protected PlayerModel playerModel;
 
 		protected APlayerSkill[] skills;
-		protected APlayerSkill[] activeSkill;
+		protected APlayerSkill[] activeSkills;
 		protected List<SPlayerSkillDataSet> skillDataSets;
 		protected Dictionary<int, Tuple<int, int>> skillToSkillDataMap;
 
@@ -49,13 +49,13 @@ namespace Player.Component
 
 		protected virtual void SetUpActiveSkill()
 		{
-			activeSkill = new APlayerSkill[4];
+			activeSkills = new APlayerSkill[4];
 
-			for (int i = 0; i < activeSkill.Length; i++)
+			for (int i = 0; i < activeSkills.Length; i++)
 			{
 				if (skills[i] != null)
 				{
-					activeSkill[i] = skills[i];
+					activeSkills[i] = skills[i];
 				}
 			}
 			return ;
@@ -65,32 +65,32 @@ namespace Player.Component
 		{
 			bool result = false;
 
-			for (int i = 0; i < activeSkill.Length; i++)
+			for (int i = 0; i < activeSkills.Length; i++)
 			{
-				activeSkill[i]?.UpdateSkill(delta);
+				activeSkills[i]?.UpdateSkill(delta);
 			}
 			return (result);
 		}
 
 		public virtual bool UseSkill(short index, KeyCode skillKey)
 		{
-			if (index > activeSkill.Length || index < 0)
+			if (index > activeSkills.Length || index < 0)
 				return (false);
-			if (activeSkill[index] == null)
+			if (activeSkills[index] == null)
 				throw new Exception($"unknown skill {index}");
-			return (activeSkill[index].UseSkill(playerModel, skillKey));
+			return (activeSkills[index].UseSkill(playerModel, skillKey));
 		}
 
 		public bool SetSkill(short targetIndex, string skillName)
 		{
-			if (targetIndex > activeSkill.Length || targetIndex < 0)
+			if (targetIndex > activeSkills.Length || targetIndex < 0)
 				return (false);
 			try
 			{
 				Type type;
 				APlayerSkill skill;
 
-				if (activeSkill[targetIndex] != null)
+				if (activeSkills[targetIndex] != null)
 					return (false);
 				type = PlayerSkill.skillTypes[skillName];
 				skill = skills.FirstOrDefault(s => s.GetType() == type);
@@ -108,9 +108,9 @@ namespace Player.Component
 
 		public bool SetSkill(short targetIndex, short skillIndex)
 		{
-			if (targetIndex > activeSkill.Length || targetIndex < 0 || skillIndex < 0 || skillIndex > skills.Length)
+			if (targetIndex > activeSkills.Length || targetIndex < 0 || skillIndex < 0 || skillIndex > skills.Length)
 				return (false);
-			if (activeSkill[targetIndex] != null)
+			if (activeSkills[targetIndex] != null)
 				return (false);
 			if (skills[skillIndex] == null)
 				return (false);
@@ -120,23 +120,23 @@ namespace Player.Component
 
 		protected virtual void SetSkill(short targetIndex, APlayerSkill skill)
 		{
-			int idx = Array.FindIndex(activeSkill, a => a.GetType() == skill.GetType());
+			int idx = Array.FindIndex(activeSkills, a => a.GetType() == skill.GetType());
 
 			if (targetIndex == idx)
 			{
-				activeSkill[targetIndex].IsSelected = false;
-				activeSkill[targetIndex] = null;
+				activeSkills[targetIndex].IsSelected = false;
+				activeSkills[targetIndex] = null;
 			}
 			else
 			{
-				activeSkill[targetIndex].IsSelected = false;
-				WriteSkillData(activeSkill[targetIndex]);
-				activeSkill[targetIndex] = skill;
-				activeSkill[targetIndex].IsSelected = true;
+				activeSkills[targetIndex].IsSelected = false;
+				WriteSkillData(activeSkills[targetIndex]);
+				activeSkills[targetIndex] = skill;
+				activeSkills[targetIndex].IsSelected = true;
 			}
 			if (idx != -1)
 			{
-				activeSkill[idx] = null;
+				activeSkills[idx] = null;
 			}
 			WriteSkillData(skill);
 			return ;
@@ -160,7 +160,7 @@ namespace Player.Component
 
 		public APlayerSkill[] GetActiveSkill()
 		{
-			return (activeSkill);
+			return (activeSkills);
 		}
 	}
 }

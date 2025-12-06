@@ -57,6 +57,25 @@ namespace Player.Component
 			return (result);
 		}
 
+		public bool HasBuffByType(BuffType type)
+		{
+			int idx = listBuff.FindIndex(buff => buff.act.Type == type);
+
+			return (idx >= 0);
+		}
+
+		public void UnactiveBuffByType(BuffType type)
+		{
+			int idx = listBuff.FindIndex(buff => buff.act.Type == type);
+
+			if (idx == -1)
+			{
+				throw (new Exception($"BuffList don't have {nameof(type)}"));
+			}
+			listBuff[idx].act.SetUnactive();
+			return ;
+		}
+
 		public void UnactiveBuff(ref SInfoBuff buff)
 		{
 			buff.act.SetUnactive();

@@ -154,12 +154,14 @@ namespace Player.Component
 		public void CountJump()
 		{
 			edited.jumpCountCurrent++;
+			origin.jumpCountCurrent++;
 			return ;
 		}
 
 		public void ResetJumpCount()
 		{
 			edited.jumpCountCurrent = 0;
+			origin.jumpCountCurrent = 0;
 			return ;
 		}
 
