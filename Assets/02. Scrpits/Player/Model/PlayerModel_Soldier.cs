@@ -45,6 +45,12 @@ namespace Player
 			return ;
 		}
 
+		protected override void OnDie()
+		{
+			cpnAnimation.SetTrigger("tDying");
+			return ;
+		}
+
 		public override Vector3 Move(Transform parent, Vector3 movement, bool isSprint, Action callback = null)
 		{
 			Vector3 result = base.Move(parent, movement, isSprint, callback);

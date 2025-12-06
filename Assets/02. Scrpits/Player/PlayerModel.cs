@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
 using System.Reflection;
+using static Player.Component.PlayerComponentStat;
+using static UnityEngine.UI.Image;
 
 namespace Player
 {
@@ -358,9 +360,37 @@ namespace Player
 			return;
 		}
 
-		#endregion
 
+		#endregion
 		#region Stat
+		public void EditOriginStat(StatCalculator calculator)
+		{
+			cpnStat.EditOriginStat(calculator);
+			ActionCallbackStatChanged?.Invoke(this);
+			return;
+		}
+
+		public void AddCalculateStat(StatCalculator calculator)
+		{
+			cpnStat.AddCalculateStat(calculator);
+			ActionCallbackStatChanged?.Invoke(this);
+			return;
+		}
+
+		public void RemoveCalculateStat(StatCalculator calculator)
+		{
+			cpnStat.RemoveCalculateStat(calculator);
+			ActionCallbackStatChanged?.Invoke(this);
+			return;
+		}
+
+		public void AddStat(SPlayerStat add)
+		{
+			cpnStat.AddStat(add);
+			ActionCallbackStatChanged?.Invoke(this);
+			return;
+		}
+
 
 		public virtual int AddShield(SInfoInt info)
 		{
@@ -451,9 +481,21 @@ namespace Player
 		{
 			int result = Stat.Damaged(damage);
 
-			IsAlive = Stat.IsAlive();
+			if (IsAlive)
+			{
+				IsAlive = Stat.IsAlive();
+				if (!IsAlive)
+				{
+					OnDie();
+				}
+			}
 			ActionCallbackStatChanged?.Invoke(this);
 			return (result);
+		}
+
+		protected virtual void OnDie()
+		{
+			return ;
 		}
 
 		protected virtual IEnumerator WaitDamaged(float time)
