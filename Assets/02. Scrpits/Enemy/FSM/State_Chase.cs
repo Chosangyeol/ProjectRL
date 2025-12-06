@@ -15,12 +15,14 @@ public class State_Chase : IState
 
     public void OnEnter()
     {
-        enemy.Anim.SetBool("isMoving", true);
+        enemy.Anim.SetBool("Chase", true);
     }
 
     public void Tick()
     {
         float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
+
+        RotateToPlayer(enemy, 5f);
 
         if (dist > enemy.enemySO.detectRange * 1.2f)
         {
@@ -28,18 +30,39 @@ public class State_Chase : IState
         }
         else if (dist <= enemy.enemySO.attackRange)
         {
-            fsm.ChangeState(new State_Attack(enemy, fsm));
+            if (IsFacingPlayer(enemy, 5f))
+            {
+                fsm.ChangeState(new State_Attack(enemy, fsm));
+            }
         }
         else
         {
             enemy.Agent.SetDestination(enemy.player.transform.position);
         }
-        Debug.Log("Chase");
     }
 
     public void FixedTick() { }
     public void OnExit()
     {
+        enemy.Anim.SetBool("Chase", false);
         enemy.Agent.ResetPath();
+    }
+
+    private void RotateToPlayer(EnemyBase enemy, float rotSpeed)
+    {
+        Vector3 dir = (enemy.player.position - enemy.transform.position);
+        dir.y = 0;
+
+        Quaternion targetRot = Quaternion.LookRotation(dir);
+        enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, targetRot, Time.deltaTime * rotSpeed);
+    }
+
+    private bool IsFacingPlayer(EnemyBase enemy, float thresholdAngle = 5f)
+    {
+        Vector3 dir = (enemy.player.position - enemy.transform.position).normalized;
+        dir.y = 0;
+
+        float angle = Vector3.Angle(enemy.transform.forward, dir);
+        return angle < thresholdAngle;
     }
 }

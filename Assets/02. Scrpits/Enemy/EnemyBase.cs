@@ -1,8 +1,10 @@
 using Player;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class EnemyBase : PoolableMono
 {
@@ -12,12 +14,16 @@ public class EnemyBase : PoolableMono
     protected NavMeshAgent agent;
     [HideInInspector]
     public NavMeshAgent Agent => agent;
-    [HideInInspector]
-    protected Rigidbody rb;
-    
+
+    protected Rigidbody rb;   
     protected Animator anim;
+    protected LineRenderer lr;
+
     [HideInInspector]
     public Animator Anim => anim;
+    [HideInInspector]
+    public LineRenderer Lr => lr;
+
     [HideInInspector]
     public float lastAttackTime;
     [HideInInspector]
@@ -31,23 +37,50 @@ public class EnemyBase : PoolableMono
     [HideInInspector]
     public StateMachine Fsm => fsm;
 
+    public bool isFixedType = false;
+
+    public Coroutine attackCoroutine;
+
+    public bool isFly = false;
+    public float flyHeight = 0f;
+    public float hover = 0.5f;
+    
+    private bool isDie = false;
+
+    protected AudioSource audioS;
+    public AudioSource AudioS => audioS;
+    [Header("사운드")]
+    public AudioClip attackClip;
+    public AudioClip deathClip;
+
     #region Unity Event
     protected virtual void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        if (!isFly)
+            agent = GetComponent<NavMeshAgent>();
+
         rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
+        lr = GetComponent<LineRenderer>();
         player = GameObject.FindAnyObjectByType<PlayerController>().transform;
         fsm = new StateMachine();
+        audioS = GetComponent<AudioSource>();
+
         Reset();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
-
+        if (lr != null)
+        {
+            lr.startWidth = 0.1f;
+            lr.endWidth = 0.1f;
+            lr.positionCount = 2;
+            lr.enabled = false;
+        }    
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         fsm.Tick();
     }
@@ -66,6 +99,11 @@ public class EnemyBase : PoolableMono
     public override void Reset()
     {
         Stat = new EnemyStat(enemySO);
+        if (agent != null)
+        {
+            agent.speed = Stat.moveSpeed;
+            Debug.Log("이동속도 세팅");
+        }
     }
 
     public EnemyStat GetStat()
@@ -73,22 +111,36 @@ public class EnemyBase : PoolableMono
         return Stat;
     }
 
-    public virtual void StartAttack()
+    public void StartAttackCoroutine(IEnumerator routine)
     {
-        if (Time.time - lastAttackTime >= Stat.attackSpeed)
-        {
-            
-            attackBehavior.ExecuteAttack(this);
-            lastAttackTime = Time.time;
-        }
+        attackCoroutine = StartCoroutine(routine);
+    }
+
+    public virtual void StartAttack(int pattenrIndex = 0)
+    {
+        attackBehavior.ExecuteAttack(this);
+    }
+
+    public virtual IEnumerator AttackDelay(float delay)
+    {
+        Debug.Log("공격 딜레이 시작");
+        anim.SetTrigger("Idle");
+        yield return new WaitForSeconds(delay);
+        if (isFly)
+            fsm.ChangeState(new State_FlyChase(this, fsm));
+        else
+            fsm.ChangeState(new State_Chase(this, fsm));
+        Debug.Log("공격 딜레이 종료");         
     }
 
     public virtual void TakeDamage(float amount)
     {
         Stat.curHp -= amount;
-        if (Stat.curHp <= 0)
+
+        if (Stat.curHp <= 0 && !isDie)
         {
-            Die();
+            isDie = true;
+            Anim.SetTrigger("Die");
         }
     }
     
@@ -98,16 +150,15 @@ public class EnemyBase : PoolableMono
         {
             player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
             FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
-            // 아이템 드랍
             TryDropItem(enemySO.itemDropTable);
-            PoolManager.Instance.Push(this);
         }
         else
         {
             player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
-            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
-            PoolManager.Instance.Push(this);
+            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>()); 
         }
+
+        PoolManager.Instance.Push(this);
     }
 
     // 아이템 드랍
@@ -152,7 +203,7 @@ public class EnemyBase : PoolableMono
         if (selectedItem != null)
         {
             PoolableMono dropItem = PoolManager.Instance.Pop(selectedItem.name);
-            dropItem.gameObject.transform.position = this.gameObject.transform.position;
+            dropItem.gameObject.transform.position = this.gameObject.transform.position + new Vector3(0,2f,0);
         }
     }
 }
