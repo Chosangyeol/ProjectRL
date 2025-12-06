@@ -162,25 +162,26 @@ public class EnemyBase : PoolableMono
 
             fsm.ChangeState(new State_Die(this, fsm));
 
+            PlayerModel model = player.GetComponentInChildren<PlayerModel>();
+
+            if (Random.Range(0, 100f) <= enemySO.itemDropPersent)
+            {
+                model.Stat.AddExp(enemySO.gainExp);
+                FindAnyObjectByType<MainUIManager>().UpdateExp(model);
+                TryDropItem(enemySO.itemDropTable);
+            }
+            else
+            {
+                model.Stat.AddExp(enemySO.gainExp);
+                FindAnyObjectByType<MainUIManager>().UpdateExp(model);
+            }
+
             Anim.SetTrigger("Die");
         }
     }
     
     protected virtual void Die()
     {
-        if (Random.Range(0, 100f) <= enemySO.itemDropPersent)
-        {
-            player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
-            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
-            TryDropItem(enemySO.itemDropTable);
-        }
-        else
-        {
-            player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
-            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>()); 
-        }
-        
-
         PoolManager.Instance.Push(this);
     }
 
@@ -238,6 +239,41 @@ public class EnemyBase : PoolableMono
                     dropItem.gameObject.transform.position = hit.point + new Vector3(0, 1f, 0);
                 }
             }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (enemySO == null) return;
+
+        Gizmos.color = Color.yellow;
+
+        float detectRange = enemySO.detectRange;
+        float fov = enemySO.detectAngle;
+
+        Vector3 pos = transform.position;
+        Vector3 forward = transform.forward;
+
+        // 왼쪽 경계 방향
+        Vector3 leftDir = Quaternion.Euler(0, -fov * 0.5f, 0) * forward;
+        // 오른쪽 경계 방향
+        Vector3 rightDir = Quaternion.Euler(0, fov * 0.5f, 0) * forward;
+
+        // 경계선 그리기
+        Gizmos.DrawLine(pos, pos + leftDir * detectRange);
+        Gizmos.DrawLine(pos, pos + rightDir * detectRange);
+
+        // 원호(Arc) 그리기
+        int segments = 30;
+        float deltaAngle = fov / segments;
+        Vector3 prevPoint = pos + leftDir * detectRange;
+
+        for (int i = 1; i <= segments; i++)
+        {
+            Vector3 nextDir = Quaternion.Euler(0, -fov * 0.5f + deltaAngle * i, 0) * forward;
+            Vector3 nextPoint = pos + nextDir * detectRange;
+            Gizmos.DrawLine(prevPoint, nextPoint);
+            prevPoint = nextPoint;
         }
     }
 }

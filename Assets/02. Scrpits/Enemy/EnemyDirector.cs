@@ -1,7 +1,11 @@
+using Player;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Playables;
+using Random = UnityEngine.Random;
 
 public class EnemyDirector : MonoBehaviour
 {
@@ -24,15 +28,24 @@ public class EnemyDirector : MonoBehaviour
     public int stageIndex = 1;
 
     private bool bossOpen = false;
+    public PoolableMono boss;
+    public GameObject bossDoor;
     public int openCount = 20;
+    public PlayableDirector pd;
+    private bool isPlayed = false;
+    private MainUIManager mainUIManager;
+
+    public event Action OnBossOpen;
 
 
     #region Unity Events
-    
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         // 자동 생성을 시작할 시간대 조절 해야함. 1f -> 60f = 1분후 플레이어 주변 스폰
+        boss.gameObject.SetActive(false);
+        mainUIManager = FindAnyObjectByType<MainUIManager>();
         while (enemyCount < maxEnemyCount)
         {
             TrySpawn();
@@ -137,7 +150,35 @@ public class EnemyDirector : MonoBehaviour
             CancelInvoke(nameof(TrySpawn));
             InvokeRepeating(nameof(TrySpawn), 0f, interval);
             Debug.Log("보스방 오픈");
+            bossDoor.SetActive(false);
+            OnBossOpen?.Invoke();
         }
+    }
+
+    public void StartBossIntroCutScene()
+    {
+        isPlayed = true;
+        mainUIManager.gameObject.SetActive(false);
+        pd.stopped += SpawnBoss;
+        pd.Play();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && !isPlayed)
+        {
+            Debug.Log("보스 컷씬 작동");
+            StartBossIntroCutScene();
+
+        }
+    }
+
+    public void SpawnBoss(PlayableDirector obj)
+    {
+        boss.gameObject.SetActive(true);
+        mainUIManager.gameObject.SetActive(true);
+        bossDoor.SetActive(true);
+
     }
 
     #endregion

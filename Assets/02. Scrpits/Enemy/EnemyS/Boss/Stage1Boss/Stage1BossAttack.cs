@@ -85,8 +85,8 @@ public class Stage1BossAttack : IAttackBehavior
         Debug.Log("ÆÐÅÏ1 ½ÇÇà");
         enemy.Lr.startWidth = 0.1f;
         enemy.Lr.endWidth = 0.1f;
-        float width = 7f;     // ¹Ú½º Æø
-        float length = 40f;
+        float width = 12f;     // ¹Ú½º Æø
+        float length = 70f;
 
         Vector3 startPos = enemy.transform.position + enemy.transform.forward * 2;
         startPos.y = 0.1f;

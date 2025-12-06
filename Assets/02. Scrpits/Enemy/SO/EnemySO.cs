@@ -19,6 +19,7 @@ public class EnemySO : ScriptableObject
     public float attackRange;
     public float patrolRange;
     public float detectRange;
+    public float detectAngle = 90f;
     public float moveSpeed;
     public float attackSpeed;
     public int   gainExp;
