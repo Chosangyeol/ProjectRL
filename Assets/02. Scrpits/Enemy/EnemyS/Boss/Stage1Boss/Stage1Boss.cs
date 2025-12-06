@@ -39,7 +39,7 @@ public class Stage1Boss : BossBase
         StartCoroutine(LaserSpin());
     }
 
-    public override void TakeDamage(float amount)
+    public override void TakeDamage(int amount)
     {
         Stat.curHp -= amount;
         if (Stat.curHp < (Stat.totalHp * 0.8f) && !isFirstDrop)

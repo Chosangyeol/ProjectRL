@@ -218,7 +218,7 @@ public class Stage2Melee1Attack : IAttackBehavior
         float t = 0;
         float timer = 2;
         enemy.Lr.enabled = true;
-        while (t < timer)
+        while (t < timer && !enemy.IsDie)
         {
             t += Time.deltaTime;
             FacePlayer(enemy);
@@ -232,7 +232,7 @@ public class Stage2Melee1Attack : IAttackBehavior
 
         t = 0;
         enemy.Anim.SetBool("Rush", true);
-        while (t < timer)
+        while (t < timer && !enemy.IsDie)
         {
             t += Time.deltaTime;
             enemy.transform.position += dir * rushSpeed * Time.deltaTime;
@@ -275,7 +275,7 @@ public class Stage3MeleeAttack : IAttackBehavior
         float height = 4.0f;        // 포물선 최고 높이
         float t = 0f;
 
-        while (t < 1f)
+        while (t < 1f && !enemy.IsDie)
         {
             t += Time.deltaTime / duration;
 

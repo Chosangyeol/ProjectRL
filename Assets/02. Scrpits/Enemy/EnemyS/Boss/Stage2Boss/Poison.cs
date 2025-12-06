@@ -2,6 +2,7 @@ using Info;
 using Player;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Poison
@@ -49,8 +50,15 @@ namespace Poison
                         null
                         );
 
-                    other.GetComponentInChildren<PlayerModel>().AddBuff(buff);
-                    other.GetComponentInChildren<PlayerModel>().Damaged(attack);
+                    PlayerModel model = other.GetComponentInChildren<PlayerModel>();
+
+                    if (model.Buff.HasBuffByType(type))
+                    {
+                        model.Buff.UnactiveBuffByType(type);
+                    }
+
+                    model.AddBuff(buff);
+                    model.Damaged(attack);
 
                     prog = 0f;
                 }
