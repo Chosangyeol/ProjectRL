@@ -44,6 +44,8 @@ public class EnemyBase : PoolableMono
     public bool isFly = false;
     public float flyHeight = 0f;
     public float hover = 0.5f;
+    
+    private bool isDie = false;
 
     protected AudioSource audioS;
     public AudioSource AudioS => audioS;
@@ -134,9 +136,11 @@ public class EnemyBase : PoolableMono
     public virtual void TakeDamage(float amount)
     {
         Stat.curHp -= amount;
-        if (Stat.curHp <= 0)
+
+        if (Stat.curHp <= 0 && !isDie)
         {
-            Die();
+            isDie = true;
+            Anim.SetTrigger("Die");
         }
     }
     
@@ -146,16 +150,15 @@ public class EnemyBase : PoolableMono
         {
             player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
             FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
-            // 아이템 드랍
             TryDropItem(enemySO.itemDropTable);
-            PoolManager.Instance.Push(this);
         }
         else
         {
             player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
-            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
-            PoolManager.Instance.Push(this);
+            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>()); 
         }
+
+        PoolManager.Instance.Push(this);
     }
 
     // 아이템 드랍
@@ -200,7 +203,7 @@ public class EnemyBase : PoolableMono
         if (selectedItem != null)
         {
             PoolableMono dropItem = PoolManager.Instance.Pop(selectedItem.name);
-            dropItem.gameObject.transform.position = this.gameObject.transform.position;
+            dropItem.gameObject.transform.position = this.gameObject.transform.position + new Vector3(0,2f,0);
         }
     }
 }

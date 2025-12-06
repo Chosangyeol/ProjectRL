@@ -21,8 +21,8 @@ MonoBehaviour:
   attackRange: 13
   patrolRange: 30
   detectRange: 30
-  moveSpeed: 5
-  attackSpeed: 2
+  moveSpeed: 6
+  attackSpeed: 4
   gainExp: 10
   itemDropTable: {fileID: 11400000, guid: ef99215bb357bfa439a107d0964fc6b9, type: 2}
   itemDropPersent: 100

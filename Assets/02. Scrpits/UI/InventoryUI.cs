@@ -44,10 +44,10 @@ namespace UI.InventoryUI
                 BigInvItemIcon[i] = BigInvPanel.transform.GetChild(i).gameObject;
                 BigInvItemIcon[i].SetActive(false);
             }
-            //Inv = FindFirstObjectByType<PlayerModel>().Inventory;
+            Inv = FindFirstObjectByType<PlayerModel>().Inventory;
 
-            //Inv.ActionAfterAddItem += OnItemAdded;
-            //Inv.ActionAfterRemoveItem += OnItemRemoved;
+            Inv.ActionAfterAddItem += OnItemAdded;
+            Inv.ActionAfterRemoveItem += OnItemRemoved;
 
             CloseBigInv();
             OpenBigPanel = false;

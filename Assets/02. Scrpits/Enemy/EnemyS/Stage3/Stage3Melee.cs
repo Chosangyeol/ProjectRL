@@ -17,7 +17,7 @@ public class Stage3Melee : EnemyBase
     {
 
         Vector3 centor = transform.position + transform.up * 1.25f;
-        Collider[] hit = Physics.OverlapSphere(centor, 1.25f);
+        Collider[] hit = Physics.OverlapSphere(centor, 2f);
 
         foreach (Collider col in hit)
         {

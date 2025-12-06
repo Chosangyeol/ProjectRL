@@ -17,7 +17,6 @@ public class MeleeAttack : IAttackBehavior
     public void ExecuteAttack(EnemyBase enemy, int pattenrIndex = 0)
     {
         enemy.Anim.SetTrigger("Attack");
-        enemy.StartAttackCoroutine(enemy.AttackDelay(enemy.GetStat().attackSpeed));
     }
 }
 
@@ -68,7 +67,7 @@ public class RangedAttack : IAttackBehavior
 
     private void Shot(EnemyBase enemy)
     {
-        enemy.Anim.SetTrigger("RangeAttack");
+        enemy.Anim.SetTrigger("Attack");
 
         if (enemy.attackClip != null)
         {
@@ -258,11 +257,13 @@ public class Stage3MeleeAttack : IAttackBehavior
 {
     public void ExecuteAttack(EnemyBase enemy, int pattenrIndex = 0)
     {
-        enemy.Anim.SetTrigger("Attack");
+        
         enemy.StartCoroutine(JumpParabolaAttack(enemy,enemy.player));
     }
     IEnumerator JumpParabolaAttack(EnemyBase enemy, Transform player)
     {
+        enemy.Anim.SetBool("Chase", false);
+        enemy.Anim.SetTrigger("Idle");
         yield return new WaitForSeconds(2f);
 
         enemy.Agent.enabled = false; // NavMeshAgent ÁßÁö
@@ -290,7 +291,7 @@ public class Stage3MeleeAttack : IAttackBehavior
 
             yield return null;
         }
-
+        enemy.Anim.SetTrigger("Attack");
         // ÂøÁö
         enemy.Agent.enabled = true;
 

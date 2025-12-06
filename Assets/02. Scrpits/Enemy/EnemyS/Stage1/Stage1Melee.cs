@@ -38,4 +38,9 @@ public class Stage1Melee : EnemyBase
             }
         }
     }
+
+    public void StartAttackDelay()
+    {
+        StartCoroutine(AttackDelay(enemySO.attackSpeed));
+    }
 }

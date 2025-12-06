@@ -18,9 +18,9 @@ MonoBehaviour:
   spawnCount: 2
   baseHp: 100
   baseDamage: 5
-  attackRange: 10
-  patrolRange: 10
-  detectRange: 7
+  attackRange: 25
+  patrolRange: 30
+  detectRange: 30
   moveSpeed: 5
   attackSpeed: 1
   gainExp: 10
