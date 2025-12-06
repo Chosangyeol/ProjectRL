@@ -2972,6 +2972,7 @@ GameObject:
   - component: {fileID: 8893545616476231747}
   - component: {fileID: 4694222214566572812}
   - component: {fileID: 5784436686365772975}
+  - component: {fileID: 8075019337309504468}
   m_Layer: 6
   m_Name: Stage1Boss
   m_TagString: Enemy
@@ -3081,9 +3082,17 @@ MonoBehaviour:
   lastAttackTime: 0
   player: {fileID: 0}
   isFixedType: 1
+  isFly: 0
+  flyHeight: 0
+  hover: 0.5
+  attackClip: {fileID: 0}
+  deathClip: {fileID: 0}
   patternCount: 3
   pattern2Projectile: {fileID: 3090394682920786780, guid: 475da8f5ef513034c937d7e49fd472b8, type: 3}
+  pattern3Projectile: {fileID: 3090394682920786780, guid: 55d62777568f7214180b5ac0b728fef8, type: 3}
   firePos: {fileID: 8513443160557099444}
+  missilePos: {fileID: 3776338116338273256}
+  pattern3Warning: {fileID: 9198931755007564555, guid: 1a9512945e09f0f4997f5657b9a8594f, type: 3}
   warningPrefab: {fileID: 9212035575336418314, guid: fa4afb0b6aab3784aa0157f3ccdb0402, type: 3}
   fallingPrefab: {fileID: 8752472503428245831, guid: 659f2fdaf7e589c448ac3f4c3d023897, type: 3}
   warningDuration: 2
@@ -3116,7 +3125,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 4a455dfeeae463245bb58c35e3d06850, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3199,6 +3208,102 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 1
   m_ApplyActiveColorSpace: 1
+--- !u!82 &8075019337309504468
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2688738186311065926}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2689558788473023762
 GameObject:
   m_ObjectHideFlags: 0
@@ -3567,7 +3672,8 @@ Transform:
   m_LocalPosition: {x: -0.20758936, y: 0.22095676, z: 0.000001764755}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3776338116338273256}
   m_Father: {fileID: 7600845641438035505}
   m_LocalEulerAnglesHint: {x: 84.44321, y: 90.000435, z: 180}
 --- !u!1 &3146954775869759491
@@ -9214,6 +9320,37 @@ Transform:
   - {fileID: 9027991898057343595}
   m_Father: {fileID: 1672849585770509815}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -21.255947}
+--- !u!1 &7935908602038711406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3776338116338273256}
+  m_Layer: 0
+  m_Name: MissilePos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3776338116338273256
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7935908602038711406}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4044728363028538377}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7992684628243108223
 GameObject:
   m_ObjectHideFlags: 0

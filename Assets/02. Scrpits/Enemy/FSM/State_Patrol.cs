@@ -1,10 +1,16 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class State_Patrol : IState
 {
     readonly EnemyBase enemy;
     readonly StateMachine fsm;
+    private float hoverTimer;
+
+    private Vector3 patrolTarget;
+    private bool hasPatrolTarget;
 
     public State_Patrol(EnemyBase enemy, StateMachine fsm)
     {
@@ -15,32 +21,101 @@ public class State_Patrol : IState
     public void OnEnter()
     {
         enemy.Anim.SetBool("isMoving", true);
-        SetRandomDestination();
+        if (enemy.isFly)
+        {
+            Vector2 circle = Random.insideUnitCircle * enemy.enemySO.patrolRange;
+            patrolTarget = enemy.transform.position + new Vector3(circle.x, 0, circle.y);
+            hasPatrolTarget = true;
+            return;
+        }
+
+        SetRandomDestination();     
     }
 
     public void Tick()
     {
-        if (!enemy.Agent.hasPath || enemy.Agent.remainingDistance < 0.5f)
-            SetRandomDestination();
+        if (!enemy.isFly)
+        {
+            if (!enemy.Agent.hasPath || enemy.Agent.remainingDistance < 0.5f)
+                fsm.ChangeState(new State_Idle(enemy, fsm));
+        }
+
+        if (enemy.isFly)
+        {
+            MoveTo(patrolTarget);
+
+            if(Vector3.Distance(enemy.transform.position, patrolTarget) < 1f)
+            {
+                Vector2 circle = Random.insideUnitCircle * enemy.enemySO.patrolRange;
+                patrolTarget = enemy.transform.position + new Vector3(circle.x, 0, circle.y);
+            }
+        }
 
         float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
-        if (dist <= enemy.enemySO.detectRange)
+
+        if (dist <= enemy.enemySO.detectRange && !enemy.isFly)
         {
             fsm.ChangeState(new State_Chase(enemy, fsm));
         }
-        Debug.Log("Patrol");
+        else if (dist <= enemy.enemySO.detectRange && enemy.isFly)
+        {
+            fsm.ChangeState(new State_FlyChase(enemy, fsm));
+
+        }
+
     }
 
     public void FixedTick() { }
 
-    public void OnExit() { }
-
+    public void OnExit()
+    {
+        enemy.Anim.SetBool("isMoving", false);
+    }
     private void SetRandomDestination()
     {
-        Vector3 randomPos = Random.insideUnitSphere * 100f;
-        randomPos += enemy.transform.position;
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randomPos, out hit, enemy.enemySO.patrolRange, 1);
-        enemy.Agent.SetDestination(hit.position);
+        const int maxAttempts = 20; // 최대 재시도 횟수
+        Vector3 result = enemy.transform.position;
+
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            // 구 범위 안에서 랜덤 위치 생성
+            Vector3 randomPos = Random.insideUnitSphere * enemy.enemySO.patrolRange;
+            randomPos += enemy.transform.position;
+
+            // NavMesh 위의 점 샘플링
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(randomPos, out hit, enemy.enemySO.patrolRange, NavMesh.AllAreas))
+            {
+                result = hit.position;
+                break;
+            }
+        }
+
+        enemy.Agent.SetDestination(result);
     }
+
+    public void MoveTo(Vector3 targetPos)
+    {
+        Vector3 adjusted = GetHoverPosition(targetPos);
+        Vector3 dir = (adjusted - enemy.transform.position).normalized;
+
+        enemy.transform.position += dir * enemy.GetStat().moveSpeed * Time.deltaTime;
+        enemy.transform.forward = Vector3.Lerp(enemy.transform.forward, dir, 10f * Time.deltaTime);
+    }
+
+    private Vector3 GetHoverPosition(Vector3 target)
+    {
+        // 1) 지면 감지
+        if (Physics.Raycast(enemy.transform.position, Vector3.down, out RaycastHit hit, 100f))
+        {
+            target.y = hit.point.y + enemy.flyHeight;
+        }
+
+        // 2) 둥둥 떠다니는 효과
+        hoverTimer += Time.deltaTime * 2;
+        target.y += Mathf.Sin(hoverTimer) * enemy.hover;
+
+        return target;
+    }
+
 }

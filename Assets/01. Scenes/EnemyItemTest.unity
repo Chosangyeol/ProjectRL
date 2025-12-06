@@ -7175,6 +7175,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4665329203114548014, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
+      propertyPath: _playerNum
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4665329203114548014, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
       propertyPath: interactRange
       value: 2
       objectReference: {fileID: 0}
@@ -13767,7 +13771,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6861046484872648269, guid: b46e67367b7b4f845986ba340910e302, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6861046484872648269, guid: b46e67367b7b4f845986ba340910e302, type: 3}
       propertyPath: m_LocalPosition.x

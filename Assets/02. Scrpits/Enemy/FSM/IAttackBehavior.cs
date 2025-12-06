@@ -2,6 +2,7 @@ using Info;
 using Player;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
@@ -16,7 +17,6 @@ public class MeleeAttack : IAttackBehavior
     public void ExecuteAttack(EnemyBase enemy, int pattenrIndex = 0)
     {
         enemy.Anim.SetTrigger("Attack");
-        enemy.StartAttackCoroutine(enemy.AttackDelay(2f));
     }
 }
 
@@ -52,7 +52,7 @@ public class RangedAttack : IAttackBehavior
         }
         enemy.Lr.enabled = false;
         Shot(enemy);
-        enemy.StartAttackCoroutine(enemy.AttackDelay(2f));
+        enemy.StartAttackCoroutine(enemy.AttackDelay(enemy.GetStat().attackSpeed));
     }
 
     private void FacePlayer(EnemyBase enemy)
@@ -67,7 +67,14 @@ public class RangedAttack : IAttackBehavior
 
     private void Shot(EnemyBase enemy)
     {
-        enemy.Anim.SetTrigger("RangeAttack");
+        enemy.Anim.SetTrigger("Attack");
+
+        if (enemy.attackClip != null)
+        {
+            enemy.AudioS.clip = enemy.attackClip;
+            enemy.AudioS.Play();
+        }
+
         PoolableMono proj = PoolManager.Instance.Pop(projectile.gameObject.name);
         proj.GetComponent<Projectile>().owner = enemy;
         proj.GetComponent<Projectile>().damage = enemy.GetStat().totalDamage;
@@ -78,335 +85,161 @@ public class RangedAttack : IAttackBehavior
     }
 }
 
-public class Stage1BossAttack : IAttackBehavior
+public class Stage1EliteAttack : IAttackBehavior
 {
-    public GameObject pattern2Projectile;
-    public GameObject pattern3Projectile;
-    public Transform firePos;
-    public Transform missilePos;
-    public GameObject pattern3Warning;
-
     public bool isAttacking = false;
 
-    public Stage1BossAttack(GameObject pattern2Projectile,GameObject pattern3Projectile, Transform firePos, Transform missilePos, GameObject pattern3Warning)
+    private PoolableMono projectile;
+    private Transform firePos1;
+    private Transform firePos2;
+
+    public Stage1EliteAttack(PoolableMono projectile, Transform firePos1, Transform firePos2)
     {
-        this.pattern2Projectile = pattern2Projectile;
-        this.pattern3Projectile = pattern3Projectile;
-        this.firePos = firePos;
-        this.missilePos = missilePos;
-        this.pattern3Warning = pattern3Warning;
+        this.projectile = projectile;
+        this.firePos1 = firePos1; 
+        this.firePos2 = firePos2;
     }
 
     public void ExecuteAttack(EnemyBase enemy, int patternIndex = 0)
     {
-        switch (patternIndex)
+        if (enemy is Stage1Elite elite)
         {
-            case 0:
-                Debug.Log(patternIndex + 1 + "번 패턴");
-                enemy.StartAttackCoroutine(Pattern1(enemy));
-                break;
-            case 1:
-                Debug.Log(patternIndex + 1 + "번 패턴");
-                enemy.StartAttackCoroutine(Pattern2(enemy));
-                break;
-            case 2:
-                Debug.Log(patternIndex + 1 + "번 패턴");
-                enemy.StartAttackCoroutine(Pattern3(enemy));
-
-                break;
-        }
-    }
-
-    #region 패턴 1 - 지면 강타
-    private void DamageBoxActive(EnemyBase enemy, float width, float length, float offset)
-    {
-        Vector3 centor = enemy.transform.position + enemy.transform.forward * (offset + length / 2f);
-        centor.y = 1f;
-
-        Vector3 half = new Vector3(width / 2f, 1f, length / 2f);
-
-        Quaternion rot = enemy.transform.rotation;
-
-        Collider[] hits = Physics.OverlapBox(centor, half, rot);
-
-        SInfoAttack damage = new SInfoAttack(
-                    enemy.gameObject,
-                    enemy.player.gameObject,
-                    Mathf.RoundToInt(enemy.GetStat().totalDamage),
-                    null
-                );
-
-
-        foreach (Collider hit in hits)
-        {
-            if (hit.CompareTag("Player"))
+            if (Vector3.Distance(enemy.player.position, enemy.transform.position) >= 15f && elite.canRange)
             {
-                PlayerModel player = hit.GetComponentInChildren<PlayerModel>();
-                if (player != null)
-                {
-                    player.Damaged(damage);
-                }
-            } 
-        }
+                enemy.StartCoroutine(AttackRoutine(enemy));
+                elite.canRange = false;
+                return;
+            }
 
-        isAttacking = false;
+            enemy.StartCoroutine(MeleeAttack(enemy));
+        }
     }
 
-    IEnumerator Pattern1(EnemyBase enemy)
+    IEnumerator MeleeAttack(EnemyBase enemy)
     {
         isAttacking = true;
-        // 전방 내려찍기
-        Debug.Log("패턴1 실행");
-        enemy.Lr.startWidth = 0.1f;
-        enemy.Lr.endWidth = 0.1f;
-        float width = 7f;     // 박스 폭
-        float length = 40f;
 
-        Vector3 startPos = enemy.transform.position + enemy.transform.forward * 2;
-        startPos.y = 0.1f;
+        enemy.Anim.SetBool("Chase", true);
+        while (Vector3.Distance(enemy.player.position, enemy.transform.position) >= 4f)
+        {
+            RotateToPlayer(enemy, 5f);
+            enemy.Agent.SetDestination(enemy.player.position);
+            yield return null;
+        }
+        enemy.Agent.ResetPath();
+        enemy.Agent.velocity = Vector3.zero;
 
-        Vector3 p0 = startPos + enemy.transform.right * (width / 2) + enemy.transform.forward * 0;
-        Vector3 p1 = startPos + enemy.transform.right * (-width / 2) + enemy.transform.forward * 0;
-        Vector3 p2 = startPos + enemy.transform.right * (-width / 2) + enemy.transform.forward * length;
-        Vector3 p3 = startPos + enemy.transform.right * (width / 2) + enemy.transform.forward * length;
+        enemy.Anim.SetBool("Chase", false);
+        enemy.Anim.SetTrigger("MeleeAttack");
+        enemy.StartAttackCoroutine(enemy.AttackDelay(6f));
 
-        enemy.Lr.positionCount = 4;
-        enemy.Lr.SetPosition(0, p0);
-        enemy.Lr.SetPosition(1, p1);
-        enemy.Lr.SetPosition(2, p2);
-        enemy.Lr.SetPosition(3, p3);
+    }
+
+    IEnumerator AttackRoutine(EnemyBase enemy)
+    {
+        float timer = 0;
+
+        enemy.Anim.SetTrigger("RangePreAttack");
+        enemy.Lr.positionCount = 3;
 
         enemy.Lr.enabled = true;
 
-        yield return new WaitForSeconds(2f);
-        enemy.Anim.SetTrigger("Pattern1");
+        while (timer < 3f)
+        {
+            FacePlayer(enemy);
+            timer += Time.deltaTime;
+            yield return null;
+        }
         enemy.Lr.enabled = false;
-        yield return new WaitForSeconds(1f);
-        DamageBoxActive(enemy, width, length, 2f);
+        Shot(enemy);
+        enemy.StartAttackCoroutine(enemy.AttackDelay(2f));
 
-        enemy.StartAttackCoroutine(enemy.AttackDelay(4f));
+
     }
-    #endregion
 
-    #region 패턴 2 - 샷건
-    IEnumerator Pattern2(EnemyBase enemy)
+    public void Shot(EnemyBase enemy)
     {
-        isAttacking = true;
-        int projectileCount = 5;     // 원하는 발사 수
-        float angleStep = 10f;       // 양쪽으로 벌어지는 각도
-        float startAngle = -(projectileCount - 1) / 2f * angleStep;
-        enemy.Anim.SetTrigger("Pattern2");
+        enemy.Anim.SetTrigger("RangeAttack");
+        PoolableMono proj = PoolManager.Instance.Pop(projectile.gameObject.name);
+        proj.GetComponent<Projectile>().owner = enemy;
+        proj.GetComponent<Projectile>().damage = (enemy.GetStat().totalDamage) / 2;
+        proj.transform.position = firePos1.position;
+        Vector3 targetPos = enemy.player.GetComponent<Collider>().bounds.center;
+        proj.GetComponent<Rigidbody>().velocity =
+            (targetPos - firePos1.position).normalized * proj.GetComponent<Projectile>().speed;
 
-        yield return new WaitForSeconds(0.5f);
-        Vector3 forwardDir = enemy.transform.forward.normalized;
-        float baseAngle = Mathf.Atan2(forwardDir.z, forwardDir.x) * Mathf.Rad2Deg;
-
-        for (int j = 0; j < 3; j++)
-        {
-            for (int i = 0; i < projectileCount; i++)
-            {
-                float angle = baseAngle + startAngle + angleStep * i;
-                Vector3 shootDir = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad), 0, Mathf.Sin(angle * Mathf.Deg2Rad));
-
-                ShootProjectile(enemy, shootDir);
-            }
-            yield return new WaitForSeconds(2f);
-        }
-        isAttacking = false;
-        enemy.StartAttackCoroutine(enemy.AttackDelay(3f));
+        PoolableMono proj2 = PoolManager.Instance.Pop(projectile.gameObject.name);
+        proj2.GetComponent<Projectile>().owner = enemy;
+        proj2.GetComponent<Projectile>().damage = (enemy.GetStat().totalDamage) / 2;
+        proj2.transform.position = firePos2.position;
+        Vector3 targetPos2 = enemy.player.GetComponent<Collider>().bounds.center;
+        proj2.GetComponent<Rigidbody>().velocity =
+            (targetPos2 - firePos2.position).normalized * proj2.GetComponent<Projectile>().speed;
     }
 
-    private void ShootProjectile(EnemyBase enemy, Vector3 dir)
+    private void RotateToPlayer(EnemyBase enemy, float rotSpeed)
     {
-        PoolableMono proj = PoolManager.Instance.Pop(pattern2Projectile.gameObject.name);
+        Vector3 dir = (enemy.player.position - enemy.transform.position);
+        dir.y = 0;
 
-        Projectile p = proj.GetComponent<Projectile>();
-        p.owner = enemy;
-        p.damage = enemy.GetStat().totalDamage;
-
-        proj.transform.position = firePos.position;
-        proj.GetComponent<Rigidbody>().velocity = dir.normalized * p.speed;
+        Quaternion targetRot = Quaternion.LookRotation(dir);
+        enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, targetRot, Time.deltaTime * rotSpeed);
     }
-    #endregion
 
-    #region 패턴 3 - 미사일
-    IEnumerator Pattern3(EnemyBase enemy)
+    private void FacePlayer(EnemyBase enemy)
     {
-        isAttacking = true;
-        for (int i = 0; i < 5; i++)
-        {
-            PoolableMono obj = PoolManager.Instance.Pop(pattern3Projectile.gameObject.name);
-            Projectile proj = obj.GetComponent<Projectile>();
-            proj.transform.position = missilePos.position;
-            Vector3 dir = missilePos.transform.up;
-            proj.GetComponent<Rigidbody>().velocity = dir.normalized * proj.speed;
-            yield return new WaitForSeconds(0.5f);
-            PoolManager.Instance.Push(obj);
-        }
+        Vector3 dir = (enemy.player.transform.position - enemy.transform.position).normalized;
+        dir.y = 0; // 고개만 돌고 위아래 각도는 무시
+        enemy.transform.forward = dir;
 
-
-        for (int i = 0; i < 5; i++)
-        {
-            Vector3 player = enemy.player.position + Vector3.up * 1f;
-            RaycastHit hit;
-
-            PoolableMono warning = PoolManager.Instance.Pop(pattern3Warning.gameObject.name);
-            if (Physics.Raycast(player, Vector3.down, out hit, 100f, LayerMask.GetMask("Ground")))
-            {
-                warning.transform.position = hit.point;
-            }
-            yield return new WaitForSeconds(0.5f);
-            enemy.StartAttackCoroutine(DestroyWarning(warning, enemy));
-
-            PoolableMono obj = PoolManager.Instance.Pop(pattern3Projectile.gameObject.name);
-            obj.transform.position = warning.transform.position + Vector3.up * 10f;
-            Projectile proj = obj.GetComponent<Projectile>();
-            Vector3 dir = Vector3.down;
-            proj.GetComponent<Rigidbody>().velocity = dir.normalized * 10f;
-        }
-
-        isAttacking = false;
-        enemy.StartAttackCoroutine(enemy.AttackDelay(3f));
+        enemy.Lr.SetPosition(0, firePos1.position);
+        enemy.Lr.SetPosition(1, enemy.player.GetComponent<Collider>().bounds.center);
+        enemy.Lr.SetPosition(2, firePos2.position);
     }
-
-    IEnumerator DestroyWarning(PoolableMono warning, EnemyBase enemy)
-    {
-        Debug.Log("경고 이펙트 시작");
-        yield return new WaitForSeconds(1f);
-        //폭발 이펙트
-        Debug.Log("경고 이펙트 종료");
-
-        Vector3 centor = warning.transform.position + Vector3.up * 5f;
-
-        Collider[] hits = Physics.OverlapCapsule(point0: centor + Vector3.up * 5f, point1: centor + Vector3.down * 5f, radius: 3f);
-
-        SInfoAttack damage = new SInfoAttack(
-                    enemy.gameObject,
-                    enemy.player.gameObject,
-                    Mathf.RoundToInt(enemy.GetStat().totalDamage),
-                    null
-                );
-
-
-        foreach (Collider hit in hits)
-        {
-            if (hit.CompareTag("Player"))
-            {
-                PlayerModel player = hit.GetComponentInChildren<PlayerModel>();
-                if (player != null)
-                {
-                    player.Damaged(damage);
-                }
-            }
-        }
-        PoolManager.Instance.Push(warning);
-    }
-    #endregion
-
 }
 
-public class Stage3BossAttack : IAttackBehavior
+public class Stage2Melee1Attack : IAttackBehavior
 {
-    public GameObject centor;
-    public GameObject pattern2Projectile;
-    public GameObject pattern2Warning;
-    public Transform  pattenr3FirePos;
-    public GameObject pattern3Projectile;
-    private bool hasPattern1Hit = false;
-    private float timer = 0f;
+    public float rushSpeed = 15f;
 
-    public bool isAttacking = false;
-
-    public Stage3BossAttack(GameObject centor, GameObject pattern2Projectile, GameObject pattern2Warning,Transform pattenr3FirePos, GameObject pattern3Projectile)
+    public Stage2Melee1Attack(float rushSpeed)
     {
-        this.centor = centor;
-        this.pattern2Projectile = pattern2Projectile;
-        this.pattern2Warning = pattern2Warning;
-        this.pattenr3FirePos = pattenr3FirePos;
-        this.pattern3Projectile = pattern3Projectile;
+        this.rushSpeed = rushSpeed;
     }
-    
-    public void ExecuteAttack(EnemyBase enemy, int patternIndex = 0)
+    public void ExecuteAttack(EnemyBase enemy, int pattenrIndex = 0)
     {
-        switch (patternIndex)
-        {
-            case 0:
-                Debug.Log(patternIndex + 1 + "번 패턴");
-                enemy.StartAttackCoroutine(Pattern1(enemy));
-                break;
-            case 1:
-                Debug.Log(patternIndex + 1 + "번 패턴");
-                enemy.StartAttackCoroutine(Pattern2(enemy));
-                break;
-            case 2:
-                Debug.Log(patternIndex + 1 + "번 패턴");
-                enemy.StartAttackCoroutine(Pattern3(enemy));
-
-                break;
-        }
+        enemy.StartCoroutine(Rush(enemy));
     }
 
-
-    IEnumerator Pattern1(EnemyBase enemy)
+    IEnumerator Rush(EnemyBase enemy)
     {
-        isAttacking = true;
-        hasPattern1Hit = false;
-        timer = 0f;
-        
-        // 패턴 1 구현
-        Vector3 targetPos = enemy.player.GetComponent<Collider>().bounds.center;
-        Vector3 dir = (targetPos - enemy.transform.position).normalized;
-
-        enemy.Lr.SetPosition(0, enemy.transform.position);
-        enemy.Lr.SetPosition(1, targetPos);
+        enemy.Anim.SetBool("Chase", false);
+        enemy.Anim.SetTrigger("Idle");
+        float t = 0;
+        float timer = 2;
         enemy.Lr.enabled = true;
-
-        while (timer < 1f)
+        while (t < timer)
         {
-            timer += Time.deltaTime;
+            t += Time.deltaTime;
             FacePlayer(enemy);
             yield return null;
         }
-
         enemy.Lr.enabled = false;
-        enemy.Anim.SetTrigger("Pattern1");
 
-        while (true)
+        Vector3 dir = (enemy.player.position - enemy.transform.position);
+        dir.y = 0;
+        dir.Normalize();
+
+        t = 0;
+        enemy.Anim.SetBool("Rush", true);
+        while (t < timer)
         {
-            enemy.transform.position += dir * 20f * Time.deltaTime;
-            if (!hasPattern1Hit)
-            {
-                Collider[] cols = Physics.OverlapSphere(enemy.transform.position, 3f);
-                foreach (var col in cols)
-                {
-                    PlayerModel player = col.GetComponentInChildren<PlayerModel>();
-                    if (player != null)
-                    {
-                        hasPattern1Hit = true;
-
-                        SInfoAttack damage = new SInfoAttack(
-                            enemy.gameObject,
-                            player.gameObject,
-                            Mathf.RoundToInt(enemy.GetStat().totalDamage),
-                            null
-                        );
-                        player.Damaged(damage);
-                        hasPattern1Hit = true;
-                        yield return RecoverHeight(enemy);
-                        yield break;
-                    }
-                }
-            }
-
-            float dist = Vector3.Distance(enemy.transform.position, targetPos);
-
-            if (dist <= 1f)
-            {
-                yield return RecoverHeight(enemy);
-                yield break;
-            }
+            t += Time.deltaTime;
+            enemy.transform.position += dir * rushSpeed * Time.deltaTime;
             yield return null;
         }
+        enemy.Anim.SetBool("Rush", false);
+        enemy.StartAttackCoroutine(enemy.AttackDelay(enemy.GetStat().attackSpeed));
     }
 
     private void FacePlayer(EnemyBase enemy)
@@ -418,106 +251,55 @@ public class Stage3BossAttack : IAttackBehavior
         enemy.Lr.SetPosition(0, enemy.GetComponent<Collider>().bounds.center);
         enemy.Lr.SetPosition(1, enemy.player.GetComponent<Collider>().bounds.center);
     }
-
-    IEnumerator RecoverHeight(EnemyBase enemy)
-    {
-        float speed = 20f;
-        Vector3 dir = (centor.transform.position - enemy.transform.position).normalized;
-
-
-        while (true)
-        {
-            enemy.transform.position += dir * speed * Time.deltaTime;
-            yield return null;
-            if (Vector3.Distance(centor.transform.position, enemy.transform.position) < 0.1f)
-            {
-                enemy.StartAttackCoroutine(enemy.AttackDelay(4f));
-                isAttacking = false;
-                yield break;    
-            }
-        }
-    }
-
-    IEnumerator Pattern2(EnemyBase enemy)
-    {
-        isAttacking = true;
-
-        float rangeX = 50f;
-        float rangeZ = 50f;
-
-        int count = 0;
-        Vector3 targetPos = enemy.transform.position + Vector3.up * 10f;
-
-        while (Vector3.Distance(enemy.transform.position, targetPos) > 0.1f)
-        {
-            enemy.transform.position += Vector3.up * 5f * Time.deltaTime;
-            yield return null;
-        }
-
-        while (count < 100)
-        {
-            PoolableMono obj = PoolManager.Instance.Pop(pattern2Projectile.gameObject.name);
-            PoolableMono warning = PoolManager.Instance.Pop(pattern2Warning.gameObject.name);
-            Projectile proj = obj.GetComponent<Projectile>();
-
-            proj.owner = enemy;
-            proj.damage = enemy.GetStat().totalDamage;
-
-            proj.transform.position = new Vector3(
-                Random.Range(centor.transform.position.x - rangeX, centor.transform.position.x + rangeX),
-                40f,
-                Random.Range(centor.transform.position.z - rangeZ, centor.transform.position.z + rangeZ)
-            );
-
-            RaycastHit hit;
-            if (Physics.Raycast(obj.transform.position, Vector3.down, out hit, 100f, LayerMask.GetMask("Ground")))
-            {
-                warning.transform.position = hit.point + Vector3.up * 0.1f;
-                enemy.StartAttackCoroutine(DestroyWarning(warning));
-            }
-            proj.GetComponent<Rigidbody>().velocity = Vector3.down * proj.GetComponent<Projectile>().speed;
-            count++;
-            yield return new WaitForSeconds(0.05f);
-        }
-
-        while (Vector3.Distance(enemy.transform.position, centor.transform.position) > 0.1f)
-        {
-            enemy.transform.position += Vector3.down * 5f * Time.deltaTime;
-            yield return null;
-        }
-        isAttacking = false;
-        enemy.StartAttackCoroutine(enemy.AttackDelay(4f));
-    }
-
-    IEnumerator DestroyWarning(PoolableMono obj)
-    {
-        yield return new WaitForSeconds(1.3f);
-        PoolManager.Instance.Push(obj);
-    }
-
-    IEnumerator Pattern3(EnemyBase enemy)
-    {
-        isAttacking = true;
-
-        for (int i = 0; i < 10; i++)
-        {
-            PoolableMono obj = PoolManager.Instance.Pop(pattern3Projectile.gameObject.name);
-            obj.transform.position = pattenr3FirePos.position;
-            FacePlayer(enemy);
-            obj.transform.forward = enemy.player.transform.position - pattenr3FirePos.position;
-            Projectile proj = obj.GetComponent<Projectile>();
-            Vector3 dir = 
-                (enemy.player.position - pattenr3FirePos.position).normalized;
-            proj.owner = enemy;
-            proj.damage = enemy.GetStat().totalDamage;
-
-            obj.GetComponent<Rigidbody>().velocity = dir.normalized * proj.speed;
-            yield return new WaitForSeconds(0.5f);
-
-        }
-        isAttacking = false;
-
-        enemy.StartAttackCoroutine(enemy.AttackDelay(4f));
-
-    }
 }
+
+public class Stage3MeleeAttack : IAttackBehavior
+{
+    public void ExecuteAttack(EnemyBase enemy, int pattenrIndex = 0)
+    {
+        
+        enemy.StartCoroutine(JumpParabolaAttack(enemy,enemy.player));
+    }
+    IEnumerator JumpParabolaAttack(EnemyBase enemy, Transform player)
+    {
+        enemy.Anim.SetBool("Chase", false);
+        enemy.Anim.SetTrigger("Idle");
+        yield return new WaitForSeconds(2f);
+
+        enemy.Agent.enabled = false; // NavMeshAgent 중지
+
+        Vector3 startPos = enemy.transform.position;
+        Vector3 targetPos = player.position;
+
+        float duration = 1.0f;      // 점프 시간
+        float height = 4.0f;        // 포물선 최고 높이
+        float t = 0f;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+
+            // 직선 이동
+            Vector3 pos = Vector3.Lerp(startPos, targetPos, t);
+
+            // 포물선 곡선 추가
+            float yOffset = height * Mathf.Sin(Mathf.PI * t);
+
+            pos.y += yOffset;
+
+            enemy.transform.position = pos;
+
+            yield return null;
+        }
+        enemy.Anim.SetTrigger("Attack");
+        // 착지
+        enemy.Agent.enabled = true;
+
+        enemy.StartAttackCoroutine(enemy.AttackDelay(enemy.GetStat().attackSpeed));
+
+    }
+
+}
+
+
+

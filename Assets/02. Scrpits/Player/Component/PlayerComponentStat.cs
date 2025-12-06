@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 
 namespace Player.Component
 {
@@ -7,10 +8,13 @@ namespace Player.Component
 		public PlayerModel playerModel;
 
 		private SPlayerStat origin;
+		private SPlayerStat edited;
 
-		public SPlayerStat Stat { get => origin; }
+		public SPlayerStat Stat { get => edited; }
 
 		public delegate void StatCalculator(ref SPlayerStat stat);
+
+		private event StatCalculator	ActionCalculateStat;
 
 		public PlayerComponentStat(PlayerModel model, PlayerComponentStatSO so)
 		{
@@ -22,12 +26,35 @@ namespace Player.Component
 		public void EditOriginStat(StatCalculator calculator)
 		{
 			calculator(ref origin);
+			RecalculateStat();
+			return ;
+		}
+
+		public void AddCalculateStat(StatCalculator calculator)
+		{
+			ActionCalculateStat += calculator;
+			RecalculateStat();
+			return ;
+		}
+
+		public void RemoveCalculateStat(StatCalculator calculator)
+		{
+			ActionCalculateStat -= calculator;
+			RecalculateStat();
 			return ;
 		}
 
 		public void AddStat(SPlayerStat add)
 		{
 			origin += add;
+			RecalculateStat();
+			return ;
+		}
+
+		private void RecalculateStat()
+		{
+			edited = origin;
+			ActionCalculateStat?.Invoke(ref edited);
 			return ;
 		}
 
@@ -40,6 +67,7 @@ namespace Player.Component
 			{
 				add = origin.shield - Int32.MaxValue;
 			}
+			RecalculateStat();
 			return (add);
 		}
 
@@ -53,6 +81,7 @@ namespace Player.Component
 				remove += origin.shield;
 				origin.shield = 0;
 			}
+			RecalculateStat();
 			return (remove);
 		}
 
@@ -66,6 +95,7 @@ namespace Player.Component
 				heal = origin.hpCurrent - origin.hpMax;
 				origin.hpCurrent = origin.hpMax;
 			}
+			RecalculateStat();
 			return (heal);
 		}
 
@@ -84,6 +114,7 @@ namespace Player.Component
 				damage = 0;
 			}
 			origin.hpCurrent = Math.Max(origin.hpCurrent - damage, 0);
+			RecalculateStat();
 			return (damage);
 		}
 
@@ -100,6 +131,7 @@ namespace Player.Component
 				return (result);
 			origin.expCurrent += exp;
 			result = LevelUp();
+			RecalculateStat();
 			return (result);
 		}
 
@@ -121,36 +153,37 @@ namespace Player.Component
 
 		public void CountJump()
 		{
-			origin.jumpCountCurrent++;
+			edited.jumpCountCurrent++;
 			return ;
 		}
 
 		public void ResetJumpCount()
 		{
-			origin.jumpCountCurrent = 0;
+			edited.jumpCountCurrent = 0;
 			return ;
 		}
 
 		public bool CanJump()
 		{
-			return (origin.jumpCountCurrent < origin.jumpCountMax);
+			return (edited.jumpCountCurrent < edited.jumpCountMax);
 		}
 
 		public float GetSpeed(bool isSprint)
 		{
 			if (isSprint)
-				return (origin.speedSprint);
-			return (origin.speedMove);
+				return (edited.speedSprint);
+			return (edited.speedMove);
 		}
 
 		public float GetJumpPower()
 		{
-			return (origin.jumpPower);
+			return (edited.jumpPower);
 		}
 
 		private void Equalize(PlayerComponentStatSO so)
 		{
 			origin.Equalize(so);
+			edited = origin;
 			return ;
 		}
 	}

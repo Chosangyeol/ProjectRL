@@ -1,8 +1,10 @@
 using Player;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class EnemyBase : PoolableMono
 {
@@ -41,7 +43,15 @@ public class EnemyBase : PoolableMono
 
     public bool isFly = false;
     public float flyHeight = 0f;
+    public float hover = 0.5f;
+    
+    private bool isDie = false;
 
+    protected AudioSource audioS;
+    public AudioSource AudioS => audioS;
+    [Header("사운드")]
+    public AudioClip attackClip;
+    public AudioClip deathClip;
 
     #region Unity Event
     protected virtual void Awake()
@@ -51,17 +61,23 @@ public class EnemyBase : PoolableMono
 
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
+        lr = GetComponent<LineRenderer>();
         player = GameObject.FindAnyObjectByType<PlayerController>().transform;
         fsm = new StateMachine();
+        audioS = GetComponent<AudioSource>();
+
         Reset();
     }
 
     protected virtual void Start()
     {
-        lr.startWidth = 0.1f;
-        lr.endWidth = 0.1f;
-        lr.positionCount = 2;
-        lr.enabled = false;
+        if (lr != null)
+        {
+            lr.startWidth = 0.1f;
+            lr.endWidth = 0.1f;
+            lr.positionCount = 2;
+            lr.enabled = false;
+        }    
     }
 
     protected virtual void Update()
@@ -83,6 +99,11 @@ public class EnemyBase : PoolableMono
     public override void Reset()
     {
         Stat = new EnemyStat(enemySO);
+        if (agent != null)
+        {
+            agent.speed = Stat.moveSpeed;
+            Debug.Log("이동속도 세팅");
+        }
     }
 
     public EnemyStat GetStat()
@@ -103,17 +124,23 @@ public class EnemyBase : PoolableMono
     public virtual IEnumerator AttackDelay(float delay)
     {
         Debug.Log("공격 딜레이 시작");
+        anim.SetTrigger("Idle");
         yield return new WaitForSeconds(delay);
-        fsm.ChangeState(new State_Chase(this, fsm));
+        if (isFly)
+            fsm.ChangeState(new State_FlyChase(this, fsm));
+        else
+            fsm.ChangeState(new State_Chase(this, fsm));
         Debug.Log("공격 딜레이 종료");         
     }
 
     public virtual void TakeDamage(float amount)
     {
         Stat.curHp -= amount;
-        if (Stat.curHp <= 0)
+
+        if (Stat.curHp <= 0 && !isDie)
         {
-            Die();
+            isDie = true;
+            Anim.SetTrigger("Die");
         }
     }
     
@@ -123,16 +150,15 @@ public class EnemyBase : PoolableMono
         {
             player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
             FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
-            // 아이템 드랍
             TryDropItem(enemySO.itemDropTable);
-            PoolManager.Instance.Push(this);
         }
         else
         {
             player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
-            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
-            PoolManager.Instance.Push(this);
+            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>()); 
         }
+
+        PoolManager.Instance.Push(this);
     }
 
     // 아이템 드랍
@@ -177,7 +203,7 @@ public class EnemyBase : PoolableMono
         if (selectedItem != null)
         {
             PoolableMono dropItem = PoolManager.Instance.Pop(selectedItem.name);
-            dropItem.gameObject.transform.position = this.gameObject.transform.position;
+            dropItem.gameObject.transform.position = this.gameObject.transform.position + new Vector3(0,2f,0);
         }
     }
 }
