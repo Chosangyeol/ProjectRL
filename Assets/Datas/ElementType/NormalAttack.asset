@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce6bdc403c567ac44bc7de0577f13d18, type: 3}
-  m_Name: BuffType
+  m_Script: {fileID: 11500000, guid: 2c27533967f9be94d998e55b6789a501, type: 3}
+  m_Name: NormalAttack
   m_EditorClassIdentifier: 
-  all:
-  - {fileID: 11400000, guid: 19c01dc120c9f1d4f8f9b02164c729ae, type: 2}
-  - {fileID: 11400000, guid: 5f204d0a665c1e440bb2bec76bf20117, type: 2}
