@@ -19,6 +19,7 @@ public class State_BossAttack : IState
     public void OnEnter()
     {
         if (!enemy.isFly)
+            if (!enemy.isFixedType)
             enemy.Agent.ResetPath();
 
         enemy.Anim.SetBool("isMoving",false);

@@ -161,6 +161,8 @@ public class Stage1BossAttack : IAttackBehavior
         isAttacking = true;
         for (int i = 0; i < 5; i++)
         {
+            if (enemy is Stage1Boss boss)
+                boss.PlaySound(boss.Pattern3FireClip);
             PoolableMono obj = PoolManager.Instance.Pop(pattern3Projectile.gameObject.name);
             Projectile proj = obj.GetComponent<Projectile>();
             proj.transform.position = missilePos.position;
@@ -189,6 +191,8 @@ public class Stage1BossAttack : IAttackBehavior
             Projectile proj = obj.GetComponent<Projectile>();
             Vector3 dir = Vector3.down;
             proj.GetComponent<Rigidbody>().velocity = dir.normalized * 10f;
+            proj.owner = enemy;
+            proj.damage = (enemy.GetStat().totalDamage)/2;
         }
 
         isAttacking = false;
@@ -201,6 +205,9 @@ public class Stage1BossAttack : IAttackBehavior
         yield return new WaitForSeconds(1f);
         //∆¯πﬂ ¿Ã∆Â∆Æ
         Debug.Log("∞Ê∞Ì ¿Ã∆Â∆Æ ¡æ∑·");
+
+        if (enemy is Stage1Boss boss)
+            boss.PlaySound(boss.Pattern3BoomClip);
 
         Vector3 centor = warning.transform.position + Vector3.up * 5f;
 

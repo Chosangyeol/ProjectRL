@@ -284,8 +284,8 @@ MonoBehaviour:
   flyHeight: 0
   hover: 0.5
   isDie: 0
-  attackClip: {fileID: 8300000, guid: c22843d0819a8114e865772e4982f7e6, type: 3}
-  deathClip: {fileID: 0}
+  attackClip: {fileID: 8300000, guid: b5aac87d41ff51e4198504eb2a4ae7c0, type: 3}
+  deathClip: {fileID: 8300000, guid: da7f028b45a2eae44909ac2c3e4f92fc, type: 3}
 --- !u!95 &2746176469963425846
 Animator:
   serializedVersion: 5
@@ -341,7 +341,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0

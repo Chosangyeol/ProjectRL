@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Stage2Boss
   m_EditorClassIdentifier: 
   enemyName: "\uC2A4\uD14C\uC774\uC9C02\uBCF4\uC2A4"
-  cost: 0
-  weight: 1
+  weight: 000000000000000000000000
   spawnCount: 0
   baseHp: 300
   baseDamage: 10
   attackRange: 40
   patrolRange: 0
   detectRange: 100
+  detectAngle: 90
   moveSpeed: 8
   attackSpeed: 2
   gainExp: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stage1Boss
   m_EditorClassIdentifier: 
   enemyName: "\uC2A4\uD14C\uC774\uC9C01\uBCF4\uC2A4"
-  weight: 
+  weight: 000000000000000000000000
   spawnCount: 0
   baseHp: 200
   baseDamage: 10

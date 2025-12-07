@@ -12,6 +12,10 @@ public class Stage1Boss : BossBase
     public Transform missilePos;
     public GameObject pattern3Warning;
 
+    public AudioClip Pattern1Clip;
+    public AudioClip Pattern3FireClip;
+    public AudioClip Pattern3BoomClip;
+
 #pragma warning disable CS0114 // 멤버가 상속된 멤버를 숨깁니다. override 키워드가 없습니다.
     private void Start()
 #pragma warning restore CS0114 // 멤버가 상속된 멤버를 숨깁니다. override 키워드가 없습니다.
@@ -57,10 +61,26 @@ public class Stage1Boss : BossBase
         if (Stat.curHp < (Stat.totalHp * 0.5f) && !isSpinning)
         {
             isSpecialPattern = true;
-            Debug.Log("레이저 공격");
-            
+            Debug.Log("레이저 공격");         
         }
+        if (Stat.curHp <= 0 && !isDie)
+        {
+            isDie = true;
+            StopAllCoroutines();
+            PlaySound(deathClip);
 
+            fsm.ChangeState(new State_Die(this, fsm));
+
+            PlayerModel model = player.GetComponentInChildren<PlayerModel>();
+
+            model.Stat.AddExp(enemySO.gainExp);
+            FindAnyObjectByType<MainUIManager>().UpdateExp(model);
+
+            TryBossDrop(enemySO.itemDropTable);
+
+            Die();
+            Anim.SetTrigger("Die");
+        }
     }
 
     #region Boss Drop Wall

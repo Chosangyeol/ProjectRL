@@ -71,8 +71,7 @@ public class RangedAttack : IAttackBehavior
 
         if (enemy.attackClip != null)
         {
-            enemy.AudioS.clip = enemy.attackClip;
-            enemy.AudioS.Play();
+            enemy.PlaySound(enemy.attackClip);
         }
 
         PoolableMono proj = PoolManager.Instance.Pop(projectile.gameObject.name);

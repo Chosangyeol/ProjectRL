@@ -29,6 +29,7 @@ public class EnemyDirector : MonoBehaviour
 
     private bool bossOpen = false;
     public PoolableMono boss;
+    public Transform bossPos;
     public GameObject bossDoor;
     public int openCount = 20;
     public PlayableDirector pd;
@@ -167,6 +168,7 @@ public class EnemyDirector : MonoBehaviour
     {
         if (other.CompareTag("Player") && !isPlayed)
         {
+            bossDoor.SetActive(true);
             Debug.Log("보스 컷씬 작동");
             StartBossIntroCutScene();
 
@@ -175,10 +177,25 @@ public class EnemyDirector : MonoBehaviour
 
     public void SpawnBoss(PlayableDirector obj)
     {
-        boss.gameObject.SetActive(true);
-        mainUIManager.gameObject.SetActive(true);
-        bossDoor.SetActive(true);
+        PoolableMono bossObj = PoolManager.Instance.Pop(boss.name);
 
+        var agent = bossObj.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.enabled = false;
+        }
+
+        // 원하는 위치로 이동
+        bossObj.transform.position = bossPos.position;
+        bossObj.transform.rotation = bossPos.rotation;
+
+        // NavMeshAgent 다시 활성화
+        if (agent != null)
+        {
+            agent.Warp(bossPos.position);
+            agent.enabled = true;
+        }
+        mainUIManager.gameObject.SetActive(true);
     }
 
     #endregion

@@ -139,6 +139,13 @@ public class EnemyBase : PoolableMono
         Debug.Log("공격 딜레이 종료");         
     }
 
+    public void PlaySound(AudioClip clip)
+    {
+        audioS.Stop();
+        audioS.clip = clip;
+        audioS.Play();
+    }
+
     public virtual void TakeDamage(int amount)
     {
         Stat.curHp -= amount;
@@ -156,7 +163,7 @@ public class EnemyBase : PoolableMono
         {
             isDie = true;
             StopAllCoroutines();
-
+            PlaySound(deathClip);
             EnemyDirector ed = GameObject.FindAnyObjectByType<EnemyDirector>();
             if (ed != null)
                 ed.IncreKillCount();
@@ -175,8 +182,7 @@ public class EnemyBase : PoolableMono
             {
                 model.Stat.AddExp(enemySO.gainExp);
                 FindAnyObjectByType<MainUIManager>().UpdateExp(model);
-            }
-
+            }      
             Anim.SetTrigger("Die");
         }
     }
