@@ -56,7 +56,6 @@ namespace Player
 			{
 				result = origin + direction.normalized * distance;
 			}
-			Debug.DrawRay(origin, result - origin, Color.red, 0.05f);
 			return (result);
 		}
 

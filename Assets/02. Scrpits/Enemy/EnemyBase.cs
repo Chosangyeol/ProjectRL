@@ -54,8 +54,7 @@ public class EnemyBase : PoolableMono
     public AudioSource AudioS => audioS;
 
     protected bool isAttacked = false;
-
-    [Header("ì‚¬ìš´ë“œ")]
+    [Header("»ç¿îµå")]
     public AudioClip attackClip;
     public AudioClip deathClip;
 
@@ -108,7 +107,7 @@ public class EnemyBase : PoolableMono
         if (agent != null)
         {
             agent.speed = Stat.moveSpeed;
-            Debug.Log("ì´ë™ì†ë„ ì„¸íŒ…");
+            Debug.Log("ÀÌµ¿¼Óµµ ¼¼ÆÃ");
         }
     }
 
@@ -129,14 +128,14 @@ public class EnemyBase : PoolableMono
 
     public virtual IEnumerator AttackDelay(float delay)
     {
-        Debug.Log("ê³µê²© ë”œë ˆì´ ì‹œì‘");
+        Debug.Log("°ø°İ µô·¹ÀÌ ½ÃÀÛ");
         anim.SetTrigger("Idle");
         yield return new WaitForSeconds(delay);
         if (isFly)
             fsm.ChangeState(new State_FlyChase(this, fsm));
         else
             fsm.ChangeState(new State_Chase(this, fsm));
-        Debug.Log("ê³µê²© ë”œë ˆì´ ì¢…ë£Œ");         
+        Debug.Log("°ø°İ µô·¹ÀÌ Á¾·á");         
     }
 
     public virtual void TakeDamage(int amount)
@@ -186,12 +185,12 @@ public class EnemyBase : PoolableMono
         PoolManager.Instance.Push(this);
     }
 
-    // ì•„ì´í…œ ë“œë
+    // ¾ÆÀÌÅÛ µå¶ø
     public void TryDropItem(DropTableSO table)
     {
         if (table == null) return;
 
-        // ë“œëë  ì•„ì´í…œì˜ ë“±ê¸‰ ì •í•˜ê¸°
+        // µå¶øµÉ ¾ÆÀÌÅÛÀÇ µî±Ş Á¤ÇÏ±â
         float groupResult = Random.Range(0f, 100f);
         float groupWeight = 0f;
 
@@ -209,7 +208,7 @@ public class EnemyBase : PoolableMono
 
         if (selectedGroup == null || selectedGroup.items.Count == 0) return;
 
-        // ì •í•´ì§„ ë“±ê¸‰ ì•ˆì—ì„œ ì•„ì´í…œ ë“œëí•˜ê¸°
+        // Á¤ÇØÁø µî±Ş ¾È¿¡¼­ ¾ÆÀÌÅÛ µå¶øÇÏ±â
         float itemResult = Random.Range(0f, 100f);
         float itemWeight = 0f;
 
@@ -255,16 +254,16 @@ public class EnemyBase : PoolableMono
         Vector3 pos = transform.position;
         Vector3 forward = transform.forward;
 
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ¿ŞÂÊ °æ°è ¹æÇâ
         Vector3 leftDir = Quaternion.Euler(0, -fov * 0.5f, 0) * forward;
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // ¿À¸¥ÂÊ °æ°è ¹æÇâ
         Vector3 rightDir = Quaternion.Euler(0, fov * 0.5f, 0) * forward;
 
-        // ï¿½ï¿½è¼± ï¿½×¸ï¿½ï¿½ï¿½
+        // °æ°è¼± ±×¸®±â
         Gizmos.DrawLine(pos, pos + leftDir * detectRange);
         Gizmos.DrawLine(pos, pos + rightDir * detectRange);
 
-        // ï¿½ï¿½È£(Arc) ï¿½×¸ï¿½ï¿½ï¿½
+        // ¿øÈ£(Arc) ±×¸®±â
         int segments = 30;
         float deltaAngle = fov / segments;
         Vector3 prevPoint = pos + leftDir * detectRange;

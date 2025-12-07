@@ -31,7 +31,7 @@ namespace Player.Buff
 
 		public abstract void OnDisable();
 
-		public virtual void SetUnactive()
+		public void SetUnactive()
 		{
 			remainSecond = 0f;
 			return ;

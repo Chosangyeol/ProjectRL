@@ -76,30 +76,6 @@ namespace Player.Component
 			return ;
 		}
 
-		public void UnactiveAllBuffByType(BuffType type)
-		{
-			int i = 0;
-			List<int> idxs = new List<int>();
-
-			for (i = 0; i < listBuff.Count; i++)
-			{
-				if (listBuff[i].act.Type == type)
-				{
-					listBuff[i].act.SetUnactive();
-				}
-			}
-			return ;
-		}
-
-		public void UnactiveAllBuff()
-		{
-			for (int i = 0; i < listBuff.Count; i++)
-			{
-				listBuff[i].act.SetUnactive();
-			}
-			return ;
-		}
-
 		public void UnactiveBuff(ref SInfoBuff buff)
 		{
 			buff.act.SetUnactive();

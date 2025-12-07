@@ -24,8 +24,6 @@ namespace Player.Component
 		{
 			playerModel = model;
 			skills = new APlayerSkill[skillDatas.Length];
-			skillDataSets = new List<SPlayerSkillDataSet>();
-			skillToSkillDataMap = new Dictionary<int, Tuple<int, int>>();
 			for (int i = 0; i < skills.Length; i++)
 			{
 				skills[i] = skillDatas[i]?.CreateSkill();

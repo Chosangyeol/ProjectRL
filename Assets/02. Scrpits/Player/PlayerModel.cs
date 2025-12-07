@@ -9,7 +9,6 @@ using Player.Skill;
 using System.Reflection;
 using static Player.Component.PlayerComponentStat;
 using static UnityEngine.UI.Image;
-using Unity.VisualScripting;
 
 namespace Player
 {
@@ -23,8 +22,6 @@ namespace Player
 
 		[Header("Attack")]
 		[SerializeField]
-		protected ElementType				_attackType;
-		[SerializeField]
 		protected PlayerBullet[]			_bulletPrefabs;
 		[SerializeField]
 		protected Transform					_bulletSummonTr;
@@ -35,7 +32,7 @@ namespace Player
 		[SerializeField]
 		protected APlayerSkillDataSO[]		_skillDataSO;
 		[SerializeField]
-		protected PlayerSummonableMono[]	_summonablePrefabs;
+		protected PoolableMono[]			_summonablePrefabs;
 
 		[SerializeField]
 		protected Inventory					inventory;
@@ -277,10 +274,8 @@ namespace Player
 		public virtual void Shoot(Vector3 targetPos, string name, float speed = 5f, float spread = 0.04f)
 		{
 			PlayerBullet bullet;
-			Vector3 direction;
-			
-			targetPos = RaycastByGun(targetPos);
-			direction = GetSpreadDirection((targetPos - _bulletSummonTr.position).normalized, spread);
+			Vector3 direction = GetSpreadDirection((targetPos - _bulletSummonTr.position).normalized, spread);
+
 			try
 			{
 				bullet = (pool.Pop(name) as PlayerBullet);
@@ -290,33 +285,11 @@ namespace Player
 				bullet = (pool.Pop(_bulletPrefabs[0].gameObject.name) as PlayerBullet);
 				Debug.LogError($"[PlayerModel_Shoot_Pool]\n{e.Message}");
 			}
-			bullet.SetPlayer(this);
-			bullet.SetInfo(GetSInfoAttack(null));
+			bullet.SetInfo(this);
 			bullet.transform.position = _bulletSummonTr.position;
 			bullet.transform.LookAt(_bulletSummonTr.position + direction);
 			bullet.SetSpeed(speed);
 			return ;
-		}
-
-		protected Vector3 RaycastByGun(Vector3 targetPos)
-		{
-			Vector3 result;
-			RaycastHit hit;
-			bool flag;
-			float distance = 50f;
-			Vector3 direction = targetPos - _bulletSummonTr.position;
-
-			flag = Physics.Raycast(_bulletSummonTr.position, direction, out hit);
-			if (flag)
-			{
-				result = hit.point;
-			}
-			else
-			{
-				result = targetPos + direction.normalized * distance;
-			}
-			Debug.DrawRay(_bulletSummonTr.position, result - _bulletSummonTr.position, Color.blue, 0.05f);
-			return (result);
 		}
 
 		public Vector3 GetSpreadDirection(Vector3 forward, float spread = 0.04f)
@@ -332,20 +305,6 @@ namespace Player
 			yield return (attackCooldown);
 			canAttack = true;
 			yield break ;
-		}
-
-		public float GetAttackCooltime()
-		{
-			return (_attackCooltime);
-		}
-
-		public void SetAttackCooltime(float cooltime = 0f)
-		{
-			if (cooltime <= 0f)
-				attackCooldown = new WaitForSeconds(_attackCooltime);
-			else
-				attackCooldown = new WaitForSeconds(cooltime);
-			return ;
 		}
 
 		public void Summon(int index = 0, float speed = 5f, float spread = 0.04f)
@@ -384,26 +343,25 @@ namespace Player
 		// TODO!
 		public virtual void Summon(Vector3 targetPos, string name, float speed = 5f, float spread = 0.04f)
 		{
-			PlayerSummonableMono target;
+			PoolableMono target;
 			Vector3 direction = GetSpreadDirection((targetPos - _bulletSummonTr.position).normalized, spread);
 
 			try
 			{
-				target = (pool.Pop(name) as PlayerSummonableMono);
+				target = (pool.Pop(name));
 			}
 			catch (Exception e)
 			{
-				target = (pool.Pop(_summonablePrefabs[0].gameObject.name) as PlayerSummonableMono);
+				target = pool.Pop(_summonablePrefabs[0].gameObject.name);
 				Debug.LogError($"[PlayerModel_Shoot_Pool]\n{e.Message}");
 			}
-			target.SetPlayer(this);
 			target.transform.position = _bulletSummonTr.position;
 			target.transform.LookAt(_bulletSummonTr.position + direction);
-			return ;
+			return;
 		}
 
-		#endregion
 
+		#endregion
 		#region Stat
 		public void EditOriginStat(StatCalculator calculator)
 		{
@@ -548,28 +506,15 @@ namespace Player
 			yield break ;
 		}
 
-		public SInfoAttack GetSInfoAttack(GameObject target, ElementType type = null)
-		{
-			int damage;
-
-			damage = Stat.Stat.attackDamage;
-			if (UnityEngine.Random.Range(0f, 1f) < Stat.Stat.critPercent)
-				damage = (int)(damage * Stat.Stat.critDamagePercent);
-			return (GetSInfoAttack(target, damage, type));
-		}
-
-		protected virtual SInfoAttack GetSInfoAttack(GameObject target, int damage, ElementType type = null)
+		// TODO!
+		protected virtual int Deal(GameObject target, int damage, ElementType type = null)
 		{
 			SInfoAttack info = new(gameObject, target, damage, type);
 
 			ActionOnBeforeDeal?.Invoke(ref info);
-			return (info);
-		}
-
-		public void AfterAttackEnemy(SInfoAttack info)
-		{
-			ActionOnAfterDeal?.Invoke(info);
-			return ;
+			// 데미지 가하기 처리
+			ActionOnAfterDeal(info);
+			return (info.damage);
 		}
 
 		#endregion
