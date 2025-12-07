@@ -49,7 +49,7 @@ public class EnemyBase : PoolableMono
 
     protected AudioSource audioS;
     public AudioSource AudioS => audioS;
-    [Header("»ç¿îµå")]
+    [Header("ì‚¬ìš´ë“œ")]
     public AudioClip attackClip;
     public AudioClip deathClip;
 
@@ -102,7 +102,7 @@ public class EnemyBase : PoolableMono
         if (agent != null)
         {
             agent.speed = Stat.moveSpeed;
-            Debug.Log("ÀÌµ¿¼Óµµ ¼¼ÆÃ");
+            Debug.Log("ì´ë™ì†ë„ ì„¸íŒ…");
         }
     }
 
@@ -123,14 +123,14 @@ public class EnemyBase : PoolableMono
 
     public virtual IEnumerator AttackDelay(float delay)
     {
-        Debug.Log("°ø°İ µô·¹ÀÌ ½ÃÀÛ");
+        Debug.Log("ê³µê²© ë”œë ˆì´ ì‹œì‘");
         anim.SetTrigger("Idle");
         yield return new WaitForSeconds(delay);
         if (isFly)
             fsm.ChangeState(new State_FlyChase(this, fsm));
         else
             fsm.ChangeState(new State_Chase(this, fsm));
-        Debug.Log("°ø°İ µô·¹ÀÌ Á¾·á");         
+        Debug.Log("ê³µê²© ë”œë ˆì´ ì¢…ë£Œ");         
     }
 
     public virtual void TakeDamage(float amount)
@@ -161,12 +161,12 @@ public class EnemyBase : PoolableMono
         PoolManager.Instance.Push(this);
     }
 
-    // ¾ÆÀÌÅÛ µå¶ø
+    // ì•„ì´í…œ ë“œë
     public void TryDropItem(DropTableSO table)
     {
         if (table == null) return;
 
-        // µå¶øµÉ ¾ÆÀÌÅÛÀÇ µî±Ş Á¤ÇÏ±â
+        // ë“œëë  ì•„ì´í…œì˜ ë“±ê¸‰ ì •í•˜ê¸°
         float groupResult = Random.Range(0f, 100f);
         float groupWeight = 0f;
 
@@ -184,7 +184,7 @@ public class EnemyBase : PoolableMono
 
         if (selectedGroup == null || selectedGroup.items.Count == 0) return;
 
-        // Á¤ÇØÁø µî±Ş ¾È¿¡¼­ ¾ÆÀÌÅÛ µå¶øÇÏ±â
+        // ì •í•´ì§„ ë“±ê¸‰ ì•ˆì—ì„œ ì•„ì´í…œ ë“œëí•˜ê¸°
         float itemResult = Random.Range(0f, 100f);
         float itemWeight = 0f;
 
