@@ -32,6 +32,7 @@ public class EnemyDirector : MonoBehaviour
     public Transform bossPos;
     public GameObject bossDoor;
     public int openCount = 20;
+    public GameObject portal;
     public PlayableDirector pd;
     private bool isPlayed = false;
     private MainUIManager mainUIManager;
@@ -51,7 +52,7 @@ public class EnemyDirector : MonoBehaviour
         {
             TrySpawn();
         }
-
+        portal.SetActive(false);
         InvokeRepeating(nameof(TrySpawn), 60f, interval);
     }
     #endregion
@@ -196,6 +197,11 @@ public class EnemyDirector : MonoBehaviour
             agent.enabled = true;
         }
         mainUIManager.gameObject.SetActive(true);
+    }
+
+    public void OpenPortal()
+    {
+        portal.SetActive(true);
     }
 
     #endregion

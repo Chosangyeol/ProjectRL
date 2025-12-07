@@ -9,13 +9,9 @@ public class BossBase : EnemyBase
     public int patternCount;
     protected bool isSpecialPattern = false;
 
-    [Header("다음 스테이지 포탈")]
-    public GameObject portal;
     protected override void Awake()
     {
         base.Awake();
-        if (portal != null )
-            portal.SetActive(false);
     }
 
     protected override void OnEnable()
@@ -45,8 +41,8 @@ public class BossBase : EnemyBase
 
     protected override void Die()
     {
-        if (portal != null)
-            portal.SetActive(true);
+        EnemyDirector ed = GameObject.FindAnyObjectByType<EnemyDirector>();
+        ed.OpenPortal();
     }
 
     protected void TryBossDrop(DropTableSO table)

@@ -38,8 +38,8 @@ public class Stage2Boss : BossBase
     public Transform[] sequence3Targets;
     public GameObject[] sequence3Warning;
 
-
-
+    [Header("»ç¿îµå")]
+    public AudioClip specialPattern2;
 
     private void Start()
     {
