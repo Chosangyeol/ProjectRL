@@ -72,6 +72,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cpnStatSO: {fileID: 11400000, guid: cebee7838d2c7224ca321271738263c7, type: 2}
+  _attackType: {fileID: 11400000, guid: 079f93963d3b5ce4f97062c70d632401, type: 2}
   _bulletPrefabs:
   - {fileID: 2847967053485417111, guid: f1e57927fc887d04ea4536496f203e52, type: 3}
   - {fileID: 2847967053485417111, guid: ff7da023a72c6e44ab6bf51f71c66e52, type: 3}

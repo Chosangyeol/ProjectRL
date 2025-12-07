@@ -22,6 +22,8 @@ namespace Player
 
 		[Header("Attack")]
 		[SerializeField]
+		protected ElementType				_attackType;
+		[SerializeField]
 		protected PlayerBullet[]			_bulletPrefabs;
 		[SerializeField]
 		protected Transform					_bulletSummonTr;
@@ -32,7 +34,7 @@ namespace Player
 		[SerializeField]
 		protected APlayerSkillDataSO[]		_skillDataSO;
 		[SerializeField]
-		protected PlayerSummonableMono[]		_summonablePrefabs;
+		protected PlayerSummonableMono[]	_summonablePrefabs;
 
 		[SerializeField]
 		protected Inventory					inventory;
@@ -285,7 +287,8 @@ namespace Player
 				bullet = (pool.Pop(_bulletPrefabs[0].gameObject.name) as PlayerBullet);
 				Debug.LogError($"[PlayerModel_Shoot_Pool]\n{e.Message}");
 			}
-			bullet.SetInfo(this);
+			bullet.SetPlayer(this);
+			bullet.SetInfo(GetSInfoAttack(null));
 			bullet.transform.position = _bulletSummonTr.position;
 			bullet.transform.LookAt(_bulletSummonTr.position + direction);
 			bullet.SetSpeed(speed);
@@ -305,6 +308,20 @@ namespace Player
 			yield return (attackCooldown);
 			canAttack = true;
 			yield break ;
+		}
+
+		public float GetAttackCooltime()
+		{
+			return (_attackCooltime);
+		}
+
+		public void SetAttackCooltime(float cooltime = 0f)
+		{
+			if (cooltime <= 0f)
+				attackCooldown = new WaitForSeconds(_attackCooltime);
+			else
+				attackCooldown = new WaitForSeconds(cooltime);
+			return ;
 		}
 
 		public void Summon(int index = 0, float speed = 5f, float spread = 0.04f)
@@ -358,11 +375,11 @@ namespace Player
 			target.SetPlayer(this);
 			target.transform.position = _bulletSummonTr.position;
 			target.transform.LookAt(_bulletSummonTr.position + direction);
-			return;
+			return ;
 		}
 
-
 		#endregion
+
 		#region Stat
 		public void EditOriginStat(StatCalculator calculator)
 		{
