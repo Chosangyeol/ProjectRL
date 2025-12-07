@@ -12,6 +12,7 @@ namespace Player
 		private Rigidbody	rigid;
 		private float		time = 0f;
 		private float		destroyTime = 10.0f;
+		private SInfoAttack info;
 
 		public void Awake()
 		{
@@ -41,6 +42,7 @@ namespace Player
 			if (other.CompareTag("Enemy"))
 			{
 				DealDamageToEnemy(other.GetComponent<EnemyBase>());
+				player.Pool.Push(this);
 			}
 			return ;
 		}
@@ -48,22 +50,26 @@ namespace Player
 		public virtual void DealDamageToEnemy(EnemyBase enemy)
 		{
 			SPlayerStat stat = player.Stat.Stat;
-			SInfoAttack info;
 
 			if (enemy == null || !enemy.gameObject.activeInHierarchy)
-				return;
-			if (Random.Range(0f, 1f) < stat.critPercent)
-				stat.attackDamage = (int)(stat.attackDamage * stat.critDamagePercent);
-			info = new SInfoAttack(player.gameObject, enemy.gameObject, stat.attackDamage);
+				return ;
+			info.SetTarget(enemy.gameObject);
 			enemy.TakeDamage(info.damage);
+			player.AfterAttackEnemy(info);
 			Debug.Log($"Player attack {enemy.gameObject.name}, Damage {info.damage}");
-			player.Pool.Push(this);
+			return ;
 		}
 
-		public void SetInfo(PlayerModel player, float destroyTime = 10.0f)
+		public void SetPlayer(PlayerModel player, float destroyTime = 10.0f)
 		{
 			this.player = player;
 			this.destroyTime = destroyTime;
+			return ;
+		}
+
+		public void SetInfo(SInfoAttack info)
+		{
+			this.info = info;
 			return ;
 		}
 
