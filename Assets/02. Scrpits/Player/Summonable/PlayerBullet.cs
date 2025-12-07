@@ -41,6 +41,7 @@ namespace Player
 			if (other.CompareTag("Enemy"))
 			{
 				DealDamageToEnemy(other.GetComponent<EnemyBase>());
+				player.Pool.Push(this);
 			}
 			return ;
 		}
@@ -51,13 +52,12 @@ namespace Player
 			SInfoAttack info;
 
 			if (enemy == null || !enemy.gameObject.activeInHierarchy)
-				return;
-			if (Random.Range(0f, 1f) < stat.critPercent)
-				stat.attackDamage = (int)(stat.attackDamage * stat.critDamagePercent);
-			info = new SInfoAttack(player.gameObject, enemy.gameObject, stat.attackDamage);
+				return ;
+			info = player.GetSInfoAttack(enemy.gameObject);
 			enemy.TakeDamage(info.damage);
+			player.AfterAttackEnemy(info);
 			Debug.Log($"Player attack {enemy.gameObject.name}, Damage {info.damage}");
-			player.Pool.Push(this);
+			return ;
 		}
 
 		public void SetInfo(PlayerModel player, float destroyTime = 10.0f)

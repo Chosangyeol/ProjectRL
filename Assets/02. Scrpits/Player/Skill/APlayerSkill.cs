@@ -63,6 +63,7 @@ namespace Player.Skill
 			{ "PlayerSkillDash", typeof(PlayerSkillDash)},
 			{ "PlayerSkillBuckShot", typeof(PlayerSkillBuckShot)},
 			{ "PlayerSkillEscapeShot", typeof(PlayerSkillEscapeShot)},
+			{ "PlayerSkillFaintGrenade", typeof(PlayerSkillFaintGrenade)},
 		};
 
 		public PlayerSkill(PlayerSkillDataSO dataSO) : base(dataSO)
