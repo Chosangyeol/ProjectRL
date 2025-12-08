@@ -15,37 +15,16 @@ namespace Player.Component
 
 		protected APlayerSkill[] skills;
 		protected APlayerSkill[] activeSkills;
-		protected List<SPlayerSkillDataSet> skillDataSets;
-		protected Dictionary<int, Tuple<int, int>> skillToSkillDataMap;
-
-		public SPlayerSkillDataSet[] SkillDataSets { get => skillDataSets.ToArray(); }
 
 		public PlayerComponentSkill(PlayerModel model, APlayerSkillDataSO[] skillDatas)
 		{
 			playerModel = model;
 			skills = new APlayerSkill[skillDatas.Length];
-			skillDataSets = new List<SPlayerSkillDataSet>();
-			skillToSkillDataMap = new Dictionary<int, Tuple<int, int>>();
 			for (int i = 0; i < skills.Length; i++)
 			{
 				skills[i] = skillDatas[i]?.CreateSkill();
 			}
 			SetUpActiveSkill();
-			MakeSkillDataSet();
-			return ;
-		}
-
-		protected virtual void MakeSkillDataSet()
-		{
-			for (int i = 0; i < skills.Length; i++)
-			{
-				if (skills[i] == null)
-					continue ;
-				SPlayerSkillData data = new SPlayerSkillData(i, skills[i].dataSO, skills[i].IsSelected);
-
-				skillDataSets.Add(new SPlayerSkillDataSet(i, data));
-				skillToSkillDataMap.Add(i, Tuple.Create(i, 0));
-			}
 			return ;
 		}
 
@@ -55,10 +34,10 @@ namespace Player.Component
 
 			for (int i = 0; i < activeSkills.Length; i++)
 			{
-				if (skills[i] != null)
-				{
-					activeSkills[i] = skills[i];
-				}
+				int idx = PlayerPrefs.GetInt($"Skill{i}", -1);
+
+				if (idx != -1)
+					activeSkills[i] = skills[idx];
 			}
 			return ;
 		}
@@ -132,7 +111,6 @@ namespace Player.Component
 			else
 			{
 				activeSkills[targetIndex].IsSelected = false;
-				WriteSkillData(activeSkills[targetIndex]);
 				activeSkills[targetIndex] = skill;
 				activeSkills[targetIndex].IsSelected = true;
 			}
@@ -140,23 +118,6 @@ namespace Player.Component
 			{
 				activeSkills[idx] = null;
 			}
-			WriteSkillData(skill);
-			return ;
-		}
-
-		public void WriteSkillData(APlayerSkill skill)
-		{
-			int tmp = Array.FindIndex(skills, s => s.GetType() == skill.GetType());
-			Tuple<int, int> idxTuple;
-			SPlayerSkillDataSet dataSet;
-			SPlayerSkillData[] datas;
-
-			if (!skillToSkillDataMap.TryGetValue(tmp, out idxTuple))
-				throw (new Exception("너가 이걸 보고있다면, 무언가 심각히 잘못되었다."));
-			dataSet = skillDataSets[idxTuple.Item1];
-			datas = dataSet.GetDatas();
-			datas[idxTuple.Item2].SetActive(skill.IsSelected);
-			skillDataSets[idxTuple.Item1] = new SPlayerSkillDataSet(dataSet.GetTargetIndex(), datas);
 			return ;
 		}
 
