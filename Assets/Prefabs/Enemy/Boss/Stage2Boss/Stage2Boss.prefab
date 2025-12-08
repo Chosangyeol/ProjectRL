@@ -72287,7 +72287,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5260705610109848015
 Transform:
   m_ObjectHideFlags: 0
@@ -72349,8 +72349,10 @@ MonoBehaviour:
   isFixedType: 0
   isFly: 0
   flyHeight: 0
+  hover: 0.5
+  isDie: 0
   attackClip: {fileID: 0}
-  deathClip: {fileID: 0}
+  deathClip: {fileID: 8300000, guid: 4453f1e3c6945ab4fab1895b175e07ed, type: 3}
   patternCount: 3
   pattern3Warning: {fileID: 5345327575248554455}
   pattern3Effect: {fileID: 6246334660746652123}
@@ -72409,6 +72411,7 @@ MonoBehaviour:
   - {fileID: 7245160258435074670}
   - {fileID: 5032544804733933301}
   - {fileID: 5024981384669756152}
+  specialPattern2: {fileID: 8300000, guid: 50ca1db7c846311479af17033f082631, type: 3}
 --- !u!54 &1696397416410606769
 Rigidbody:
   m_ObjectHideFlags: 0

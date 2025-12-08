@@ -30,6 +30,7 @@ public class BossBase : EnemyBase
     public override IEnumerator AttackDelay(float delay)
     {
         Debug.Log("보스 공격 딜레이 시작");
+        audioS.Stop();
         yield return new WaitForSeconds(delay);
         if (!isSpecialPattern)
         {

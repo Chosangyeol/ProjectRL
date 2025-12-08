@@ -11,7 +11,6 @@ public class EnemyDirector : MonoBehaviour
 {
     [SerializeField]
     private PoolingListSO spawnEnemyList;
-    public float spawnRadius = 15f;
     public float interval = 60f;
 
     private Transform player;
@@ -21,12 +20,14 @@ public class EnemyDirector : MonoBehaviour
     private int maxRecentCount = 2;
 
     public int enemyCount = 0;
+    [Header("스테이지 별 최대 몬스터 수")]
     public int maxEnemyCount = 20;
     private int enemyKillCount = 0;
     public int EnemyKillCount => enemyKillCount;
 
     public int stageIndex = 1;
 
+    [Header("보스 메뉴")]
     private bool bossOpen = false;
     public PoolableMono boss;
     public Transform bossPos;
@@ -36,6 +37,13 @@ public class EnemyDirector : MonoBehaviour
     public PlayableDirector pd;
     private bool isPlayed = false;
     private MainUIManager mainUIManager;
+
+    [Header("포탑 메뉴")]
+    public PoolableMono[] towerPrefab;
+    public int maxTowerCount = 3;
+
+    [Header("Bgm 변경")]
+    public BGMPlayer bgmPlayer;
 
     public event Action OnBossOpen;
 
@@ -52,6 +60,7 @@ public class EnemyDirector : MonoBehaviour
         {
             TrySpawn();
         }
+        SetTower();
         portal.SetActive(false);
         InvokeRepeating(nameof(TrySpawn), 60f, interval);
     }
@@ -161,7 +170,9 @@ public class EnemyDirector : MonoBehaviour
     {
         isPlayed = true;
         mainUIManager.gameObject.SetActive(false);
+        if (!pd.gameObject.activeSelf) pd.gameObject.SetActive(true);
         pd.stopped += SpawnBoss;
+        bgmPlayer.BossBgmPlay();
         pd.Play();
     }
 
@@ -202,6 +213,29 @@ public class EnemyDirector : MonoBehaviour
     public void OpenPortal()
     {
         portal.SetActive(true);
+    }
+
+    #endregion
+
+    #region Tower Setting
+    private void SetTower()
+    {
+        List<Transform> towerPos = spawnPosList;
+
+        for (int i = 0; i < maxTowerCount; i++)
+        {
+            int posIndex = Random.Range(0,towerPos.Count);
+            Vector3 towerSpawnPos = towerPos[posIndex].position;
+            towerPos.Remove(towerPos[posIndex]);
+
+            towerSpawnPos.x += Random.Range(-5, 5);
+            towerSpawnPos.z += Random.Range(-5, 5);
+
+            int towerIndex = Random.Range(0,towerPrefab.Length);
+
+            PoolableMono tower = PoolManager.Instance.Pop(towerPrefab[towerIndex].name);
+            tower.transform.position = towerSpawnPos; 
+        }
     }
 
     #endregion

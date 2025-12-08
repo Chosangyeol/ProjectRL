@@ -22,6 +22,8 @@ namespace UI.SceneManage
         public static void LoadScene(string sceneName)
         {
             nextScene = sceneName;
+            if (PoolManager.Instance != null)
+                PoolManager.Instance.ClearPoolingObject();
             SceneManager.LoadScene("LoadingScene");
         }
 

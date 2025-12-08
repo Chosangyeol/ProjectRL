@@ -46,4 +46,13 @@ public class PoolManager : MonoBehaviour
     {
         _pools[obj.name].Push(obj);
     }
+
+    public void ClearPoolingObject()
+    {
+        var activeObjects = FindObjectsOfType<PoolableMono>();
+        foreach(var obj in activeObjects)
+        {
+            Push(obj);
+        }
+    }
 }

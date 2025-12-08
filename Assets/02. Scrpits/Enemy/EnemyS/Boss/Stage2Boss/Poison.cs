@@ -40,7 +40,7 @@ namespace Poison
                     SInfoBuff buff = new SInfoBuff(
                         this.gameObject,
                         other.gameObject,
-                        new SpeedBuff(player, 30f, "이동속도 감소", type, 0.5f, false)
+                        new SpeedBuff(player, 30f, "이동속도 감소", type, 0.3f, false)
                         );
 
                     SInfoAttack attack = new SInfoAttack(

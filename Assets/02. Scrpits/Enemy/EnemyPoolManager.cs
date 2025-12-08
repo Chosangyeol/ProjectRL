@@ -8,13 +8,17 @@ public class EnemyPoolManager : MonoBehaviour
     private PoolingListSO EnemyList;
     [SerializeField]
     private PoolingListSO ProjectileList;
+    [SerializeField]
+    private PoolingListSO itemList;
+    [SerializeField]
+    private PoolingListSO towerList;
 
     private void Awake()
     {
-        CreateEnemyPool();
+        CreatePool();
     }
 
-    private void CreateEnemyPool()
+    private void CreatePool()
     {
 
         EnemyList.PoolList.ForEach(p =>
@@ -23,6 +27,16 @@ public class EnemyPoolManager : MonoBehaviour
         });
 
         ProjectileList.PoolList.ForEach(p =>
+        {
+            PoolManager.Instance.CreatePool(p.Prefab, p.Count);
+        });
+
+        itemList.PoolList.ForEach(p =>
+        {
+            PoolManager.Instance.CreatePool(p.Prefab, p.Count);
+        });
+
+        towerList.PoolList.ForEach(p =>
         {
             PoolManager.Instance.CreatePool(p.Prefab, p.Count);
         });

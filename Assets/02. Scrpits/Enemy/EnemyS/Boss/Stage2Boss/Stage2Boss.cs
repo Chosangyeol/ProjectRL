@@ -38,7 +38,7 @@ public class Stage2Boss : BossBase
     public Transform[] sequence3Targets;
     public GameObject[] sequence3Warning;
 
-    [Header("사운드")]
+    [Header("보스 추가 사운드")]
     public AudioClip specialPattern2;
 
     private void Start()
@@ -73,6 +73,25 @@ public class Stage2Boss : BossBase
             {
                 poisonTrigger = true;      
             }
+        }
+
+        if (Stat.curHp <= 0 && !isDie)
+        {
+            isDie = true;
+            StopAllCoroutines();
+            PlaySound(deathClip);
+
+            fsm.ChangeState(new State_Die(this, fsm));
+
+            PlayerModel model = player.GetComponentInChildren<PlayerModel>();
+
+            model.Stat.AddExp(enemySO.gainExp);
+            FindAnyObjectByType<MainUIManager>().UpdateExp(model);
+
+            TryBossDrop(enemySO.itemDropTable);
+
+            Die();
+            Anim.SetTrigger("Die");
         }
 
     }
@@ -148,6 +167,7 @@ public class Stage2Boss : BossBase
 
         Debug.Log("트리거 발동");
 
+        centorPos = GameObject.FindWithTag("Stage2BossCentor").transform;
         poisonTrigger = false;
         isPoisonPlaying = false;
         fsm.ChangeState(new State_BossSpecialPattern(this, fsm, patternCount));

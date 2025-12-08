@@ -9,6 +9,8 @@ public class State_Patrol : IState
     readonly StateMachine fsm;
     private float hoverTimer;
 
+    private float patrolTimer = 0;
+
     private Vector3 patrolTarget;
     private bool hasPatrolTarget;
 
@@ -59,6 +61,12 @@ public class State_Patrol : IState
                 fsm.ChangeState(new State_FlyChase(enemy, fsm));
         }
 
+        patrolTimer += Time.deltaTime;
+        if (patrolTimer >= 10f)
+        {
+            patrolTimer = 0;
+            fsm.ChangeState(new State_Idle(enemy, fsm));
+        }
     }
 
     public void FixedTick() { }
