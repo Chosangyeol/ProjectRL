@@ -32,17 +32,17 @@ namespace Player.Component
 		{
 			activeSkills = new APlayerSkill[4];
 
-			for (short i = 0; i < activeSkills.Length; i++)
+			for (int i = 0; i < activeSkills.Length; i++)
 			{
 				int idx = PlayerPrefs.GetInt($"Skill{i}", -1);
 
 				if (idx != -1)
 				{
-					SetSkill(i, (short)idx);
+					activeSkills[i] = skills[idx];
 				}
 				else
 				{
-					SetSkill(i, i);
+					activeSkills[i] = skills[i];
 				}
 			}
 			return ;
