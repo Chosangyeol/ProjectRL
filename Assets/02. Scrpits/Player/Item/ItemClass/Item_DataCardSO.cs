@@ -7,6 +7,7 @@ namespace Player.Item
     [CreateAssetMenu(fileName = "DataCard", menuName = "SO/Data - Item/DataCard")]
     public class Item_DataCardSO : AItemDataSO
     {
+        public bool reverse = false;
         public int increAmount;
         public CanIncreStats canIncreStats;
 

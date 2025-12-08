@@ -9,6 +9,7 @@ using Player.Skill;
 using System.Reflection;
 using static Player.Component.PlayerComponentStat;
 using static UnityEngine.UI.Image;
+using Unity.VisualScripting;
 
 namespace Player
 {
@@ -276,8 +277,10 @@ namespace Player
 		public virtual void Shoot(Vector3 targetPos, string name, float speed = 5f, float spread = 0.04f)
 		{
 			PlayerBullet bullet;
-			Vector3 direction = GetSpreadDirection((targetPos - _bulletSummonTr.position).normalized, spread);
-
+			Vector3 direction;
+			
+			targetPos = RaycastByGun(targetPos);
+			direction = GetSpreadDirection((targetPos - _bulletSummonTr.position).normalized, spread);
 			try
 			{
 				bullet = (pool.Pop(name) as PlayerBullet);
@@ -293,6 +296,27 @@ namespace Player
 			bullet.transform.LookAt(_bulletSummonTr.position + direction);
 			bullet.SetSpeed(speed);
 			return ;
+		}
+
+		protected Vector3 RaycastByGun(Vector3 targetPos)
+		{
+			Vector3 result;
+			RaycastHit hit;
+			bool flag;
+			float distance = 50f;
+			Vector3 direction = targetPos - _bulletSummonTr.position;
+
+			flag = Physics.Raycast(_bulletSummonTr.position, direction, out hit);
+			if (flag)
+			{
+				result = hit.point;
+			}
+			else
+			{
+				result = targetPos + direction.normalized * distance;
+			}
+			Debug.DrawRay(_bulletSummonTr.position, result - _bulletSummonTr.position, Color.blue, 0.05f);
+			return (result);
 		}
 
 		public Vector3 GetSpreadDirection(Vector3 forward, float spread = 0.04f)

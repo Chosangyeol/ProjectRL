@@ -24,11 +24,7 @@ public class State_Chase : IState
 
         RotateToPlayer(enemy, 5f);
 
-        if (dist > enemy.enemySO.detectRange * 1.2f)
-        {
-            fsm.ChangeState(new State_Patrol(enemy, fsm));
-        }
-        else if (dist <= enemy.enemySO.attackRange)
+        if (dist <= enemy.enemySO.attackRange)
         {
             if (IsFacingPlayer(enemy, 5f))
             {

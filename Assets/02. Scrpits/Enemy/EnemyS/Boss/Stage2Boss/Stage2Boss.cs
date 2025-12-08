@@ -38,8 +38,8 @@ public class Stage2Boss : BossBase
     public Transform[] sequence3Targets;
     public GameObject[] sequence3Warning;
 
-
-
+    [Header("»ç¿îµå")]
+    public AudioClip specialPattern2;
 
     private void Start()
     {
@@ -57,7 +57,7 @@ public class Stage2Boss : BossBase
         fsm.Tick();
     }
 
-    public override void TakeDamage(float amount)
+    public override void TakeDamage(int amount)
     {
         Stat.curHp -= amount;
         if (poisonIndex <= 9 && Stat.curHp <= (Stat.totalHp / 10) * (10 - poisonIndex))
