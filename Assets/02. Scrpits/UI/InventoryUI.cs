@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using DG.Tweening;
 
 namespace UI.InventoryUI
@@ -75,8 +76,8 @@ namespace UI.InventoryUI
         public void ItemGetAnnounce(AItem item)
         {
             ItemGetAnnouncePanelIcon.GetComponent<Image>().sprite = item.itemData.itemSprite;
-            ItemGetAnnouncePanelName.GetComponent<Text>().text = item.itemData.itemName;
-            ItemGetAnnouncePanelDesc.GetComponent<Text>().text = item.itemData.tooltip;
+            ItemGetAnnouncePanelName.GetComponent<TMP_Text>().text = item.itemData.itemName;
+            ItemGetAnnouncePanelDesc.GetComponent<TMP_Text>().text = item.itemData.tooltip;
             ItemGetAnnouncePanel.SetActive(true);
             StartCoroutine(Wait(3));      
         }
@@ -99,8 +100,8 @@ namespace UI.InventoryUI
         public void MouseOverIcon(int index)
         {
             ItemDescPanelIcon.GetComponent<Image>().sprite = Inv.Items[index].itemData.itemSprite;
-            ItemDescPanelName.GetComponent<Text>().text = Inv.Items[index].itemData.itemName;
-            ItemDescPanelDesc.GetComponent<Text>().text = Inv.Items[index].itemData.tooltip;
+            ItemDescPanelName.GetComponent<TMP_Text>().text = Inv.Items[index].itemData.itemName;
+            ItemDescPanelDesc.GetComponent<TMP_Text>().text = Inv.Items[index].itemData.tooltip;
         }
 
         void OpenBigInv()
