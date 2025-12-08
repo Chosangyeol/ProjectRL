@@ -8,18 +8,18 @@ public class EnemySO : ScriptableObject
     public string enemyName;
 
     [Header("스폰 세팅")]
-    public int cost;
-    public int weight = 1;
+    public int[] weight;
     public int spawnCount;
 
     [Header("몬스터 스텟 세팅 (성장)")]
-    public float baseHp;
-    public float baseDamage;
+    public int baseHp;
+    public int baseDamage;
 
     [Header("몬스터 스텟 세팅 (고정)")]
     public float attackRange;
     public float patrolRange;
     public float detectRange;
+    public float detectAngle = 90f;
     public float moveSpeed;
     public float attackSpeed;
     public int   gainExp;

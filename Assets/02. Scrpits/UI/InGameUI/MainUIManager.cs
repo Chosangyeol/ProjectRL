@@ -16,7 +16,6 @@ public class MainUIManager : MonoBehaviour
 
     public TMP_Text timeText;
 
-    // 추후 GameManager로 이동
     private float time;
 
     private void Awake()
@@ -27,12 +26,11 @@ public class MainUIManager : MonoBehaviour
 
     private void Update()
     {
-        time += Time.deltaTime;
+        time = GameManager.Instance.Timer;
 
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
 
-        // 00:00 형식으로 표시
         timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 

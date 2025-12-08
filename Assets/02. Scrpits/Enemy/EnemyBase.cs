@@ -45,10 +45,16 @@ public class EnemyBase : PoolableMono
     public float flyHeight = 0f;
     public float hover = 0.5f;
     
-    private bool isDie = false;
+    public bool isDie = false;
+    public bool IsDie => isDie;
 
     protected AudioSource audioS;
+
+    [HideInInspector]
     public AudioSource AudioS => audioS;
+
+    protected bool isAttacked = false;
+
     [Header("사운드")]
     public AudioClip attackClip;
     public AudioClip deathClip;
@@ -133,31 +139,56 @@ public class EnemyBase : PoolableMono
         Debug.Log("공격 딜레이 종료");         
     }
 
-    public virtual void TakeDamage(float amount)
+    public void PlaySound(AudioClip clip)
+    {
+        audioS.Stop();
+        audioS.clip = clip;
+        audioS.Play();
+    }
+
+    public virtual void TakeDamage(int amount)
     {
         Stat.curHp -= amount;
+
+        if (!isAttacked)
+        {
+            isAttacked = true;
+            if (isFly)
+                fsm.ChangeState(new State_FlyChase(this, fsm));
+            else
+                fsm.ChangeState(new State_Chase(this, fsm));
+        }
 
         if (Stat.curHp <= 0 && !isDie)
         {
             isDie = true;
+            StopAllCoroutines();
+            PlaySound(deathClip);
+            EnemyDirector ed = GameObject.FindAnyObjectByType<EnemyDirector>();
+            if (ed != null)
+                ed.IncreKillCount();
+
+            fsm.ChangeState(new State_Die(this, fsm));
+
+            PlayerModel model = player.GetComponentInChildren<PlayerModel>();
+
+            if (Random.Range(0, 100f) <= enemySO.itemDropPersent)
+            {
+                model.Stat.AddExp(enemySO.gainExp);
+                FindAnyObjectByType<MainUIManager>().UpdateExp(model);
+                TryDropItem(enemySO.itemDropTable);
+            }
+            else
+            {
+                model.Stat.AddExp(enemySO.gainExp);
+                FindAnyObjectByType<MainUIManager>().UpdateExp(model);
+            }      
             Anim.SetTrigger("Die");
         }
     }
     
     protected virtual void Die()
     {
-        if (Random.Range(0, 100f) <= enemySO.itemDropPersent)
-        {
-            player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
-            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>());
-            TryDropItem(enemySO.itemDropTable);
-        }
-        else
-        {
-            player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>().Stat.AddExp(enemySO.gainExp);
-            FindAnyObjectByType<MainUIManager>().UpdateExp(player.gameObject.transform.GetChild(1).GetComponent<PlayerModel>()); 
-        }
-
         PoolManager.Instance.Push(this);
     }
 
@@ -203,7 +234,53 @@ public class EnemyBase : PoolableMono
         if (selectedItem != null)
         {
             PoolableMono dropItem = PoolManager.Instance.Pop(selectedItem.name);
-            dropItem.gameObject.transform.position = this.gameObject.transform.position + new Vector3(0,2f,0);
+            if (!isFly)
+            {
+                dropItem.gameObject.transform.position = this.gameObject.transform.position + new Vector3(0, 1f, 0);
+            }
+            else if (isFly)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(this.transform.position,Vector3.down, out hit, 100f,LayerMask.GetMask("Ground")))
+                {
+                    dropItem.gameObject.transform.position = hit.point + new Vector3(0, 1f, 0);
+                }
+            }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (enemySO == null) return;
+
+        Gizmos.color = Color.yellow;
+
+        float detectRange = enemySO.detectRange;
+        float fov = enemySO.detectAngle;
+
+        Vector3 pos = transform.position;
+        Vector3 forward = transform.forward;
+
+        // ���� ��� ����
+        Vector3 leftDir = Quaternion.Euler(0, -fov * 0.5f, 0) * forward;
+        // ������ ��� ����
+        Vector3 rightDir = Quaternion.Euler(0, fov * 0.5f, 0) * forward;
+
+        // ��輱 �׸���
+        Gizmos.DrawLine(pos, pos + leftDir * detectRange);
+        Gizmos.DrawLine(pos, pos + rightDir * detectRange);
+
+        // ��ȣ(Arc) �׸���
+        int segments = 30;
+        float deltaAngle = fov / segments;
+        Vector3 prevPoint = pos + leftDir * detectRange;
+
+        for (int i = 1; i <= segments; i++)
+        {
+            Vector3 nextDir = Quaternion.Euler(0, -fov * 0.5f + deltaAngle * i, 0) * forward;
+            Vector3 nextPoint = pos + nextDir * detectRange;
+            Gizmos.DrawLine(prevPoint, nextPoint);
+            prevPoint = nextPoint;
         }
     }
 }

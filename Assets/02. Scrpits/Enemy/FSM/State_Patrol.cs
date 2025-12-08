@@ -51,16 +51,12 @@ public class State_Patrol : IState
             }
         }
 
-        float dist = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);
-
-        if (dist <= enemy.enemySO.detectRange && !enemy.isFly)
+        if (IsPlayerInSight())
         {
-            fsm.ChangeState(new State_Chase(enemy, fsm));
-        }
-        else if (dist <= enemy.enemySO.detectRange && enemy.isFly)
-        {
-            fsm.ChangeState(new State_FlyChase(enemy, fsm));
-
+            if (!enemy.isFly)
+                fsm.ChangeState(new State_Chase(enemy, fsm));
+            else
+                fsm.ChangeState(new State_FlyChase(enemy, fsm));
         }
 
     }
@@ -116,6 +112,33 @@ public class State_Patrol : IState
         target.y += Mathf.Sin(hoverTimer) * enemy.hover;
 
         return target;
+    }
+
+    private bool IsPlayerInSight()
+    {
+        Vector3 dirToPlayer = enemy.player.transform.position - enemy.transform.position;
+        float distance = dirToPlayer.magnitude;
+
+        // 1) 탐지 거리 체크
+        if (distance > enemy.enemySO.detectRange)
+            return false;
+
+        // 2) 시야 각도 체크 (전방 기준)
+        float angle = Vector3.Angle(enemy.transform.forward, dirToPlayer);
+
+        if (angle > enemy.enemySO.detectAngle * 0.5f)
+            return false;
+
+        // 3) 장애물 체크 (옵션)
+        if (Physics.Raycast(enemy.transform.position + Vector3.up * 1f, dirToPlayer.normalized, out RaycastHit hit, distance))
+        {
+            if (!hit.collider.CompareTag("Player"))
+            {
+                return false; // 벽 등에 가려진 경우
+            }
+        }
+
+        return true;
     }
 
 }

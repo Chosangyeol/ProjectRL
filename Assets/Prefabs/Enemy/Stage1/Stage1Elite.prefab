@@ -1686,8 +1686,9 @@ MonoBehaviour:
   isFly: 0
   flyHeight: 0
   hover: 0.5
-  attackClip: {fileID: 0}
-  deathClip: {fileID: 0}
+  isDie: 0
+  attackClip: {fileID: 8300000, guid: 7498675745e0f9144adb571e680cd4f6, type: 3}
+  deathClip: {fileID: 8300000, guid: f1756c9dde8c15a4eb12d7c86c499e44, type: 3}
   canRange: 1
   rangeCool: 10
   projectile: {fileID: 203203734673528485, guid: bb9fabd62da4f2f40982f4c6ce50ad39, type: 3}
@@ -1727,7 +1728,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0

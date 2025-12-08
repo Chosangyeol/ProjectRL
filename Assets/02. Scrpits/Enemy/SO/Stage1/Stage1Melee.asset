@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Stage1Melee
   cost: 5
-  weight: 2
-  spawnCount: 3
+  weight: 050000000300000002000000
+  spawnCount: 4
   baseHp: 100
   baseDamage: 10
   attackRange: 2.5

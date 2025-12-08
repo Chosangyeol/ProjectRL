@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Stage1Elite
   m_EditorClassIdentifier: 
   enemyName: Stage1Elite
-  cost: 5
-  weight: 2
-  spawnCount: 3
+  cost: 30
+  weight: 010000000200000004000000
+  spawnCount: 1
   baseHp: 100
   baseDamage: 20
   attackRange: 30

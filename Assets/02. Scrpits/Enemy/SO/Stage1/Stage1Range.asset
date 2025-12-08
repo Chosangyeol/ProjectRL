@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Stage1Range
   m_EditorClassIdentifier: 
   enemyName: Stage1Range
-  cost: 30
-  weight: 3
+  cost: 10
+  weight: 040000000300000002000000
   spawnCount: 2
   baseHp: 100
   baseDamage: 5

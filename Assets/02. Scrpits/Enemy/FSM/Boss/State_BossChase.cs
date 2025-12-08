@@ -71,7 +71,8 @@ public class State_BossChase : IState
         enemy.Anim.SetBool("isMoving", false);
 
         if (!enemy.isFly)
-            enemy.Agent.ResetPath();
+            if (!enemy.isFixedType)
+                enemy.Agent.ResetPath();
     }
 
     private void RotateToPlayer(EnemyBase enemy, float rotSpeed)
