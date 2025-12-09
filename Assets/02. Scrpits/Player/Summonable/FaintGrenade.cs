@@ -15,6 +15,7 @@ namespace Player
 		public void Awake()
 		{
 			rigid = GetComponent<Rigidbody>();
+			rigid.velocity = transform.forward * 10f;
 			return ;
 		}
 
@@ -39,7 +40,8 @@ namespace Player
 		// TODO!
 		public void Boom()
 		{
-			Collider[] hits = Physics.OverlapSphere(transform.position, 5f);
+			Collider[] hits = new Collider[32];
+			Physics.OverlapSphereNonAlloc(transform.position, 5f, hits, LayerMask.GetMask("Enemy"));
 			SInfoAttack info;
 
 			for (int i = 0; i < hits.Length; i++)
