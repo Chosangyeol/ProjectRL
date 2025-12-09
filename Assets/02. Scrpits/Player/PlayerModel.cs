@@ -6,11 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
-using System.Reflection;
-using static Player.Component.PlayerComponentStat;
-using static UnityEngine.UI.Image;
-using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
+using static Player.Component.PlayerComponentStat;
 
 namespace Player
 {
