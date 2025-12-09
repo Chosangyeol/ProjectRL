@@ -43,8 +43,9 @@ namespace Player
 			{
 				if (other.TryGetComponent<EnemyBase>(out var enemy))
 					DealDamageToEnemy(enemy);
-				player.Pool.Push(this);
 			}
+			if (!other.TryGetComponent<PlayerBullet>(out var _))
+				player.Pool.Push(this);
 			return ;
 		}
 
