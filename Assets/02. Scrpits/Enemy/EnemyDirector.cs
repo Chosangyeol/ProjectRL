@@ -228,13 +228,20 @@ public class EnemyDirector : MonoBehaviour
             Vector3 towerSpawnPos = towerPos[posIndex].position;
             towerPos.Remove(towerPos[posIndex]);
 
-            towerSpawnPos.x += Random.Range(-5, 5);
-            towerSpawnPos.z += Random.Range(-5, 5);
+            RaycastHit ray;
 
-            int towerIndex = Random.Range(0,towerPrefab.Length);
+            if (Physics.Raycast(towerSpawnPos, Vector3.down, out ray, 100f, LayerMask.GetMask("Ground")))
+            {
+                towerSpawnPos = ray.point;
 
-            PoolableMono tower = PoolManager.Instance.Pop(towerPrefab[towerIndex].name);
-            tower.transform.position = towerSpawnPos; 
+                towerSpawnPos.x += Random.Range(-5, 5);
+                towerSpawnPos.z += Random.Range(-5, 5);
+
+                int towerIndex = Random.Range(0, towerPrefab.Length);
+
+                PoolableMono tower = PoolManager.Instance.Pop(towerPrefab[towerIndex].name);
+                tower.transform.position = towerSpawnPos;
+            }        
         }
     }
 

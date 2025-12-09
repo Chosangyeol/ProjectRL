@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7932286553748679427}
   - component: {fileID: 9082487190252413734}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TowerTest
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 8697803566150085021}
   - component: {fileID: 764630743700992377}
   - component: {fileID: 7510859800613924650}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}

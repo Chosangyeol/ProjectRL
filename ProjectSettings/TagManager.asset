@@ -8,6 +8,13 @@ TagManager:
   - Enemy
   - StartPoint
   - Stage2BossCentor
+  - Wall
+  - InteractCanvas
+  - Blue
+  - Green
+  - HealBullet
+  - Red
+  - Tower
   layers:
   - Default
   - TransparentFX

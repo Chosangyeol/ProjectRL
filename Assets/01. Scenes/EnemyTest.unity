@@ -3009,7 +3009,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &544826497
 Transform:
   m_ObjectHideFlags: 0
@@ -4921,7 +4921,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &672749569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6591,6 +6591,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2170516929676166016, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4665329203114548014, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
       propertyPath: _playerNum
       value: 2
@@ -6603,13 +6607,17 @@ PrefabInstance:
       propertyPath: interactLayer.m_Bits
       value: 128
       objectReference: {fileID: 0}
+    - target: {fileID: 8586287377044655095, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8833538003665856672, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
       propertyPath: m_Name
       value: PlayerParent
       objectReference: {fileID: 0}
     - target: {fileID: 8833538003665856672, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8833538003665856672, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
       propertyPath: m_TagString
@@ -10535,7 +10543,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1397663842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10577,6 +10585,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyList: {fileID: 11400000, guid: ab81d8466a4a5404da6ede58ca7f7576, type: 2}
   ProjectileList: {fileID: 11400000, guid: 92f58e5c01e7b8344998d6d571b4b00e, type: 2}
+  itemList: {fileID: 0}
+  towerList: {fileID: 0}
 --- !u!4 &1410807291 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2828601153369104076, guid: bdd91695cfcf4b643963af1fce587ef5, type: 3}
@@ -12139,7 +12149,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnEnemyList: {fileID: 0}
-  spawnRadius: 10
   interval: 1
   spawnPosList:
   - {fileID: 0}
@@ -12152,6 +12161,9 @@ MonoBehaviour:
   openCount: 20
   portal: {fileID: 0}
   pd: {fileID: 0}
+  towerPrefab: []
+  maxTowerCount: 3
+  bgmPlayer: {fileID: 0}
 --- !u!4 &1632866582
 Transform:
   m_ObjectHideFlags: 0

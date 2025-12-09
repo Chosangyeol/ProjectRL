@@ -65,19 +65,6 @@ public class Stage1Boss : BossBase
         }
         if (Stat.curHp <= 0 && !isDie)
         {
-            isDie = true;
-            StopAllCoroutines();
-            PlaySound(deathClip);
-
-            fsm.ChangeState(new State_Die(this, fsm));
-
-            PlayerModel model = player.GetComponentInChildren<PlayerModel>();
-
-            model.Stat.AddExp(enemySO.gainExp);
-            FindAnyObjectByType<MainUIManager>().UpdateExp(model);
-
-            TryBossDrop(enemySO.itemDropTable);
-
             Die();
             Anim.SetTrigger("Die");
         }

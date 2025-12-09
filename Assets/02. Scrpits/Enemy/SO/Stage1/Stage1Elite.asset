@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Stage1Elite
   m_EditorClassIdentifier: 
   enemyName: Stage1Elite
-  cost: 30
   weight: 010000000200000004000000
   spawnCount: 1
   baseHp: 100
@@ -21,8 +20,11 @@ MonoBehaviour:
   attackRange: 30
   patrolRange: 30
   detectRange: 35
+  detectAngle: 90
   moveSpeed: 2
   attackSpeed: 2
   gainExp: 30
   itemDropTable: {fileID: 11400000, guid: ef99215bb357bfa439a107d0964fc6b9, type: 2}
   itemDropPersent: 100
+  minDropMoney: 25
+  maxDropMoney: 35

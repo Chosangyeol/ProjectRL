@@ -171,16 +171,20 @@ public class EnemyBase : PoolableMono
             fsm.ChangeState(new State_Die(this, fsm));
 
             PlayerModel model = player.GetComponentInChildren<PlayerModel>();
+            int dropMoney = Random.Range(enemySO.minDropMoney, enemySO.maxDropMoney);
+
 
             if (Random.Range(0, 100f) <= enemySO.itemDropPersent)
             {
                 model.Stat.AddExp(enemySO.gainExp);
+                GameManager.Instance.AddMoney(dropMoney);
                 FindAnyObjectByType<MainUIManager>().UpdateExp(model);
                 TryDropItem(enemySO.itemDropTable);
             }
             else
             {
                 model.Stat.AddExp(enemySO.gainExp);
+                GameManager.Instance.AddMoney(dropMoney);
                 FindAnyObjectByType<MainUIManager>().UpdateExp(model);
             }      
             Anim.SetTrigger("Die");
@@ -236,14 +240,14 @@ public class EnemyBase : PoolableMono
             PoolableMono dropItem = PoolManager.Instance.Pop(selectedItem.name);
             if (!isFly)
             {
-                dropItem.gameObject.transform.position = this.gameObject.transform.position + new Vector3(0, 1f, 0);
+                dropItem.gameObject.transform.position = this.gameObject.transform.position;
             }
             else if (isFly)
             {
                 RaycastHit hit;
                 if (Physics.Raycast(this.transform.position,Vector3.down, out hit, 100f,LayerMask.GetMask("Ground")))
                 {
-                    dropItem.gameObject.transform.position = hit.point + new Vector3(0, 1f, 0);
+                    dropItem.gameObject.transform.position = hit.point;
                 }
             }
         }

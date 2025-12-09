@@ -28,5 +28,7 @@ public class EnemySO : ScriptableObject
     public DropTableSO itemDropTable;
     [Range(0f, 100f)]
     public float itemDropPersent;
+    public int minDropMoney;
+    public int maxDropMoney;
 
 }

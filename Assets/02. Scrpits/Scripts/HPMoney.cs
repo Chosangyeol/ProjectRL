@@ -1,59 +1,74 @@
+using Info;
+using Player;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace hpmoney
 {
-    public class HPMoney : MonoBehaviour
+    public class HPMoney : InteractableObject, IInteractable
     {
-
-
         public float detectRange = 10f;
-        private Transform player;
+        private PlayerModel plyr;
         private bool isActivated = false;
+
+        protected override void Start()
+        {
+            base.Start();
+            plyr = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<PlayerModel>();
+        }
 
         void Update()
         {
-            if (player == null)
+            if (Vector3.Distance(transform.position, plyr.transform.position) <= interactRange && !isActivated)
             {
-                GameObject p = GameObject.FindGameObjectWithTag("Player");
-                if (p != null) player = p.transform;
+                OnFocus();
             }
-
-            if (player != null)
+            else
             {
-                float dist = Vector3.Distance(transform.position, player.position);
-
-                if (!isActivated && dist <= detectRange)
-                {
-
-                    if (Input.GetKeyDown(KeyCode.E))
-                    {
-                        PlayerKM playerScript = player.GetComponent<PlayerKM>();
-                        if (playerScript != null && playerScript.HP >= 25)
-                        {
-                            playerScript.HP -= 25; // Îèà Ï∞®Í∞ê
-                            playerScript.money += 25; // Ìîº Ï¶ùÍ∞Ä
-                            isActivated = true;
-                        }
-                        else
-                        {
-                            Debug.Log("Ìîº Î∂ÄÏ°±.");
-                        }
-                    }
-                }
-
-
+                OnUnFocus();
             }
-
         }
 
-        void OnDrawGizmosSelected()
+
+        public string interactName { get; }
+
+        public void OnFocus()
         {
-            Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
-            Gizmos.DrawWireSphere(transform.position, detectRange);
+            interactCanvas.SetActive(true);
+            interactCanvas.GetComponentInChildren<TMP_Text>().text = interactName + " - " + price + "G";
         }
+        public void OnUnFocus()
+        {
+            interactCanvas.GetComponentInChildren<TMP_Text>().text = " ";
+            interactCanvas.SetActive(false);
+        }
+        public void OnInteract()
+        {
+            if (isActivated) return;
 
+            int nowMoney = GameManager.Instance.Money;
+            PlayerModel player = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<PlayerModel>();
 
+            if (player.Stat.Stat.hpCurrent > price)
+            {
+                GameManager.Instance.AddMoney(price);
+
+                SInfoAttack damage = new SInfoAttack(
+                    this.gameObject,
+                    player.gameObject,
+                    price,
+                    null
+                    );
+
+                player.Damaged(damage);
+                isActivated = true;                 // «— π¯∏∏ ø≠∏≤
+            }
+            else
+            {
+                Debug.Log("√º∑¬ ∫Œ¡∑");
+            }
+        }
     }
 }

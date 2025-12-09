@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TowerList
   m_EditorClassIdentifier: 
   PoolList:
-  - Prefab: {fileID: 9082487190252413734, guid: 10ffe19b648498e40b468d4f40929c73, type: 3}
+  - Prefab: {fileID: 5364843316032860610, guid: f81f401ca5707f24891a6d003f25d414, type: 3}
     Count: 2
-  - Prefab: {fileID: 9082487190252413734, guid: 9590c061fe1327a40abc8fe4b6d8de48, type: 3}
+  - Prefab: {fileID: 8129360343074139188, guid: c2c0b2e1a74b0eb4da4ff978f4ea3729, type: 3}
     Count: 2
-  - Prefab: {fileID: 9082487190252413734, guid: f7a3b932e2ab69143af49d987d147cf0, type: 3}
+  - Prefab: {fileID: 5474901940150520695, guid: 81d8a22bf1ab3b7448e6eaf10c302dd8, type: 3}
     Count: 2

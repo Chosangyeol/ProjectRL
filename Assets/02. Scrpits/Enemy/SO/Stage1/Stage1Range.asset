@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Stage1Range
   m_EditorClassIdentifier: 
   enemyName: Stage1Range
-  cost: 10
   weight: 040000000300000002000000
   spawnCount: 2
   baseHp: 100
@@ -21,8 +20,11 @@ MonoBehaviour:
   attackRange: 25
   patrolRange: 30
   detectRange: 30
+  detectAngle: 90
   moveSpeed: 5
   attackSpeed: 1
   gainExp: 10
   itemDropTable: {fileID: 11400000, guid: ef99215bb357bfa439a107d0964fc6b9, type: 2}
   itemDropPersent: 100
+  minDropMoney: 13
+  maxDropMoney: 18

@@ -1,4 +1,5 @@
 using Newtonsoft.Json.Bson;
+using Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,7 +43,23 @@ public class BossBase : EnemyBase
 
     protected override void Die()
     {
+        isDie = true;
+        StopAllCoroutines();
+        PlaySound(deathClip);
+
+        fsm.ChangeState(new State_Die(this, fsm));
+
         EnemyDirector ed = GameObject.FindAnyObjectByType<EnemyDirector>();
+
+        PlayerModel model = player.GetComponentInChildren<PlayerModel>();
+
+        model.Stat.AddExp(enemySO.gainExp);
+        FindAnyObjectByType<MainUIManager>().UpdateExp(model);
+
+        int dropMoney = Random.Range(enemySO.minDropMoney, enemySO.maxDropMoney);
+        GameManager.Instance.AddMoney(dropMoney);
+        TryBossDrop(enemySO.itemDropTable);
+
         ed.OpenPortal();
     }
 
