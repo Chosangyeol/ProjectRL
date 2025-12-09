@@ -11,18 +11,22 @@ namespace Player
 		private Rigidbody	rigid;
 		private float		time = 0f;
 		private float		activeTime = 3.0f;
+		private bool		isShotable = false;
 
 		public void Awake()
 		{
 			rigid = GetComponent<Rigidbody>();
-			rigid.velocity = transform.forward * 10f;
 			return ;
 		}
 
 		private void Update()
 		{
+			if (isShotable)
+			{
+				rigid.AddForce(transform.forward * 10f, ForceMode.Impulse);
+				isShotable = false;
+			}
 			time += Time.deltaTime;
-
 			if (time >= activeTime)
 			{
 				Boom();
@@ -34,6 +38,7 @@ namespace Player
 		public override void Reset()
 		{
 			time = 0f;
+			isShotable = true;
 			return ;
 		}
 
@@ -41,13 +46,12 @@ namespace Player
 		public void Boom()
 		{
 			Collider[] hits = new Collider[32];
-			Physics.OverlapSphereNonAlloc(transform.position, 5f, hits, LayerMask.GetMask("Enemy"));
+			int idx = Physics.OverlapSphereNonAlloc(transform.position, 5f, hits, LayerMask.GetMask("Enemy"));
 			SInfoAttack info;
 
-			for (int i = 0; i < hits.Length; i++)
+			for (int i = 0; i < idx; i++)
 			{
-
-				if (!hits[i].TryGetComponent<EnemyBase>(out var enemy))
+				if (!hits[i].gameObject.TryGetComponent<EnemyBase>(out var enemy))
 				{
 					continue ;
 				}
