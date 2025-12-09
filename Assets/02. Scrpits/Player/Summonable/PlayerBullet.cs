@@ -41,9 +41,11 @@ namespace Player
 		{
 			if (other.CompareTag("Enemy"))
 			{
-				DealDamageToEnemy(other.GetComponent<EnemyBase>());
-				player.Pool.Push(this);
+				if (other.TryGetComponent<EnemyBase>(out var enemy))
+					DealDamageToEnemy(enemy);
 			}
+			if (!other.TryGetComponent<PlayerBullet>(out var _))
+				player.Pool.Push(this);
 			return ;
 		}
 

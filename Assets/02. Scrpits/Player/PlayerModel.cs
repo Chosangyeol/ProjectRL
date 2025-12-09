@@ -6,10 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Player.Skill;
-using System.Reflection;
+using UnityEngine.SceneManagement;
 using static Player.Component.PlayerComponentStat;
-using static UnityEngine.UI.Image;
-using Unity.VisualScripting;
 
 namespace Player
 {
@@ -30,6 +28,7 @@ namespace Player
 		protected Transform					_bulletSummonTr;
 		[SerializeField]
 		protected float						_attackCooltime = 0.2f;
+		protected float						dashCooltime = 0f;
 
 		[Header("Skill")]
 		[SerializeField]
@@ -67,6 +66,7 @@ namespace Player
 		public PlayerPool					Pool { get => pool; }
 
 		public bool							CanDamaged { get => (canDamaged || isWaitDamaged); }
+		public float						DashCooltime { get => dashCooltime; }
 
 		public bool							IsAlive { get; protected set; } = true;
 		public bool							IsMoveable { get; protected set; } = true;
@@ -102,6 +102,7 @@ namespace Player
 
 			rigid = GetComponentInParent<Rigidbody>();
 			bulletParent = new GameObject("PlayerBulletParent").transform;
+			DontDestroyOnLoad(bulletParent);
 			cpnSkill = new PlayerComponentSkill(this, _skillDataSO);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
@@ -119,6 +120,7 @@ namespace Player
 				pool.CreatePool(_summonablePrefabs[i++], 3);
 			}
 			IsMoveable = true;
+			SceneManager.sceneLoaded += OnSceneLoaded;
 			return ;
 		}
 
@@ -131,6 +133,9 @@ namespace Player
 			cpnSkill.UpdateSkill(Time.deltaTime);
 			inventory.UpdateItem(Time.deltaTime);
 			cpnAnimation.Update(Time.deltaTime);
+			cpnStat.Update(Time.deltaTime);
+			if (dashCooltime >= 0f)
+				dashCooltime -= Time.deltaTime;
 			return ;
 		}
 
@@ -138,12 +143,29 @@ namespace Player
 		{
 			if (bulletParent != null)
 				Destroy(bulletParent.gameObject);
+			SceneManager.sceneLoaded -= OnSceneLoaded;
 			return ;
 		}
 
 		public void SetRaycaster(IRaycastable raycastable)
 		{
 			raycaster = raycastable;
+			return ;
+		}
+
+		public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+		{
+			int i = bulletParent.childCount;
+
+			while (i-- > 0)
+			{
+				Transform tr = bulletParent.GetChild(i);
+
+				if (tr.gameObject.activeSelf)
+				{
+					pool.Push(tr.gameObject.GetComponent<PoolableMono>());
+				}
+			}
 			return ;
 		}
 
@@ -189,9 +211,13 @@ namespace Player
 			return (false);
 		}
 
-		public void Dash(Action callback = null)
+		public virtual void Dash(Action callback = null)
 		{
-			Dash(Stat.Stat.powerDash, moveDirection, callback);
+			if (dashCooltime <= 0f)
+			{
+				Dash(Stat.Stat.powerDash, moveDirection, callback);
+				dashCooltime = 7f;
+			}
 			return;
 		}
 
@@ -605,7 +631,7 @@ namespace Player
 			return ;
 		}
 
-		public void RemovevItem(AItem item)
+		public void RemoveItem(AItem item)
 		{
 			if (inventory.RemoveItem(item))
 				ActionCallbackItemChanged?.Invoke(this);

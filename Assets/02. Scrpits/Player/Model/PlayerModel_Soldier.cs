@@ -61,7 +61,7 @@ namespace Player
 				cpnAnimation.SetFloat("fsqrSpeed", 0f);
 				return (result);
 			}
-			cpnAnimation.SetBool("bRunning", isSprint);
+			cpnAnimation.SetBool("bRunning", isSprint && Stat.GetSPCurrent() > 0);
 			cpnAnimation.SetFloat("fsqrSpeed", 1f);
 			cpnAnimation.SetBool("bMoveBack", isMoveBack);
 			return (result);

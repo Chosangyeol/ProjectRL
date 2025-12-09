@@ -15,7 +15,7 @@ namespace Player.Component
 
 		protected override void SetUpActiveSkill()
 		{
-			activeSkills = new APlayerSkill[2];
+			activeSkills = new APlayerSkill[4];
 
 			for (int i = 0; i < activeSkills.Length; i++)
 			{
