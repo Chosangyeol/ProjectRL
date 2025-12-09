@@ -57,7 +57,7 @@ namespace Player
 		protected bool						isGrounded = true;
 		protected bool						canDamaged = true;
 		protected bool						isWaitDamaged = false;
-		protected float						regenerationHPtime;
+		protected Coroutine					waitDamagedCoroutine;
 
 		public PlayerComponentSkill			Skill { get => cpnSkill; }
 		public PlayerComponentBuff			Buff { get => cpnBuff; }
@@ -124,8 +124,6 @@ namespace Player
 
 		protected virtual void Update()
 		{
-			if (!IsAlive)
-				return ;
 			if (cpnBuff.UpdateBuff(Time.deltaTime))
 			{
 				ActionCallbackBuffChanged?.Invoke(this);
