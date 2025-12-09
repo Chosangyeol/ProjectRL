@@ -10,6 +10,7 @@ using System.Reflection;
 using static Player.Component.PlayerComponentStat;
 using static UnityEngine.UI.Image;
 using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 namespace Player
 {
@@ -102,6 +103,7 @@ namespace Player
 
 			rigid = GetComponentInParent<Rigidbody>();
 			bulletParent = new GameObject("PlayerBulletParent").transform;
+			DontDestroyOnLoad(bulletParent);
 			cpnSkill = new PlayerComponentSkill(this, _skillDataSO);
 			cpnBuff = new PlayerComponentBuff(this);
 			cpnStat = new PlayerComponentStat(this, _cpnStatSO);
@@ -119,6 +121,7 @@ namespace Player
 				pool.CreatePool(_summonablePrefabs[i++], 3);
 			}
 			IsMoveable = true;
+			SceneManager.sceneLoaded += OnSceneLoaded;
 			return ;
 		}
 
@@ -139,12 +142,29 @@ namespace Player
 		{
 			if (bulletParent != null)
 				Destroy(bulletParent.gameObject);
+			SceneManager.sceneLoaded -= OnSceneLoaded;
 			return ;
 		}
 
 		public void SetRaycaster(IRaycastable raycastable)
 		{
 			raycaster = raycastable;
+			return ;
+		}
+
+		public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+		{
+			int i = bulletParent.childCount;
+
+			while (i-- > 0)
+			{
+				Transform tr = bulletParent.GetChild(i);
+
+				if (tr.gameObject.activeSelf)
+				{
+					pool.Push(tr.gameObject.GetComponent<PoolableMono>());
+				}
+			}
 			return ;
 		}
 
