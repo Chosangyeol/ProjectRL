@@ -123,5 +123,12 @@ namespace Config
 			ActionCallbackConfigChanged?.Invoke();
 			return;
 		}
+
+		public void SetKeyInputSetting(SInputSetting setting)
+		{
+			input = setting;
+			OnChangeConfig();
+			return ;
+		}
 	}
 }
