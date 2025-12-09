@@ -133,6 +133,8 @@ namespace Player
 			if (movement.sqrMagnitude > 1)
 				movement.Normalize();
 			Player.Move(transform, timeSecond * movement, ConfigUserInput.Instance.GetKey("keySprint"), ActionCallbackMove);
+			if (ConfigUserInput.Instance.GetKeyDown("keyDash"))
+				Player.Dash();
 			return ;
 		}
 

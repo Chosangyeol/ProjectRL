@@ -28,6 +28,7 @@ namespace Player
 		protected Transform					_bulletSummonTr;
 		[SerializeField]
 		protected float						_attackCooltime = 0.2f;
+		protected float						dashCooltime = 0f;
 
 		[Header("Skill")]
 		[SerializeField]
@@ -65,6 +66,7 @@ namespace Player
 		public PlayerPool					Pool { get => pool; }
 
 		public bool							CanDamaged { get => (canDamaged || isWaitDamaged); }
+		public float						DashCooltime { get => dashCooltime; }
 
 		public bool							IsAlive { get; protected set; } = true;
 		public bool							IsMoveable { get; protected set; } = true;
@@ -132,6 +134,8 @@ namespace Player
 			inventory.UpdateItem(Time.deltaTime);
 			cpnAnimation.Update(Time.deltaTime);
 			cpnStat.Update(Time.deltaTime);
+			if (dashCooltime >= 0f)
+				dashCooltime -= Time.deltaTime;
 			return ;
 		}
 
@@ -207,9 +211,13 @@ namespace Player
 			return (false);
 		}
 
-		public void Dash(Action callback = null)
+		public virtual void Dash(Action callback = null)
 		{
-			Dash(Stat.Stat.powerDash, moveDirection, callback);
+			if (dashCooltime <= 0f)
+			{
+				Dash(Stat.Stat.powerDash, moveDirection, callback);
+				dashCooltime = 7f;
+			}
 			return;
 		}
 
