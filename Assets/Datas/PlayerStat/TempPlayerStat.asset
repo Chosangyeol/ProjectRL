@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hpMax: 100
   hpRegenPerSecond: 1
-  spMax: 10
+  spMax: 200
   spRegenPerSecond: 2
   levelMax: 100
   expMax: 100

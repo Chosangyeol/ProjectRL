@@ -9,11 +9,11 @@ namespace Poison
 {
     public class Posion : MonoBehaviour
     {
-        public int dmg = 5;          // ÃÑ µ¥¹ÌÁö·®
+        public int dmg = 5;          // ì´ ë°ë¯¸ì§€ëŸ‰
 
         public BuffType type;
         private bool damaging = false;
-        private float prog = 0f;      // ÁøÇàµµ
+        private float prog = 0f;      // ì§„í–‰ë„
         private PlayerModel player;
 
 
@@ -40,7 +40,7 @@ namespace Poison
                     SInfoBuff buff = new SInfoBuff(
                         this.gameObject,
                         other.gameObject,
-                        new SpeedBuff(player, 30f, "ÀÌµ¿¼Óµµ °¨¼Ò", type, 0.3f, false)
+                        new SpeedBuff(player, 30f, "ì´ë™ì†ë„ ê°ì†Œ", type, 0.3f, false)
                         );
 
                     SInfoAttack attack = new SInfoAttack(

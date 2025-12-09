@@ -36,7 +36,7 @@ public class SpeedBuff : ABuffPlayer
 
     public void SetBuff(ref SPlayerStat buffStat)
     {
-        buffStat.speedMove = buffAmount;
-        buffStat.speedSprint = buffAmount;
+        buffStat.speedMove -= buffAmount;
+        buffStat.speedSprint -= buffAmount;
     }
 }
