@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography;
+using UnityEngine;
 
 namespace Player.Component
 {
@@ -9,6 +10,12 @@ namespace Player.Component
 
 		private SPlayerStat origin;
 		private SPlayerStat edited;
+
+		private float timeHPRegen = 1f;
+		private float hpRegentimer = 0f;
+		private float timeSPRegen = 1f;
+		private float spRegentimer = 0f;
+		private float timeSPused = 0f;
 
 		public SPlayerStat Stat { get => edited; }
 
@@ -20,6 +27,30 @@ namespace Player.Component
 		{
 			playerModel = model;
 			Equalize(so);
+			return ;
+		}
+
+		public void Update(float deltaTime)
+		{
+			hpRegentimer += deltaTime;
+			if (hpRegentimer >= timeHPRegen)
+			{
+				hpRegentimer -= timeHPRegen;
+				Healed(1);
+			}
+			if (timeSPused > 0)
+			{
+				timeSPused -= deltaTime;
+			}
+			else
+			{
+				spRegentimer += deltaTime;
+				if (spRegentimer >= timeSPRegen)
+				{
+					spRegentimer -= timeSPRegen;
+					RegenSP(1);
+				}
+			}
 			return ;
 		}
 
@@ -55,6 +86,10 @@ namespace Player.Component
 		{
 			edited = origin;
 			ActionCalculateStat?.Invoke(ref edited);
+			timeHPRegen = 1f / origin.hpRegenPerSecond;
+			hpRegentimer = 0f;
+			timeSPRegen = 1f / origin.spRegenPerSecond;
+			spRegentimer = 0f;
 			return ;
 		}
 
@@ -97,6 +132,20 @@ namespace Player.Component
 			}
 			RecalculateStat();
 			return (heal);
+		}
+
+		public int RegenSP(int regen)
+		{
+			if (regen < 0)
+				return (0);
+			origin.spCurrent += regen;
+			if (origin.spCurrent > origin.spMax)
+			{
+				regen = origin.spCurrent - origin.spMax;
+				origin.spCurrent = origin.spMax;
+			}
+			RecalculateStat();
+			return (regen);
 		}
 
 		public int Damaged(int damage)
@@ -172,8 +221,12 @@ namespace Player.Component
 
 		public float GetSpeed(bool isSprint)
 		{
-			if (isSprint)
+			if (isSprint && Stat.spCurrent > 0)
+			{
+				timeSPused = 3f;
+				origin.spCurrent -= 1;
 				return (edited.speedSprint);
+			}
 			return (edited.speedMove);
 		}
 
@@ -185,7 +238,7 @@ namespace Player.Component
 		private void Equalize(PlayerComponentStatSO so)
 		{
 			origin.Equalize(so);
-			edited = origin;
+			RecalculateStat();
 			return ;
 		}
 	}
