@@ -148,6 +148,11 @@ namespace Player.Component
 			return (regen);
 		}
 
+		public int GetSPCurrent()
+		{
+			return (origin.spCurrent);
+		}
+
 		public int Damaged(int damage)
 		{
 			if (damage <= 0)
