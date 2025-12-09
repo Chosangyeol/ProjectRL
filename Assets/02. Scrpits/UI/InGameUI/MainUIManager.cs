@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Player.Skill;
 
 public class MainUIManager : MonoBehaviour
 {
@@ -16,23 +17,27 @@ public class MainUIManager : MonoBehaviour
 
     public TMP_Text timeText;
 
-    // 추후 GameManager로 이동
+    public Image[] SkillImage;
+    APlayerSkill[] _activeskill;
+
+
     private float time;
 
     private void Awake()
     {
         _model = GameObject.FindAnyObjectByType <PlayerModel>();
         UpdateHp(_model);
+
+        SkillImgChange();
     }
 
     private void Update()
     {
-        time += Time.deltaTime;
+        time = GameManager.Instance.Timer;
 
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
 
-        // 00:00 형식으로 표시
         timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
@@ -58,5 +63,21 @@ public class MainUIManager : MonoBehaviour
         expSlider.maxValue = model.Stat.Stat.expMax;
         expSlider.value = model.Stat.Stat.expCurrent;
         lvText.text = "Lv. " + model.Stat.Stat.levelCurrent.ToString();
+    }
+    void SkillImgChange()
+    {
+        _activeskill = _model.Skill.GetActiveSkill();
+        for(int i =0; i < SkillImage.Length; i++)
+        {
+            SkillImage[i].sprite = _activeskill[i].dataSO.skillSprite;
+        }
+    }
+
+    public void SkillCoolDownImage(int index, float cooldown)
+    {
+        for(float i = 0; i < 1; i += Time.deltaTime * cooldown)
+        {
+            SkillImage[index].color = new Color(i / 255f, i / 255f, i / 255f);
+        }
     }
 }
