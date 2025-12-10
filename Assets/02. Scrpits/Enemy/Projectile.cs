@@ -8,6 +8,8 @@ using UnityEngine.Rendering;
 public class Projectile : PoolableMono
 {
     public EnemyBase owner;
+    public Turret2 owner2;
+    public bool isTower = false;
     [HideInInspector]
     public float damage;
     [HideInInspector]
@@ -56,11 +58,35 @@ public class Projectile : PoolableMono
             PoolManager.Instance.Push(this);
         }
 
+        if (other.CompareTag("Tower"))
+        {
+            Turret2 turret = other.GetComponent<Turret2>();
+            if (turret.IsActivated)
+            {
+                turret.TakeDamage(Mathf.RoundToInt(damage));
+            }
+        }
+
         if (other.CompareTag("Ground"))
         {
             if (isSpawnObj)
             {
                 SpawnObjcet(transform.position);
+            }
+        }
+
+        if (isTower)
+        {
+            if (other.CompareTag("Enemy"))
+            {
+                SInfoAttack attackInfo = new SInfoAttack(
+                owner2.gameObject,
+                other.gameObject,
+                Mathf.RoundToInt(damage),
+                null
+                );
+
+                other.GetComponent<EnemyBase>().TakeDamage(Mathf.RoundToInt(damage));
             }
         }
     }

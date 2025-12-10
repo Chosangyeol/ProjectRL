@@ -8,10 +8,11 @@ using UnityEngine;
 public class Turret2 : InteractableObject, IInteractable
 {
     [Header("Turret Settings")]
-    public GameObject bulletPrefab;
+    public PoolableMono bulletPrefab;
     public Transform[] firePoints;
     public float fireRate = 2f;
     public float detectRange = 10f;
+    public int turretDamage;
     public GameObject objectToDisable;
     public GameObject objectToDestroy;
 
@@ -24,6 +25,7 @@ public class Turret2 : InteractableObject, IInteractable
     private float fireTime = 0f;
     private Transform targetEnemy;
     private bool isActivated = false;
+    public bool IsActivated => isActivated;
     private int currentFireIndex = 0;
     private Animator anim;
     private AudioSource audioSource;
@@ -38,7 +40,7 @@ public class Turret2 : InteractableObject, IInteractable
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         if (audioSource != null) audioSource.enabled = false;
-
+        plyr = GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<PlayerModel>();
         detectRangeSqr = detectRange * detectRange;
         currentHP = maxHP;
     }
@@ -103,7 +105,14 @@ public class Turret2 : InteractableObject, IInteractable
             Transform fp = firePoints[currentFireIndex];
             Vector3 dir = (target.position - fp.position).normalized;
             Quaternion rot = Quaternion.LookRotation(dir);
-            Instantiate(bulletPrefab, fp.position, rot);
+
+            PoolableMono bullet = PoolManager.Instance.Pop(bulletPrefab.name);
+            Projectile proj = bullet.GetComponent<Projectile>();
+            proj.damage = turretDamage;
+            proj.owner2 = this;
+
+            proj.GetComponent<Rigidbody>().velocity =
+                (targetEnemy.position - fp.position).normalized * proj.GetComponent<Projectile>().speed;
 
             if (anim != null)
                 anim.SetTrigger("Shoot");
@@ -167,9 +176,6 @@ public class Turret2 : InteractableObject, IInteractable
 
             if (objectToDisable != null)
                 objectToDisable.SetActive(false);
-
-            if (objectToDestroy != null)
-                Destroy(objectToDestroy);
         }
         else
         {

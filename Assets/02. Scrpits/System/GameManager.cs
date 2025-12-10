@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     private float timer = 0;
     public float Timer => timer;
 
-    private int money = 0;
+    private int money = 30;
     public int Money => money;
 
     public event Action<int> OnMoneyChange;

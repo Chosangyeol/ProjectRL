@@ -11,8 +11,7 @@ public class InteractableObject : PoolableMono
 
     protected virtual void Start()
     {
-        interactCanvas = GameObject.FindGameObjectWithTag("InteractCanvas");
-        Debug.Log(interactCanvas.name);
+        interactCanvas.SetActive(false);
         interactRange = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().interactRange;
     }
 }
