@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace Player.Component
@@ -16,6 +17,9 @@ namespace Player.Component
 		private float timeSPRegen = 1f;
 		private float spRegentimer = 0f;
 		private float timeSPused = 0f;
+		private float spSpend = 0f;
+
+		private bool isSprint = false;
 
 		public SPlayerStat Stat { get => edited; }
 
@@ -30,28 +34,53 @@ namespace Player.Component
 			return ;
 		}
 
-		public void Update(float deltaTime)
+		public bool Update(float deltaTime)
+		{
+			return (RegenHPUpdate(deltaTime) | RegenSPUpdate(deltaTime));
+		}
+
+		protected bool RegenHPUpdate(float deltaTime)
 		{
 			hpRegentimer += deltaTime;
 			if (hpRegentimer >= timeHPRegen)
 			{
-				hpRegentimer -= timeHPRegen;
-				Healed(1);
+				Healed((int)(hpRegentimer / timeHPRegen));
+				hpRegentimer %= timeHPRegen;
+				return (true);
 			}
-			if (timeSPused > 0)
+			return (false);
+		}
+
+		protected bool RegenSPUpdate(float deltaTime)
+		{
+			if (isSprint && origin.spCurrent > 0)
+			{
+				spSpend += deltaTime;
+				if (spSpend >= 1f)
+				{
+					int spend = Mathf.CeilToInt(spSpend);
+
+					origin.spCurrent -= spend;
+					spSpend -= spend;
+					return (true);
+				}
+			}
+			else if (timeSPused > 0)
 			{
 				timeSPused -= deltaTime;
 			}
 			else
 			{
+				spSpend = 0f;
 				spRegentimer += deltaTime;
 				if (spRegentimer >= timeSPRegen)
 				{
-					spRegentimer -= timeSPRegen;
-					RegenSP(1);
+					RegenSP((int)(spRegentimer / timeSPRegen));
+					spRegentimer %= timeSPRegen;
+					return (true);
 				}
 			}
-			return ;
+			return (false);
 		}
 
 		public void EditOriginStat(StatCalculator calculator)
@@ -226,10 +255,10 @@ namespace Player.Component
 
 		public float GetSpeed(bool isSprint)
 		{
+			this.isSprint = isSprint;
 			if (isSprint && Stat.spCurrent > 0)
 			{
 				timeSPused = 3f;
-				origin.spCurrent -= 1;
 				return (edited.speedSprint);
 			}
 			return (edited.speedMove);
