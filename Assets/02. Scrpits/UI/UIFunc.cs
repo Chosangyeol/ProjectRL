@@ -14,11 +14,13 @@ namespace UI
         public GameObject BlurPanel;
         public GameObject InGameScreen;
 
-        public bool IsPaused = false;
+        public bool IsEscBanned = false;
+        bool IsPaused = false;
 
         private void Update()
         {
-            if (ConfigUserInput.Instance.GetKeyDown("keyPause")) // Esc
+            
+            if (ConfigUserInput.Instance.GetKeyDown("keyPause") && !IsEscBanned)
             {
                 if (IsPaused)
                 {
@@ -34,8 +36,6 @@ namespace UI
                     ObjectHide(InGameScreen);
                     IsPaused = true;
                 }
-
-                // 나중에 특정 씬에서는 안 펼쳐지게 하면 될 듯
             }
         }
 

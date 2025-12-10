@@ -133,7 +133,7 @@ namespace UI.InventoryUI
         {
             yield return new WaitForSeconds(second);
             ItemGetAnnouncePanel.SetActive(false);
-            ItemGetAnnouncePanel.GetComponent<DOTweenAnimation>().DORewind();
+            ItemGetAnnouncePanel.GetComponent<DOTweenAnimation>().DORestart();
         }
     }
 }

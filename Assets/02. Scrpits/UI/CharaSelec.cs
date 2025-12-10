@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Player.Skill;
 
 namespace UI.CharaSelec
 {
     public class CharaSelec : MonoBehaviour
     {
+        
         public GameObject[] CharaModel;
 
         public void ChangeCharacter(int num)
         {
             DisactiveChara();
             CharaModel[num].SetActive(true);
-            // 스킬셋 설명 변경 함수 추가
         }
         void DisactiveChara()
         {
@@ -21,14 +23,56 @@ namespace UI.CharaSelec
                 CharaModel[i].SetActive(false);
             }
         }
-        /* 스킬셋 설명 변경 함수
-            데이터 파일에서 끌고와서 알아서 쏙쏙 넣어보자.
-            당 데이터는 이쪽이 만들어서 관리하는게 좋을 것 같긴 한데 스킬 쪽 어느정도 나오고 딜 계수 나오면 설명문 맞춰서 재작성하면 될 듯.
-            << 돌겠네 JSON 안 써봤는데 ㅋㅋ
-        
 
-            난이도 변경 함수도 여기.
-            그냥 뭐... 시스템에서 뭔가 빼와서 바꾸면 되지 않을까...
-        */
+        public GameObject[] Skill1stSelected;
+        public GameObject[] Skill2stSelected;
+        public GameObject[] difficultyButtons;
+        bool Skill1Sel = false;
+        bool Skill2Sel = false;
+        bool difficultySel = false;
+        public void Select1stSkill(int selected)
+        {
+            for(int i = 0; i < Skill1stSelected.Length; i++)
+            {
+                Skill1stSelected[i].GetComponent<Image>().color = new Color(Skill1stSelected[i].GetComponent<Image>().color.r, Skill1stSelected[i].GetComponent<Image>().color.g, Skill1stSelected[i].GetComponent<Image>().color.b, 100 / 255f);
+            }
+            Skill1stSelected[selected].GetComponent<Image>().color = new Color(Skill1stSelected[selected].GetComponent<Image>().color.r, Skill1stSelected[selected].GetComponent<Image>().color.g, Skill1stSelected[selected].GetComponent<Image>().color.b, 255 / 255f);
+            PlayerPrefs.SetInt("Skill2", selected);
+            Skill1Sel = true;
+        }
+        
+        public void Select2ndSkill(int selected)
+        {
+            for (int i = 0; i < Skill1stSelected.Length; i++)
+            {
+                Skill2stSelected[i].GetComponent<Image>().color = new Color(Skill2stSelected[i].GetComponent<Image>().color.r, Skill2stSelected[i].GetComponent<Image>().color.g, Skill2stSelected[i].GetComponent<Image>().color.b, 100 / 255f);
+            }
+            Skill2stSelected[selected].GetComponent<Image>().color = new Color(Skill2stSelected[selected].GetComponent<Image>().color.r, Skill2stSelected[selected].GetComponent<Image>().color.g, Skill2stSelected[selected].GetComponent<Image>().color.b, 255 / 255f);
+            PlayerPrefs.SetInt("Skill3", selected+2);
+            Skill2Sel = true;
+        }
+        public void Changedifficulty(int difficulty) // 이지 0, 하드 1
+        {
+            for (int i = 0; i < difficultyButtons.Length; i++)
+            {
+                difficultyButtons[i].GetComponent<Image>().color = new Color(difficultyButtons[i].GetComponent<Image>().color.r, difficultyButtons[i].GetComponent<Image>().color.g, difficultyButtons[i].GetComponent<Image>().color.b, 100 / 255f);
+            }
+            difficultyButtons[difficulty].GetComponent<Image>().color = new Color(difficultyButtons[difficulty].GetComponent<Image>().color.r, difficultyButtons[difficulty].GetComponent<Image>().color.g, difficultyButtons[difficulty].GetComponent<Image>().color.b, 255 / 255f);
+
+            PlayerPrefs.SetInt("difficulty", difficulty);
+            difficultySel = true;
+        }
+
+        public void CheckIfSkillSelected(GameObject obj)
+        {
+            if(!Skill1Sel || !Skill2Sel)
+            {
+                obj.GetComponent<Button>().enabled = false;
+            }
+            else
+            {
+                obj.GetComponent<Button>().enabled = true;
+            }
+        }
     }
 }
