@@ -84,6 +84,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5e1caa0f472d6564fb7688ddeee5fbb0, type: 2}
   - {fileID: 11400000, guid: 255277472b9dff84dbc85393c959d909, type: 2}
   - {fileID: 11400000, guid: 03356931818864a4e805aa8e1f585c36, type: 2}
+  _skillRequireLevels:
+  - 0
+  - 0
   _summonablePrefabs:
   - {fileID: 2821800536037023784, guid: a8bfb42e58256e9469efaf2ab03391f2, type: 3}
   cameraRotation: {x: 0, y: 0, z: 0, w: 0}

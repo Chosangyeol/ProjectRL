@@ -30,7 +30,7 @@ namespace Player.Component
 					activeSkills[i] = skills[i];
 				}
 			}
-			return;
+			return ;
 		}
 	}
 }

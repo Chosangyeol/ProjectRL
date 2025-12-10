@@ -47,6 +47,7 @@ namespace Player
 
 		protected override void OnDie()
 		{
+			base.OnDie();
 			cpnAnimation.SetTrigger("tDying");
 			return ;
 		}

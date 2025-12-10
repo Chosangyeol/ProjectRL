@@ -1442,6 +1442,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  _skillRequireLevels:
+  - 0
+  - 0
   _summonablePrefabs: []
   cameraRotation: {x: 0, y: 0, z: 0, w: 0}
   moveDirection: {x: 0, y: 0, z: 0}

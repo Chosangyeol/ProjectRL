@@ -75,6 +75,8 @@ namespace Player
 
 		void Update()
 		{
+			if (Player == null || !Player.IsAlive)
+				return ;
 			Attack(Time.deltaTime);
 			Move(Time.deltaTime);
 			UseSkill();
