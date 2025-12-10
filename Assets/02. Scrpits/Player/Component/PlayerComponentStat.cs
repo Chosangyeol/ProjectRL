@@ -1,6 +1,4 @@
 using System;
-using System.Security.Cryptography;
-using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace Player.Component

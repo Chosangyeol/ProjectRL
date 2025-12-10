@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     private int money = 30;
     public int Money => money;
 
+    private int difficulty = 0;
+    public int Difficulty => difficulty;    
+
     public event Action<int> OnMoneyChange;
 
 
@@ -29,6 +32,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        difficulty = PlayerPrefs.GetInt("difficulty",0);
+    }
+
     private void Update()
     {
         timer += Time.deltaTime;
@@ -40,12 +48,12 @@ public class GameManager : MonoBehaviour
     public void AddMoney(int amount)
     {
         this.money += amount;
-        OnMoneyChange?.Invoke(amount);
+        OnMoneyChange?.Invoke(money);
     }
 
     public void RemoveMoney(int amount)
     {
         this.money -= amount;
-        OnMoneyChange?.Invoke(amount);
+        OnMoneyChange?.Invoke(money);
     }
 }

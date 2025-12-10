@@ -17,7 +17,7 @@ public class BGMPlayer : MonoBehaviour
 
     private void Start()
     {
-        if (defaultBGM != null) return;
+        if (defaultBGM == null) return;
 
         audioS.clip = defaultBGM;
         audioS.Play();
@@ -25,7 +25,7 @@ public class BGMPlayer : MonoBehaviour
 
     public void BossBgmPlay()
     {
-        if (bossBGM != null) return;
+        if (bossBGM == null) return;
 
         audioS.Stop();
         audioS.clip = bossBGM;

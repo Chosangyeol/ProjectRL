@@ -108,11 +108,15 @@ public class Turret2 : InteractableObject, IInteractable
 
             PoolableMono bullet = PoolManager.Instance.Pop(bulletPrefab.name);
             Projectile proj = bullet.GetComponent<Projectile>();
+            bullet.transform.position = fp.position;
+            bullet.transform.LookAt(firePoints[currentFireIndex].position + dir);
             proj.damage = turretDamage;
             proj.owner2 = this;
 
+            
+
             proj.GetComponent<Rigidbody>().velocity =
-                (targetEnemy.position - fp.position).normalized * proj.GetComponent<Projectile>().speed;
+                (targetEnemy.GetComponent<Collider>().bounds.center - fp.position).normalized * proj.GetComponent<Projectile>().speed;
 
             if (anim != null)
                 anim.SetTrigger("Shoot");

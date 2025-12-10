@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 613797979980402395}
   - component: {fileID: 260320471278953937}
   - component: {fileID: 203203734673528485}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Stage1RangeProj
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,7 +147,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 0}
+  owner2: {fileID: 0}
+  isTower: 0
   damage: 0
   timer: 0
   destroyTime: 3
   speed: 3
+  isEffect: 0
+  isSpawnObj: 0
+  spawnObj: {fileID: 0}

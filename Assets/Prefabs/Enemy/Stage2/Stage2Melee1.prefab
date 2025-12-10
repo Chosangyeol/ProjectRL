@@ -294,8 +294,9 @@ MonoBehaviour:
   isFly: 0
   flyHeight: 0
   hover: 0.5
-  attackClip: {fileID: 0}
-  deathClip: {fileID: 0}
+  isDie: 0
+  attackClip: {fileID: 8300000, guid: eb740cce5224bb94d91997ca8973e83f, type: 3}
+  deathClip: {fileID: 8300000, guid: 540fb5d5439ddcc4c955d2d4e30dd8e8, type: 3}
   rushSpeed: 15
 --- !u!195 &858941850124416502
 NavMeshAgent:

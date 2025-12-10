@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Config;
 using DG.Tweening;
+using Player;
 
 namespace UI
 {
@@ -13,6 +14,8 @@ namespace UI
         public GameObject PausePanel;
         public GameObject BlurPanel;
         public GameObject InGameScreen;
+        public GameObject askQuit;
+        public PlayerController pc;
 
         public bool IsEscBanned = false;
         bool IsPaused = false;
@@ -27,6 +30,7 @@ namespace UI
                     ObjectHide(PausePanel);
                     ObjectHide(BlurPanel);
                     ObjectShow(InGameScreen);
+                    pc.FixCursor(true);
                     IsPaused = false;
                 }
                 else
@@ -34,6 +38,8 @@ namespace UI
                     ObjectShowWithMove(PausePanel);
                     ObjectShow(BlurPanel);
                     ObjectHide(InGameScreen);
+                    ObjectHide(askQuit);
+                    pc.FixCursor(false);
                     IsPaused = true;
                 }
             }
@@ -41,12 +47,14 @@ namespace UI
 
         public void OffPause()
         {
+            pc.FixCursor(true);
             IsPaused = false;
         }
 
         public void ChangeScene(string sceneName)
         {
             UI.SceneManage.LoadSceneManagement.LoadScene(sceneName);
+            ResetGame();
         }
         public void QuitGame()
         {
@@ -70,6 +78,21 @@ namespace UI
             obj.SetActive(true);
 
             obj.GetComponent<RectTransform>().DOAnchorPos(SetPos, 0.5f);
+        }
+
+        public void ResetGame()
+        {
+            var player = FindFirstObjectByType<PlayerController>();
+            Destroy(player.gameObject);
+
+            //var pool = FindFirstObjectByType<PoolManager>();
+            //Destroy(pool.gameObject);
+
+            GameObject bulletpool = GameObject.Find("PlayerBulletParent");
+            Destroy(bulletpool);
+
+            var gm = FindFirstObjectByType<GameManager>();
+            Destroy(gm.gameObject);
         }
     }
 }

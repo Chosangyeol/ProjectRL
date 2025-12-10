@@ -143,7 +143,9 @@ public class EnemyDirector : MonoBehaviour
 
             EnemyBase enemy = PoolManager.Instance.Pop(enemyPrefab.gameObject.name) as EnemyBase;
             enemy.transform.position = spanwPos;
-            enemy.Agent.Warp(spanwPos);
+            if (enemy.Agent != null)
+                enemy.Agent.Warp(spanwPos);
+
             enemyCount++;
         }
     }

@@ -35,10 +35,13 @@ public class EnemyStat
     {
         float growthPerSecond = 1.001155f;
 
-        // timer(초)에 따라 난이도 배율 계산
-        float difficulty = Mathf.Pow(growthPerSecond, GameManager.Instance.Timer);
+        int difficultyIndex = GameManager.Instance.Difficulty;
 
-        totalHp = Mathf.RoundToInt(baseHp * difficulty);
-        totalDamage = Mathf.RoundToInt(baseDamage * difficulty);
+        float difficultyMultiplier = difficultyIndex == 0 ? 0.75f : 1.0f;
+        // timer(초)에 따라 난이도 배율 계산
+        float difficultyGrowth = Mathf.Pow(growthPerSecond, GameManager.Instance.Timer * difficultyMultiplier);
+
+        totalHp = Mathf.RoundToInt(baseHp * difficultyGrowth);
+        totalDamage = Mathf.RoundToInt(baseDamage * difficultyGrowth);
     }
 }

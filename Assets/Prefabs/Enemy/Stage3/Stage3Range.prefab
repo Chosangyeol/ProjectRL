@@ -425,8 +425,8 @@ MonoBehaviour:
   flyHeight: 5
   hover: 0.5
   isDie: 0
-  attackClip: {fileID: 0}
-  deathClip: {fileID: 0}
+  attackClip: {fileID: 8300000, guid: 80f2282bc3cb1fe47a7157371ccdbb4b, type: 3}
+  deathClip: {fileID: 8300000, guid: 0a38fdbeb4f68d941ae6fa142c74c637, type: 3}
   projectile: {fileID: 3090394682920786780, guid: 9a495e8b2f07fee458dece3aebdc8164, type: 3}
   firePos: {fileID: 3936994934687778456}
   attackPreDelay: 2

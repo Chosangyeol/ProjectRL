@@ -4903,7 +4903,9 @@ MonoBehaviour:
   hpText: {fileID: 157209714}
   expSlider: {fileID: 1474365909}
   lvText: {fileID: 766637817}
+  moneyText: {fileID: 0}
   timeText: {fileID: 924399491}
+  SkillImage: []
 --- !u!1 &672749568
 GameObject:
   m_ObjectHideFlags: 0
@@ -6606,6 +6608,22 @@ PrefabInstance:
     - target: {fileID: 4665329203114548014, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
       propertyPath: interactLayer.m_Bits
       value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937691824382357927, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937691824382357927, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937691824382357927, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937691824382357927, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8586287377044655095, guid: 92ed5970a06fb224b9c7fd5957629938, type: 3}
       propertyPath: m_AnchorMax.y
@@ -10585,8 +10603,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyList: {fileID: 11400000, guid: ab81d8466a4a5404da6ede58ca7f7576, type: 2}
   ProjectileList: {fileID: 11400000, guid: 92f58e5c01e7b8344998d6d571b4b00e, type: 2}
-  itemList: {fileID: 0}
-  towerList: {fileID: 0}
+  itemList: {fileID: 11400000, guid: 5ca4cbbc806ea4047884b18bb75a4ed6, type: 2}
+  towerList: {fileID: 11400000, guid: ca4c2b75eb1e9c242bf8c8221e3d53b9, type: 2}
 --- !u!4 &1410807291 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2828601153369104076, guid: bdd91695cfcf4b643963af1fce587ef5, type: 3}
@@ -12148,7 +12166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b3cc842119180e47a23cdc885548f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnEnemyList: {fileID: 0}
+  spawnEnemyList: {fileID: 11400000, guid: ab81d8466a4a5404da6ede58ca7f7576, type: 2}
   interval: 1
   spawnPosList:
   - {fileID: 0}

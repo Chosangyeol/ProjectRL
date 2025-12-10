@@ -1,10 +1,11 @@
 using Player;
+using Player.Skill;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Player.Skill;
+using static UnityEngine.InputSystem.InputSettings;
 
 public class MainUIManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class MainUIManager : MonoBehaviour
     public TMP_Text hpText;
     public Slider expSlider;
     public TMP_Text lvText;
+    public TMP_Text moneyText;
 
     public TMP_Text timeText;
 
@@ -26,7 +28,13 @@ public class MainUIManager : MonoBehaviour
     private void Awake()
     {
         _model = GameObject.FindAnyObjectByType <PlayerModel>();
+        
+    }
+
+    private void Start()
+    {
         UpdateHp(_model);
+        UpdateMoney(GameManager.Instance.Money);
 
         SkillImgChange();
     }
@@ -44,11 +52,18 @@ public class MainUIManager : MonoBehaviour
     private void OnEnable()
     {
         _model.ActionCallbackStatChanged += UpdateHp;
+        GameManager.Instance.OnMoneyChange += UpdateMoney;
+    }
+
+    private void Instance_OnMoneyChange(int obj)
+    {
+        throw new System.NotImplementedException();
     }
 
     private void OnDisable()
     {
         _model.ActionCallbackStatChanged -= UpdateHp;
+        GameManager.Instance.OnMoneyChange -= UpdateMoney;
     }
 
     public void UpdateHp(PlayerModel model)
@@ -64,6 +79,12 @@ public class MainUIManager : MonoBehaviour
         expSlider.value = model.Stat.Stat.expCurrent;
         lvText.text = "Lv. " + model.Stat.Stat.levelCurrent.ToString();
     }
+
+    public void UpdateMoney(int money)
+    {
+        moneyText.text = $"{money:0000}G";
+    }
+
     void SkillImgChange()
     {
         _activeskill = _model.Skill.GetActiveSkill();

@@ -57,19 +57,24 @@ public class Stage1Range : EnemyBase
     IEnumerator Die()
     {
         deathEffect.SetActive(true);
+        audioS.clip = deathClip;
+        audioS.Play();
         yield return new WaitForSeconds(1f);
 
         PlayerModel model = player.GetComponentInChildren<PlayerModel>();
+        int dropMoney = Random.Range(enemySO.minDropMoney, enemySO.maxDropMoney);
 
         if (Random.Range(0, 100f) <= enemySO.itemDropPersent)
         {
             model.Stat.AddExp(enemySO.gainExp);
+            GameManager.Instance.AddMoney(dropMoney);
             FindAnyObjectByType<MainUIManager>().UpdateExp(model);
             TryDropItem(enemySO.itemDropTable);
         }
         else
         {
             model.Stat.AddExp(enemySO.gainExp);
+            GameManager.Instance.AddMoney(dropMoney);
             FindAnyObjectByType<MainUIManager>().UpdateExp(model);
         }
 

@@ -37,7 +37,7 @@ namespace UI.CharaSelec
                 Skill1stSelected[i].GetComponent<Image>().color = new Color(Skill1stSelected[i].GetComponent<Image>().color.r, Skill1stSelected[i].GetComponent<Image>().color.g, Skill1stSelected[i].GetComponent<Image>().color.b, 100 / 255f);
             }
             Skill1stSelected[selected].GetComponent<Image>().color = new Color(Skill1stSelected[selected].GetComponent<Image>().color.r, Skill1stSelected[selected].GetComponent<Image>().color.g, Skill1stSelected[selected].GetComponent<Image>().color.b, 255 / 255f);
-            PlayerPrefs.SetInt("Skill2", selected);
+            PlayerPrefs.SetInt("Skill0", selected);
             Skill1Sel = true;
         }
         
@@ -48,7 +48,7 @@ namespace UI.CharaSelec
                 Skill2stSelected[i].GetComponent<Image>().color = new Color(Skill2stSelected[i].GetComponent<Image>().color.r, Skill2stSelected[i].GetComponent<Image>().color.g, Skill2stSelected[i].GetComponent<Image>().color.b, 100 / 255f);
             }
             Skill2stSelected[selected].GetComponent<Image>().color = new Color(Skill2stSelected[selected].GetComponent<Image>().color.r, Skill2stSelected[selected].GetComponent<Image>().color.g, Skill2stSelected[selected].GetComponent<Image>().color.b, 255 / 255f);
-            PlayerPrefs.SetInt("Skill3", selected+2);
+            PlayerPrefs.SetInt("Skill1", selected+2);
             Skill2Sel = true;
         }
         public void Changedifficulty(int difficulty) // 이지 0, 하드 1

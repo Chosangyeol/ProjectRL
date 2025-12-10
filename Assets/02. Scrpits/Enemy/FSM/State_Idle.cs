@@ -16,7 +16,9 @@ public class State_Idle : IState
 
     public void OnEnter()
     {
-        enemy.Agent.ResetPath();
+        if (!enemy.isFly)
+            enemy.Agent.ResetPath();
+
         enemy.Anim.SetTrigger("Idle");
     }
 

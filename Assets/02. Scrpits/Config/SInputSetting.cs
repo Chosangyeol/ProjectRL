@@ -27,9 +27,9 @@ namespace Config
 				{ nameof(keySkillTree), KeyCode.K },
 
 				{ nameof(keySkill1), KeyCode.Q },
-				{ nameof(keySkill2), KeyCode.E },
-				{ nameof(keySkill3), KeyCode.R },
-				{ nameof(keySkill4), KeyCode.G },
+				{ nameof(keySkill2), KeyCode.R },
+				//{ nameof(keySkill3), KeyCode.E },
+				//{ nameof(keySkill4), KeyCode.G },
 
 				{ nameof(keyPause), KeyCode.Escape }
 			});
@@ -51,8 +51,8 @@ namespace Config
 
 		public KeyCode keySkill1;
 		public KeyCode keySkill2;
-		public KeyCode keySkill3;
-		public KeyCode keySkill4;
+		//public KeyCode keySkill3;
+		//public KeyCode keySkill4;
 
 		public KeyCode keyPause;
 

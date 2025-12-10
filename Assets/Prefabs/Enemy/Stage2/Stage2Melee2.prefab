@@ -1345,8 +1345,9 @@ MonoBehaviour:
   isFly: 0
   flyHeight: 0
   hover: 0.5
-  attackClip: {fileID: 0}
-  deathClip: {fileID: 0}
+  isDie: 0
+  attackClip: {fileID: 8300000, guid: 36e1c31afc23a064eb3d712fac15134a, type: 3}
+  deathClip: {fileID: 8300000, guid: 269c0b9af594d8049b4437abba07d7c3, type: 3}
 --- !u!95 &7360497914111711211
 Animator:
   serializedVersion: 5
