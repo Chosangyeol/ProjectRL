@@ -133,7 +133,10 @@ namespace Player
 			cpnSkill.UpdateSkill(Time.deltaTime);
 			inventory.UpdateItem(Time.deltaTime);
 			cpnAnimation.Update(Time.deltaTime);
-			cpnStat.Update(Time.deltaTime);
+			if (cpnStat.Update(Time.deltaTime))
+			{
+				ActionCallbackStatChanged?.Invoke(this);
+			}
 			if (dashCooltime >= 0f)
 				dashCooltime -= Time.deltaTime;
 			return ;
