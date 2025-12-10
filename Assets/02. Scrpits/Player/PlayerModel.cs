@@ -34,6 +34,8 @@ namespace Player
 		[SerializeField]
 		protected APlayerSkillDataSO[]		_skillDataSO;
 		[SerializeField]
+		protected float[]					_skillRequireLevels;
+		[SerializeField]
 		protected PlayerSummonableMono[]	_summonablePrefabs;
 
 		[SerializeField]
@@ -126,6 +128,8 @@ namespace Player
 
 		protected virtual void Update()
 		{
+			if (!IsAlive)
+				return ;
 			if (cpnBuff.UpdateBuff(Time.deltaTime))
 			{
 				ActionCallbackBuffChanged?.Invoke(this);
@@ -566,6 +570,9 @@ namespace Player
 
 		protected virtual void OnDie()
 		{
+			IsMoveable = false;
+			canAttack = false;
+			StopAllCoroutines();
 			return ;
 		}
 
@@ -620,7 +627,9 @@ namespace Player
 		public virtual bool UseSkill(short index, KeyCode skillKey)
 		{
 			Debug.Log($"PlayerModel : Skill {index} use input");
-			return (cpnSkill.UseSkill(index, skillKey));
+			if (Stat.Stat.levelCurrent >= _skillRequireLevels[index])
+				return (cpnSkill.UseSkill(index, skillKey));
+			return (false);
 		}
 
 		#endregion

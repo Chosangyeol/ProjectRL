@@ -15,7 +15,7 @@ namespace Player.Component
 
 		protected override void SetUpActiveSkill()
 		{
-			activeSkills = new APlayerSkill[4];
+			activeSkills = new APlayerSkill[2];
 
 			for (int i = 0; i < activeSkills.Length; i++)
 			{
@@ -30,7 +30,7 @@ namespace Player.Component
 					activeSkills[i] = skills[i];
 				}
 			}
-			return;
+			return ;
 		}
 	}
 }

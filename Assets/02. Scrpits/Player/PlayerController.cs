@@ -75,6 +75,8 @@ namespace Player
 
 		void Update()
 		{
+			if (Player == null || !Player.IsAlive)
+				return ;
 			Attack(Time.deltaTime);
 			Move(Time.deltaTime);
 			UseSkill();
@@ -154,16 +156,6 @@ namespace Player
 				index = 1;
 				skillKey = ConfigUserInput.Instance.GetKeyCode("keySkill2");
 			}
-			//if (ConfigUserInput.Instance.GetKeyDown("keySkill3"))
-			//{
-			//	index = 2;
-			//	skillKey = ConfigUserInput.Instance.GetKeyCode("keySkill3");
-			//}
-			//if (ConfigUserInput.Instance.GetKeyDown("keySkill4"))
-			//{
-			//	index = 3;
-			//	skillKey = ConfigUserInput.Instance.GetKeyCode("keySkill4");
-			//}
 			if (index != -1)
 			{
 				trySkill = Player.UseSkill(index, skillKey);
