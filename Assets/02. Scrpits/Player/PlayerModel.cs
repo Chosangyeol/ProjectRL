@@ -573,6 +573,7 @@ namespace Player
 			IsMoveable = false;
 			canAttack = false;
 			StopAllCoroutines();
+			//Invoke()
 			return ;
 		}
 

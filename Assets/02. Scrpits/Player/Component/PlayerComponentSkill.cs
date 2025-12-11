@@ -65,7 +65,9 @@ namespace Player.Component
 				return (false);
 			if (activeSkills[index] == null)
 				throw new Exception($"unknown skill {index}");
-			return (activeSkills[index].UseSkill(playerModel, skillKey));
+            playerModel.StartCoroutine(GameObject.FindAnyObjectByType<MainUIManager>().SkillCool(index, activeSkills[index].dataSO.coolTime));
+
+            return (activeSkills[index].UseSkill(playerModel, skillKey));
 		}
 
 		public bool SetSkill(short targetIndex, string skillName)

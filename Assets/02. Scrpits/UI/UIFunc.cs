@@ -18,7 +18,7 @@ namespace UI
         public PlayerController pc;
 
         public bool IsEscBanned = false;
-        bool IsPaused = false;
+        public bool IsPaused = false;
 
         private void Update()
         {
@@ -30,6 +30,7 @@ namespace UI
                     ObjectHide(PausePanel);
                     ObjectHide(BlurPanel);
                     ObjectShow(InGameScreen);
+                    ObjectHide(askQuit);
                     pc.FixCursor(true);
                     IsPaused = false;
                 }
@@ -37,8 +38,7 @@ namespace UI
                 {
                     ObjectShowWithMove(PausePanel);
                     ObjectShow(BlurPanel);
-                    ObjectHide(InGameScreen);
-                    ObjectHide(askQuit);
+                    ObjectHide(InGameScreen);             
                     pc.FixCursor(false);
                     IsPaused = true;
                 }
@@ -54,7 +54,7 @@ namespace UI
         public void ChangeScene(string sceneName)
         {
             UI.SceneManage.LoadSceneManagement.LoadScene(sceneName);
-            ResetGame();
+            //ResetGame();
         }
         public void QuitGame()
         {

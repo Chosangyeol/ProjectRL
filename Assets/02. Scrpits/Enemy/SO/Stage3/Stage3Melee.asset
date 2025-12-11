@@ -13,16 +13,18 @@ MonoBehaviour:
   m_Name: Stage3Melee
   m_EditorClassIdentifier: 
   enemyName: Stage3Melee
-  cost: 5
   weight: 000000000000000006000000
   spawnCount: 3
-  baseHp: 100
+  baseHp: 250
   baseDamage: 5
   attackRange: 15
   patrolRange: 30
   detectRange: 30
+  detectAngle: 90
   moveSpeed: 4
   attackSpeed: 4
   gainExp: 10
   itemDropTable: {fileID: 11400000, guid: ef99215bb357bfa439a107d0964fc6b9, type: 2}
   itemDropPersent: 100
+  minDropMoney: 0
+  maxDropMoney: 0

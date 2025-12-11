@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Stage3Boss : BossBase
@@ -49,6 +50,17 @@ public class Stage3Boss : BossBase
             isSpecialPattern = true;
         CheckSpecial1();
         fsm.Tick();
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        spawnPos = GameObject.FindGameObjectsWithTag("Stage3BossSpecial2")
+                     .Select(obj => obj.transform)
+                     .ToArray();
+
+        Special1Object = GameObject.FindWithTag("Stage3BossSpecial1");
+        Centor = GameObject.FindWithTag("Stage3BossCentor");
     }
 
     public override void TakeDamage(int amount)

@@ -15,5 +15,5 @@ MonoBehaviour:
   skillName: BuckShot
   coolTime: 7
   tooltip: shot buckshot
-  skillSprite: {fileID: 0}
+  skillSprite: {fileID: 21300000, guid: c9ea5457acbf3064fba8b218a483990f, type: 3}
   skillClassName: PlayerSkillBuckShot

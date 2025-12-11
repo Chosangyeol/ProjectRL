@@ -32,12 +32,25 @@ namespace hpmoney
         }
 
 
-        public string interactName { get; }
+        [SerializeField]
+        private string _interactName;
+        public string interactName => _interactName;
 
         public void OnFocus()
         {
             interactCanvas.SetActive(true);
             interactCanvas.GetComponentInChildren<TMP_Text>().text = interactName + " - " + price + "G";
+            Transform player = GameObject.FindAnyObjectByType<PlayerModel>().transform;
+
+            // 플레이어 방향 벡터 계산
+            Vector3 dir = player.position - interactCanvas.transform.position;
+            dir.y = 0;  // 위아래 각도 제거
+
+            // 방향이 0 벡터가 되지 않도록 체크
+            if (dir.sqrMagnitude > 0.0001f)
+            {
+                interactCanvas.transform.rotation = Quaternion.LookRotation(dir);
+            }
         }
         public void OnUnFocus()
         {

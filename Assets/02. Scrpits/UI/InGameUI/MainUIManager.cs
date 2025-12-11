@@ -1,5 +1,6 @@
 using Player;
 using Player.Skill;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,6 +22,9 @@ public class MainUIManager : MonoBehaviour
 
     public Image[] SkillImage;
     APlayerSkill[] _activeskill;
+    private Image[] skillCover = new Image[2];
+    private bool[] skillIsOpen = new bool[2];
+
 
 
     private float time;
@@ -28,13 +32,19 @@ public class MainUIManager : MonoBehaviour
     private void Awake()
     {
         _model = GameObject.FindAnyObjectByType <PlayerModel>();
-        
+        _activeskill = _model.Skill.GetActiveSkill();
     }
 
     private void Start()
     {
         UpdateHp(_model);
         UpdateMoney(GameManager.Instance.Money);
+
+        skillCover[0] = SkillImage[0].transform.GetChild(1).GetComponent<Image>();
+        skillCover[1] = SkillImage[1].transform.GetChild(1).GetComponent<Image>();
+        skillIsOpen[0] = false;
+        skillIsOpen[1] = false;
+
 
         SkillImgChange();
     }
@@ -47,12 +57,35 @@ public class MainUIManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(time % 60f);
 
         timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+        if (_model.Stat.Stat.levelCurrent < 4)
+        {
+            skillCover[0].fillAmount = 1f;
+        }
+        if (_model.Stat.Stat.levelCurrent >= 4 && !skillIsOpen[0])
+        {
+            skillIsOpen[0] = true;
+            skillCover[0].fillAmount = 0f;
+        }
+
+        if (_model.Stat.Stat.levelCurrent < 7)
+        {
+            skillCover[1].fillAmount = 1f;
+        }
+        if (_model.Stat.Stat.levelCurrent >= 7 && !skillIsOpen[1])
+        {
+            skillIsOpen[1] = true;
+            skillCover[1].fillAmount = 0f;
+        }
+
     }
 
     private void OnEnable()
     {
         _model.ActionCallbackStatChanged += UpdateHp;
         GameManager.Instance.OnMoneyChange += UpdateMoney;
+
+        
     }
 
     private void Instance_OnMoneyChange(int obj)
@@ -87,18 +120,25 @@ public class MainUIManager : MonoBehaviour
 
     void SkillImgChange()
     {
-        _activeskill = _model.Skill.GetActiveSkill();
         for(int i =0; i < SkillImage.Length; i++)
         {
             SkillImage[i].sprite = _activeskill[i].dataSO.skillSprite;
         }
     }
 
-    public void SkillCoolDownImage(int index, float cooldown)
+
+    public IEnumerator SkillCool(int index, float cool)
     {
-        for(float i = 0; i < 1; i += Time.deltaTime * cooldown)
+        float nowTime = 0f;
+        skillCover[index].fillAmount = 1f;
+
+        while (nowTime <= cool)
         {
-            SkillImage[index].color = new Color(i / 255f, i / 255f, i / 255f);
+            nowTime += Time.deltaTime;
+            skillCover[index].fillAmount = 1f - (nowTime / cool);
+            yield return null;
         }
+
+        skillCover[index].fillAmount = 0f;
     }
 }

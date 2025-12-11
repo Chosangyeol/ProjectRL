@@ -15,5 +15,5 @@ MonoBehaviour:
   skillName: TimeToHunt
   coolTime: 40
   tooltip: Get time to hunt
-  skillSprite: {fileID: 0}
+  skillSprite: {fileID: 21300000, guid: 787a7db6fed6d6d4aa9ad2d9b02532c1, type: 3}
   skillClassName: PlayerSkillTimeToHunt

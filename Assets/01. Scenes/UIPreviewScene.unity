@@ -7971,7 +7971,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2062426263}
         m_TargetAssemblyTypeName: UI.UIFunc, Assembly-CSharp
         m_MethodName: ObjectShow
         m_Mode: 2
@@ -7983,7 +7983,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2062426263}
         m_TargetAssemblyTypeName: UI.UIFunc, Assembly-CSharp
         m_MethodName: ObjectHide
         m_Mode: 2
@@ -11702,8 +11702,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UI.UIButtonFunc, Assembly-CSharp
+      - m_Target: {fileID: 2062426263}
+        m_TargetAssemblyTypeName: UI.UIFunc, Assembly-CSharp
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -13512,6 +13512,7 @@ GameObject:
   - component: {fileID: 1193950446}
   - component: {fileID: 1193950445}
   - component: {fileID: 1193950444}
+  - component: {fileID: 1193950448}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -13607,6 +13608,102 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!82 &1193950448
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1193950443}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: ff2129dc9e7d2fb45b5bb7224d5a3725, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1197371305
 GameObject:
   m_ObjectHideFlags: 0
@@ -19359,7 +19456,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2062426263}
         m_TargetAssemblyTypeName: UI.UIFunc, Assembly-CSharp
         m_MethodName: ObjectHide
         m_Mode: 2
@@ -19371,12 +19468,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2062426263}
         m_TargetAssemblyTypeName: UI.UIFunc, Assembly-CSharp
-        m_MethodName: ObjectShowWithMove
+        m_MethodName: ObjectShow
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 1629031422}
+          m_ObjectArgument: {fileID: 897372692}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -21218,7 +21315,10 @@ MonoBehaviour:
   PausePanel: {fileID: 1629031422}
   BlurPanel: {fileID: 1441384290}
   InGameScreen: {fileID: 641219722}
+  askQuit: {fileID: 0}
+  pc: {fileID: 0}
   IsEscBanned: 0
+  IsPaused: 0
 --- !u!1 &2064439671
 GameObject:
   m_ObjectHideFlags: 0

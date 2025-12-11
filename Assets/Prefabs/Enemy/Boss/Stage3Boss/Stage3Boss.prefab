@@ -10709,7 +10709,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1127870135168881268
 Transform:
   m_ObjectHideFlags: 0
@@ -10792,8 +10792,10 @@ MonoBehaviour:
   isFixedType: 0
   isFly: 1
   flyHeight: 10
-  attack: {fileID: 0}
-  death: {fileID: 0}
+  hover: 0.5
+  isDie: 0
+  attackClip: {fileID: 0}
+  deathClip: {fileID: 0}
   patternCount: 3
   Centor: {fileID: 0}
   pattern2Projectile: {fileID: 3090394682920786780, guid: 050ff51e4e1254b41a3e6542a06a5b6b, type: 3}

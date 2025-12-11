@@ -25,6 +25,7 @@ namespace Player.Component
 
 		private event StatCalculator	ActionCalculateStat;
 
+
 		public PlayerComponentStat(PlayerModel model, PlayerComponentStatSO so)
 		{
 			playerModel = model;

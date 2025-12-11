@@ -15,5 +15,5 @@ MonoBehaviour:
   skillName: Dash
   coolTime: 7
   tooltip: Do dash
-  skillSprite: {fileID: 0}
+  skillSprite: {fileID: 21300000, guid: 55679dfaf2a2f494a81b932a092de798, type: 3}
   skillClassName: PlayerSkillDash

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stage1Range
   m_EditorClassIdentifier: 
   enemyName: Stage1Range
-  weight: 040000000300000002000000
+  weight: 040000000300000000000000
   spawnCount: 2
   baseHp: 100
   baseDamage: 5
@@ -23,7 +23,7 @@ MonoBehaviour:
   detectAngle: 90
   moveSpeed: 5
   attackSpeed: 1
-  gainExp: 10
+  gainExp: 100
   itemDropTable: {fileID: 11400000, guid: ef99215bb357bfa439a107d0964fc6b9, type: 2}
   itemDropPersent: 100
   minDropMoney: 13

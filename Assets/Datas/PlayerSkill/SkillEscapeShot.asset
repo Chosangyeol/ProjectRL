@@ -15,5 +15,5 @@ MonoBehaviour:
   skillName: EscapeShot
   coolTime: 9
   tooltip: Escape and Shot
-  skillSprite: {fileID: 0}
+  skillSprite: {fileID: 21300000, guid: 0bbb05227ca005947a1228bb743b4727, type: 3}
   skillClassName: PlayerSkillEscapeShot

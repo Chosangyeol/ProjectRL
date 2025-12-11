@@ -15,6 +15,10 @@ TagManager:
   - HealBullet
   - Red
   - Tower
+  - Chara
+  - Stage3BossSpecial1
+  - Stage3BossSpecial2
+  - Stage3BossCentor
   layers:
   - Default
   - TransparentFX

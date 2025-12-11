@@ -26,7 +26,7 @@ public class State_FlyChase : IState
 
         Vector3 enemyPos = enemy.transform.position;
 
-        if (Physics.Raycast(enemy.transform.position, Vector3.down, out RaycastHit hit, 100f))
+        if (Physics.Raycast(enemy.transform.position, Vector3.down, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
         {
             enemyPos.y = hit.point.y;
         }
@@ -34,6 +34,7 @@ public class State_FlyChase : IState
         {
             enemyPos.y = 0;
         }
+
         float dist = Vector3.Distance(enemy.player.transform.position, enemyPos);
 
         if (dist <= enemy.enemySO.attackRange)
@@ -58,16 +59,37 @@ public class State_FlyChase : IState
     public void MoveTo(Vector3 targetPos)
     {
         Vector3 adjusted = GetHoverPosition(targetPos);
-        Vector3 dir = (adjusted - enemy.transform.position).normalized;
 
+        // 현재 위치
+        Vector3 current = enemy.transform.position;
+
+        // 이동 방향은 XZ 평면에서만 계산
+        Vector3 dir = adjusted - current;
+        dir.y = 0; // y는 고정한 뒤 XZ만 따라간다
+        dir = dir.normalized;
+
+        // 실제 이동
         enemy.transform.position += dir * enemy.GetStat().moveSpeed * Time.deltaTime;
-        enemy.transform.forward = Vector3.Lerp(enemy.transform.forward, dir, 10f * Time.deltaTime);
+
+        // 이동 후 y값은 hover 위치로 보정
+        enemy.transform.position = new Vector3(
+            enemy.transform.position.x,
+            adjusted.y,
+            enemy.transform.position.z
+        );
+
+        // 부드럽게 플레이어 방향 보기
+        enemy.transform.forward = Vector3.Lerp(
+            enemy.transform.forward,
+            new Vector3(dir.x, 0, dir.z),
+            10f * Time.deltaTime
+        );
     }
 
     private Vector3 GetHoverPosition(Vector3 target)
     {
         // 1) 지면 감지
-        if (Physics.Raycast(enemy.transform.position, Vector3.down, out RaycastHit hit, 100f))
+        if (Physics.Raycast(enemy.transform.position, Vector3.down, out RaycastHit hit, 100f, LayerMask.GetMask("Ground")))
         {
             target.y = hit.point.y + enemy.flyHeight;
         }

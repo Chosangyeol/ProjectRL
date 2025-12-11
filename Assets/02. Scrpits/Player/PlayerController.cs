@@ -1,5 +1,6 @@
 using Config;
 using System;
+using UI;
 using UnityEngine;
 
 namespace Player
@@ -117,6 +118,8 @@ namespace Player
 
 		private void Attack(float timeSecond)
 		{
+			if (GetComponentInChildren<UIFunc>().IsPaused) return;
+
 			if (Input.GetMouseButton(0))
 			{
 				Player.Attack(Camera.RaycastByAngle());

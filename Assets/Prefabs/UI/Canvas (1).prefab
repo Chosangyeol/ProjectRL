@@ -2798,6 +2798,18 @@ MonoBehaviour:
           m_StringArgument: UIPreviewScene
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5518885908131023444}
+        m_TargetAssemblyTypeName: UI.UIFunc, Assembly-CSharp
+        m_MethodName: ResetGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1291905204950236423
 GameObject:
   m_ObjectHideFlags: 0
@@ -10559,7 +10571,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5151631347377090643
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10594,7 +10606,10 @@ MonoBehaviour:
   PausePanel: {fileID: 5805409054912014993}
   BlurPanel: {fileID: 5265746172687943158}
   InGameScreen: {fileID: 1291905204950236423}
+  askQuit: {fileID: 0}
+  pc: {fileID: 0}
   IsEscBanned: 0
+  IsPaused: 0
 --- !u!1 &4674665700266493304
 GameObject:
   m_ObjectHideFlags: 0

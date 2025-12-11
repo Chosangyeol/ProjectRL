@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 using Random = UnityEngine.Random;
@@ -61,7 +62,8 @@ public class EnemyDirector : MonoBehaviour
             TrySpawn();
         }
         SetTower();
-        portal.SetActive(false);
+        if (portal != null)
+            portal.SetActive(false);
         InvokeRepeating(nameof(TrySpawn), 60f, interval);
     }
     #endregion
@@ -210,6 +212,7 @@ public class EnemyDirector : MonoBehaviour
             agent.enabled = true;
         }
         mainUIManager.gameObject.SetActive(true);
+        pd.gameObject.SetActive(false);
     }
 
     public void OpenPortal()
